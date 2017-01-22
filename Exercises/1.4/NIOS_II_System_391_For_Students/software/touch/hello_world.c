@@ -70,9 +70,6 @@ int ScreenTouched( void )
 	 // return TRUE if any data received from 6850 connected to touchscreen
 	 // or FALSE otherwise
 
-	if(Touchscreen_RxData != 0){
-		printf("%d", Touchscreen_RxData);
-	}
 	return (Touchscreen_RxData == 0x80);
 }
 
@@ -142,10 +139,11 @@ int main()
 {
   printf("Hello from Nios II!\n");
   Init_Touch();
+
   while(1){
   	  GetPress();
   	  GetRelease();
-   }
+  }
 
   return 0;
 }
