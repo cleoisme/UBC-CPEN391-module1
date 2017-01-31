@@ -113,6 +113,18 @@ void DrawVerticalLine(int y1, int y2, int x, int Colour)
 	GraphicsCommandReg = DrawVLine;
 }
 
+void DrawBresenhamLine(int x1, int x2, int y1, int y2, int Colour)
+{
+	WAIT_FOR_GRAPHICS;
+
+	GraphicsX1Reg = x1;
+	GraphicsX2Reg = x2;
+	GraphicsY1Reg = y1;
+	GraphicsY2Reg = y2;
+	GraphicsColourReg = Colour;
+	GraphicsCommandReg = DrawLine;
+}
+
 /****************************************************************************************************
 ** subroutine to program a hardware (graphics chip) palette number with an RGB value
 ** e.g. ProgramPalette(RED, 0x00FF0000) ;
@@ -137,8 +149,12 @@ int main()
 	//for(i = 0; i < 800; i ++)
 		//WriteAPixel(i, 100, RED);
 
-	DrawHorizontalLine(0, 800, 250, CYAN);
+	DrawHorizontalLine(0, 800, 400, CYAN);
 	DrawVerticalLine(0, 480, 400, MAGENTA);
+	DrawBresenhamLine(0, 400, 0, 300, YELLOW);
+	DrawBresenhamLine(0, 400, 300, 0, YELLOW);
+	DrawBresenhamLine(600, 300, 0, 300, YELLOW);
+	DrawBresenhamLine(600, 300, 300, 0, YELLOW);
 
 	// read the pixels back and make sure we read 2 (RED) to prove it's working
 	for(i = 0; i < 800; i ++)
