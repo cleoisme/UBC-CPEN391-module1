@@ -102,6 +102,17 @@ void DrawHorizontalLine(int x1, int x2, int y, int Colour)
 	GraphicsCommandReg = DrawHLine;
 }
 
+void DrawVerticalLine(int y1, int y2, int x, int Colour)
+{
+	WAIT_FOR_GRAPHICS;
+
+	GraphicsY1Reg = y1;
+	GraphicsY2Reg = y2;
+	GraphicsX1Reg = x;
+	GraphicsColourReg = Colour;
+	GraphicsCommandReg = DrawVLine;
+}
+
 /****************************************************************************************************
 ** subroutine to program a hardware (graphics chip) palette number with an RGB value
 ** e.g. ProgramPalette(RED, 0x00FF0000) ;
@@ -125,8 +136,9 @@ int main()
 	// draw a line across the screen in RED at y coord 100 and from x = 0 to 799
 	//for(i = 0; i < 800; i ++)
 		//WriteAPixel(i, 100, RED);
-	DrawHorizontalLine(0, 800, 250, CYAN);
 
+	DrawHorizontalLine(0, 800, 250, CYAN);
+	DrawVerticalLine(0, 480, 400, MAGENTA);
 
 	// read the pixels back and make sure we read 2 (RED) to prove it's working
 	for(i = 0; i < 800; i ++)

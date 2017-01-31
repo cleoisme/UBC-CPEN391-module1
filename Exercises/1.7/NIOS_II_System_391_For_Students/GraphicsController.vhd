@@ -72,6 +72,7 @@ architecture bhvr of GraphicsController is
 				Y2_Select_H,
 				X1_Inc_1_H,
 				X1_Inc_2_H,
+				Y1_Inc_1_H,
 				Command_Select_H,
 				Colour_Select_H,
 				BackGroundColour_Select_H: Std_Logic; 	
@@ -307,6 +308,8 @@ Begin
 				if(LDS_L = '0') then
 					Y1(7 downto 0) <= DataInFromCPU(7 downto 0);
 				end if;
+			elsif(Y1_Inc_1_H = '1') then
+				Y1 <= Y1 + 1;
 			end if;
 		end if;
 	end process;
@@ -511,6 +514,7 @@ Begin
 		
 		X1_Inc_1_H 						   <= '0';
 		X1_Inc_2_H							<= '0';
+		Y1_Inc_1_H							<= '0';
 		
 		-------------------------------------------------------------------------------------
 		-- IMPORTANT we have to define what the default NEXT state will be. In this case we the state machine
@@ -722,6 +726,8 @@ Begin
 				
 				-- We're done if x1 has reached x2
 				if(x1 >= x2) then
+					X1_Inc_1_H <= '0';
+					X1_Inc_2_H <= '0';
 					NextState <= IDLE;
 				else
 					NextState <= DrawHLine;
@@ -735,7 +741,26 @@ Begin
 		elsif(CurrentState = DrawVline) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
 			-- TODO in your project
-			NextState <= IDLE;
+			if(OKTODRAW_L = '0') then
+				Sig_AddressOut 	<= Y1(8 downto 0) & X1(9 downto 1);
+				Sig_RW_Out <= '0';
+				Y1_Inc_1_H <= '1';
+				
+				if(x1(0) = '0') then
+					Sig_UDS_Out_L 	<= '0';	
+				else 
+					Sig_LDS_Out_L <= '0';
+				end if;
+				
+				if (Y1 >= Y2) then
+					Y1_Inc_1_H <= '0';
+					NextState <= IDLE;
+				else
+					NextState <= DrawVline;
+				end if;
+			else
+				NextState <= DrawVline;
+			end if;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		elsif(CurrentState = DrawLine) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
