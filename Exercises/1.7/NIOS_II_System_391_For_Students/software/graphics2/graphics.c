@@ -81,6 +81,36 @@ void DrawBresenhamLine(int x1, int x2, int y1, int y2, int Colour)
 	GraphicsCommandReg = DrawLine;
 }
 
+void DrawString1(int x, int y, int colour, int background, char* string, int erase){
+	int i;
+	for (i = 0; string[i] != '\0'; ++i){
+		OutGraphicsCharFont1(x, y, colour, background, string[i], erase);
+		x += 10;
+	}
+}
+
+void DrawString2(int x, int y, int colour, int background, char* string, int erase){
+	int i;
+	for (i = 0; string[i] != '\0'; ++i){
+		OutGraphicsCharFont2(x, y, colour, background, string[i], erase);
+		x += 14;
+	}
+}
+
+void DrawRectangle(int x1, int x2, int y1, int y2, int colour){
+	DrawHorizontalLine(x1, x2, y1, colour);
+	DrawHorizontalLine(x1, x2, y2, colour);
+	DrawVerticalLine(y1, y2, x1, colour);
+	DrawVerticalLine(y1, y2, x2, colour);
+}
+
+void DrawFilledRectangle(int x1, int x2, int y1, int y2, int colour){
+	int col;
+	for (col = y1; col <= y2; ++col){
+		DrawHorizontalLine(x1, x2, col, colour);
+	}
+}
+
 /****************************************************************************************************
 ** subroutine to program a hardware (graphics chip) palette number with an RGB value
 ** e.g. ProgramPalette(RED, 0x00FF0000) ;
@@ -112,9 +142,16 @@ int main()
 	DrawBresenhamLine(600, 300, 0, 300, YELLOW);
 	DrawBresenhamLine(600, 300, 300, 0, YELLOW);
 
+	DrawString1(300, 150, RED, WHITE, "abcderfg", 1);
+	DrawString2(300, 150, RED, WHITE, "abcderfg", 0);
+
+	DrawRectangle(30, 200, 50, 150, CYAN);
+
+	DrawFilledRectangle(100, 200, 300, 350, WHITE);
+
 	// read the pixels back and make sure we read 2 (RED) to prove it's working
-	for(i = 0; i < 800; i ++)
-		printf("Colour value (i.e. pallette number) = %d at [%d, 100]\n", ReadAPixel(i, 100), i);
+	//for(i = 0; i < 800; i ++)
+		//printf("Colour value (i.e. pallette number) = %d at [%d, 100]\n", ReadAPixel(i, 100), i);
 
 	return 0;
 }

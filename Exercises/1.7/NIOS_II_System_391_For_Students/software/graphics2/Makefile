@@ -142,7 +142,9 @@ ACDS_VERSION := 13.0sp1
 ELF := graphics2.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := hello_world.c
+C_SRCS += OutGraphicsCharFont.c
+C_SRCS += fonts.c
+C_SRCS += graphics.c
 CXX_SRCS :=
 ASM_SRCS :=
 

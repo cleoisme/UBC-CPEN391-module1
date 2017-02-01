@@ -11,13 +11,13 @@
 #include "graphics.h"
 #include "OutGraphicsCharFont.h"
 
+extern const unsigned char Font5x7[95][7];
+extern const unsigned short int Font10x14[][14];
+extern const unsigned char Font16x27[];
+extern const unsigned char Font22x40[];
+extern const unsigned char Font38x59[];
+
 void OutGraphicsCharFont(int x, int y, int fontcolour, int backgroundcolour, int c, int Erase, int fontWidth, int fontHeight){
-	// Check if valid font size from fonts.c
-	if (!(fontWidth == 5 && fontHeight == 7) || !(fontWidth == 10 && fontHeight == 14)
-		|| !(fontWidth == 16 && fontHeight == 27) || !(fontWidth == 22 && fontHeight == 40)
-		|| !(fontWidth == 38 && fontHeight == 59)){
-		return;
-	}
 
 	register int row, column, theX = x, theY = y ;
 	register int pixels ;
@@ -35,7 +35,14 @@ void OutGraphicsCharFont(int x, int y, int fontcolour, int backgroundcolour, int
 		for(row = 0; (char)(row) < (char)(fontHeight); row ++)	{
 
 			// get the bit pattern for row 0 of the character from the software font
-			pixels = Font5x7[theC][row] ;
+
+			if (fontWidth == 5){
+				pixels = Font5x7[theC][row];
+			}
+			else if (fontWidth == 10){
+				pixels = Font10x14[theC][row];
+			}
+
 			BitMask =  1 << fontWidth - 1;
 
 			for(column = 0; (char)(column) < (char)(fontWidth); column ++)	{
