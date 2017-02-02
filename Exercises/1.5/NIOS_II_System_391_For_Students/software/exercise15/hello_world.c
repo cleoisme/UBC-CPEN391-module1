@@ -129,7 +129,7 @@ int fixquality, satellites;
 int LOCUS_serial, LOCUS_records;
 int LOCUS_type, LOCUS_mode, LOCUS_config, LOCUS_interval, LOCUS_distance, LOCUS_speed, LOCUS_status, LOCUS_percent;
 
-
+int mode = 1;
 
 
 void Init_GPSCHIP(void)
@@ -650,6 +650,26 @@ int main() {
 
 
 	alt_up_character_lcd_init(char_lcd_dev);
+	
+	/**
+	while(1) {
+		
+		int number = IORD_8DIRECT(keys, 0);
+		if(data == keys_off) {
+			continue;	
+		}
+		
+		int i = 0;
+		for(i = 0; i < 4; ++i) {
+			if((number & (1 << i))	== 0) {
+				mode = i;
+				break;
+			}
+		}
+		
+	}
+	**/
+	
 
 	while(1){
 		getcharGPSCHIP();
@@ -658,14 +678,55 @@ int main() {
 			if(parseData(lastNMEA())
 					== 1){
 
-				int data = IORD_8DIRECT(keys, 0);
-				if(data == keys_off) {
-					continue;
-				}
-
 				alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 0);
 
+				/**
+				if(mode == 1) {
+				
+					char * display_time;
+					sprintf(display_time, "%s Time", format);
+					alt_up_character_lcd_string(char_lcd_dev, display_time);
+					alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+					char * time;
+					sprintf(time, "%d:%d:%d",hour, minute, milliseconds);
+					alt_up_character_lcd_string(char_lcd_dev, time);
+					
+				}
+				
+				if(mode == 2) {
+					
+					char * display_date;
+					sprintf(display_date, "%s Date", format);
+					alt_up_character_lcd_string(char_lcd_dev, display_time);
+					alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+					char * date;
+					sprintf(date, "%d:%d:%d", day, month, year);
+					alt_up_character_lcd_string(char_lcd_dev, date);	
+				}
+				
+				if(mode == 3) {
+					
+					char * latitude;
+					sprintf(display_time, "%s Latitude", format);
+					alt_up_character_lcd_string(char_lcd_dev, display_time);
+					alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+					char * latitude_str;
+					sprintf(latitude_str, "%.2f %c", latitude_str);
+					alt_up_character_lcd_string(char_lcd_dev, latitude_str);	
+				}
+				
+				if(mode == 4) {
+					
+					char * longitude;
+					sprintf(display_time, "%s Longitude", format);
+					alt_up_character_lcd_string(char_lcd_dev, display_time);
+					alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+					char * longitude_str;
+					sprintf(longitude_str, "%.2f %c", longitude_str);
+					alt_up_character_lcd_string(char_lcd_dev, longitude_str);	
+				}
 
+				**/
 				char * format_str;
 				sprintf(format_str, "%s", format);
 				char * time;
