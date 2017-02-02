@@ -145,6 +145,7 @@ ELF := graphics2.elf
 C_SRCS += OutGraphicsCharFont.c
 C_SRCS += fonts.c
 C_SRCS += graphics.c
+C_SRCS += ColourPalletteData.c
 CXX_SRCS :=
 ASM_SRCS :=
 

@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_qsys_0' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: C:/altera/13.0sp1/CPEN391/Exercises/1.7/NIOS_II_System_391_For_Students/nios_system.sopcinfo
  *
- * Generated: Mon Jan 30 22:43:54 PST 2017
+ * Generated: Wed Feb 01 10:47:14 PST 2017
  */
 
 /*
@@ -61,6 +61,7 @@
 #include "altera_nios2_qsys_irq.h"
 #include "altera_avalon_jtag_uart.h"
 #include "altera_avalon_timer.h"
+#include "altera_hostfs.h"
 #include "altera_up_avalon_character_lcd.h"
 #include "altera_up_avalon_rs232.h"
 
@@ -72,6 +73,7 @@ ALTERA_NIOS2_QSYS_IRQ_INSTANCE ( NIOS2_QSYS_0, nios2_qsys_0);
 ALTERA_AVALON_JTAG_UART_INSTANCE ( JTAG_UART_0, jtag_uart_0);
 ALTERA_AVALON_TIMER_INSTANCE ( TIMER_0, timer_0);
 ALTERA_AVALON_TIMER_INSTANCE ( TIMER_1, timer_1);
+ALTERA_HOSTFS_INSTANCE ( ALTERA_HOSTFS, altera_hostfs);
 ALTERA_UP_AVALON_CHARACTER_LCD_INSTANCE ( CHARACTER_LCD_0, character_lcd_0);
 ALTERA_UP_AVALON_RS232_INSTANCE ( RS232_0, rs232_0);
 
@@ -99,6 +101,7 @@ void alt_sys_init( void )
     ALTERA_AVALON_TIMER_INIT ( TIMER_0, timer_0);
     ALTERA_AVALON_TIMER_INIT ( TIMER_1, timer_1);
     ALTERA_AVALON_JTAG_UART_INIT ( JTAG_UART_0, jtag_uart_0);
+    ALTERA_HOSTFS_INIT ( ALTERA_HOSTFS, altera_hostfs);
     ALTERA_UP_AVALON_CHARACTER_LCD_INIT ( CHARACTER_LCD_0, character_lcd_0);
     ALTERA_UP_AVALON_RS232_INIT ( RS232_0, rs232_0);
 }

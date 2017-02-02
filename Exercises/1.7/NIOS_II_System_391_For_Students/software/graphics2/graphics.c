@@ -15,7 +15,12 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "graphics.h"
+#include "Colours.h"
+
+extern const unsigned int ColourPalletteData[256];
 
 /**********************************************************************
 * This function writes a single pixel to the x,y coords specified in the specified colour
@@ -111,6 +116,156 @@ void DrawFilledRectangle(int x1, int x2, int y1, int y2, int colour){
 	}
 }
 
+int GetClosetColour(int r, int g, int b){
+	Colour c = 0;
+	int minDiff = 256 * 3;
+	Colour minC = 0;
+	for (c = BLACK; c <= WHITE_REPEAT; ++c){
+		int currR = ColourPalletteData[c] >> 16;
+		int currG = (ColourPalletteData[c] & 0x00FF00) >> 8;
+		int currB = ColourPalletteData[c] & 0x0000FF;
+		int currDiff = abs(r - currR) + abs(g - currG) + abs(b - currB);
+		if (currDiff < minDiff){
+			minDiff = currDiff;
+			minC = c;
+		}
+		if (minDiff <= 70){
+			return minC;
+		}
+	}
+
+	return minC;
+}
+
+// Draws a map from a 24-bit bitmap where the lower left is at (x,y) and option to scale the image (stretch)
+void DrawMap(char *fileName, int x, int y, int length, int width, int scale){
+	 // super-simplified BMP read algorithm to pull out RGB data
+	 // read image for coloring scheme
+	 //int image[400*400][3]; // first number here is 1024 pixels in my image, 3 is for RGB values
+	 FILE *streamIn;
+	 streamIn = fopen(fileName, "r");
+	 if (streamIn == (FILE *)0){
+	   perror("File opening error ocurred. Exiting program.\n");
+	   exit(0);
+	 }
+
+	 int byte;
+	 int i;
+	 for(i=0; i<54; i++) byte = getc(streamIn);  // strip out BMP header
+
+	 int currX = x;
+	 int currY = y;
+
+	 for (i=0; i < length*width; i++){    // foreach pixel
+	    int b = fgetc(streamIn);  // use BMP 24bit with no alpha channel
+	    int g = fgetc(streamIn);  // BMP uses BGR but we want RGB, grab byte-by-byte
+	    int r = fgetc(streamIn);  // reverse-order array indexing fixes RGB issue...
+
+	    Colour c = GetClosetColour(r, g, b);
+	    //printf("C: %x, Pixel %d : [%d,%d,%d]\n", ColourPalletteData[c], i+1,r,g,b);
+
+	    if (i % length == 0){
+	    	currX = x;
+	    	currY -= scale;
+	    }
+	    else{
+	    	currX += scale;
+	    }
+
+	    int scaleX;
+	    int scaleY;
+	    for (scaleY = currY; scaleY > currY - scale; --scaleY){
+	    	for (scaleX = currX; scaleX < currX + scale; ++scaleX){
+	    		WriteAPixel(scaleX, scaleY, c);
+	    	}
+	    }
+	 }
+
+	 fclose(streamIn);
+}
+
+// Same as DrawMap but with a more efficient bitmap decoding implementation
+void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
+	 // super-simplified BMP read algorithm to pull out RGB data
+	 // read image for coloring scheme
+	 //int image[400*400][3]; // first number here is 1024 pixels in my image, 3 is for RGB values
+	 FILE *streamIn;
+	 streamIn = fopen(fileName, "rb");
+	 if (streamIn == (FILE *)0){
+	   perror("File opening error ocurred. Exiting program.\n");
+	   exit(0);
+	 }
+
+	 int i;
+
+	 unsigned char info[54];
+	 for(i=0; i<54; i++) getc(streamIn);  // strip out BMP header
+
+	 int row_padded = (length*3 + 3) & (~3);
+	 unsigned char data[row_padded];
+	 unsigned char tmp;
+
+	 int row, col, count;
+	 row = col = count = 0;
+	 int currX = x;
+	 int currY = y;
+	 for(row = 0; row < width; ++row){
+		 fread(data, sizeof(unsigned char), row_padded, streamIn);
+		 for(col = 0; col < length * 3; col +=3){
+			 tmp = data[col];
+			 data[col] = data[col + 2];
+			 data[col + 2] = tmp;
+
+			 Colour c = GetClosetColour(data[col], data[col + 1], data[col + 2]);
+
+			 int currX2;
+			 int currY2;
+			 for(currY2 = currY; currY2 > currY - scale; --currY2){
+				 for(currX2 = currX; currX2 < currX + scale; ++currX2){
+					 WriteAPixel(currX2, currY2, c) ;
+				 }
+			 }
+
+			 currX = currX2;
+			 //printf("Pixel: %d, R:%d, G:%d, B:%d\n", count++, (int)data[j], (int)data[j + 1], (int)data[j + 2]);
+		 }
+
+		 currY -= scale;
+		 currX = x;
+		 //printf("%d", row);
+	 }
+
+
+
+
+	 fclose(streamIn);
+}
+
+void TestShapes(){
+	// draw a line across the screen in RED at y coord 100 and from x = 0 to 799
+	//for(i = 0; i < 800; i ++)
+		//WriteAPixel(i, 100, RED);
+
+	// read the pixels back and make sure we read 2 (RED) to prove it's working
+		//for(i = 0; i < 800; i ++)
+			//printf("Colour value (i.e. pallette number) = %d at [%d, 100]\n", ReadAPixel(i, 100), i);
+
+	DrawHorizontalLine(0, 800, 400, CYAN);
+	DrawVerticalLine(0, 480, 400, MAGENTA);
+	DrawBresenhamLine(0, 400, 0, 300, YELLOW);
+	DrawBresenhamLine(0, 400, 300, 0, YELLOW);
+	DrawBresenhamLine(600, 300, 0, 300, YELLOW);
+	DrawBresenhamLine(600, 300, 300, 0, YELLOW);
+
+	DrawString1(300, 150, RED, WHITE, "abcderfg", 1);
+	DrawString2(300, 150, RED, WHITE, "abcderfg", 0);
+
+	DrawRectangle(30, 200, 50, 150, CYAN);
+
+	DrawFilledRectangle(100, 200, 300, 350, 12);
+}
+
+
 /****************************************************************************************************
 ** subroutine to program a hardware (graphics chip) palette number with an RGB value
 ** e.g. ProgramPalette(RED, 0x00FF0000) ;
@@ -128,30 +283,17 @@ void ProgramPalette(int PaletteNumber, int RGB)
 
 int main()
 {
-	int i ;
 	printf("Hello from Nios II!\n");
 
-	// draw a line across the screen in RED at y coord 100 and from x = 0 to 799
-	//for(i = 0; i < 800; i ++)
-		//WriteAPixel(i, 100, RED);
+//	clock_t begin = clock();
+//	DrawMap("/mnt/host/map3.bmp", 200, 450, 100, 100, 4);
+//	clock_t end = clock();
+//	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
-	DrawHorizontalLine(0, 800, 400, CYAN);
-	DrawVerticalLine(0, 480, 400, MAGENTA);
-	DrawBresenhamLine(0, 400, 0, 300, YELLOW);
-	DrawBresenhamLine(0, 400, 300, 0, YELLOW);
-	DrawBresenhamLine(600, 300, 0, 300, YELLOW);
-	DrawBresenhamLine(600, 300, 300, 0, YELLOW);
-
-	DrawString1(300, 150, RED, WHITE, "abcderfg", 1);
-	DrawString2(300, 150, RED, WHITE, "abcderfg", 0);
-
-	DrawRectangle(30, 200, 50, 150, CYAN);
-
-	DrawFilledRectangle(100, 200, 300, 350, WHITE);
-
-	// read the pixels back and make sure we read 2 (RED) to prove it's working
-	//for(i = 0; i < 800; i ++)
-		//printf("Colour value (i.e. pallette number) = %d at [%d, 100]\n", ReadAPixel(i, 100), i);
+	clock_t begin2 = clock();
+	DrawMap2("/mnt/host/map3.bmp", 200, 450, 100, 100, 2);
+	clock_t end2 = clock();
+	printf("%f\n", (double)(end2 - begin2) / CLOCKS_PER_SEC);
 
 	return 0;
 }

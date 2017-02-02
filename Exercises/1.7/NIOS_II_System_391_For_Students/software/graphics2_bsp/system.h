@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_qsys_0' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: C:/altera/13.0sp1/CPEN391/Exercises/1.7/NIOS_II_System_391_For_Students/nios_system.sopcinfo
  *
- * Generated: Mon Jan 30 22:43:54 PST 2017
+ * Generated: Wed Feb 01 10:47:14 PST 2017
  */
 
 /*
@@ -168,6 +168,14 @@
 #define ALT_STDOUT_PRESENT
 #define ALT_STDOUT_TYPE "altera_avalon_jtag_uart"
 #define ALT_SYSTEM_NAME "nios_system"
+
+
+/*
+ * altera_hostfs configuration
+ *
+ */
+
+#define ALTERA_HOSTFS_NAME "/mnt/host"
 
 
 /*

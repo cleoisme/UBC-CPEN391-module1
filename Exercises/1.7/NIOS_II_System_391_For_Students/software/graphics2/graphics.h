@@ -34,16 +34,6 @@
 // while the source file ColourPaletteData.c contains the 24 bit RGB data
 // that is pre-programmed into each of the 256 palettes
 
-#define	BLACK		0
-#define	WHITE		1
-#define	RED			2
-#define	LIME		3
-#define	BLUE		4
-#define	YELLOW		5
-#define	CYAN		6
-#define	MAGENTA		7
-
-
 #define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsStatusReg   		(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsX1Reg   		(*(volatile unsigned short int *)(0x84000002))
@@ -59,5 +49,8 @@ void DrawHorizontalLine(int x1, int x2, int y, int Colour);
 void DrawVerticalLine(int y1, int y2, int x, int Colour);
 void DrawBresenhamLine(int x1, int x2, int y1, int y2, int Colour);
 void ProgramPalette(int PaletteNumber, int RGB);
+int GetClosetColour(int r, int g, int b);
+void DrawMap();
+void TestShapes();
 
 #endif
