@@ -43,6 +43,7 @@ volatile char *lastline;
 volatile int receivedFlag;
 volatile int inStandbyMode;
 volatile int paused;
+volatile char *format;
 
 char* lastNMEA(void);
 int newNMEAreceived(void);
@@ -186,6 +187,7 @@ int parseData(char *data) {
 
 	//GGA format
 	if(strstr(data, "$GPGGA")) {
+		format = "$GPGGA";
 		char *p = data;
 		p = strchr(p, ',') + 1;
 		float timef = atof(p);
@@ -292,6 +294,7 @@ int parseData(char *data) {
 	if (strstr(data, "$GPRMC")) {
 	   // found RMC
 	    char *p = data;
+	    format = "$GPRMC";
 
 	    // get time
 	    p = strchr(p, ',')+1;
@@ -636,22 +639,48 @@ int main() {
 	printf("Test GPSCHIP\n");
 	Init_GPSCHIP();
 
+	alt_up_character_lcd_dev *char_lcd_dev;
+
+	char_lcd_dev = alt_up_character_lcd_open_dev ("/dev/character_lcd_0");
+
+	if(char_lcd_dev == NULL)
+		printf("Error: could not open character LCD device\n");
+	else
+		printf("Character LCD Device open\n");
+
+
+	alt_up_character_lcd_init(char_lcd_dev);
+
 	while(1){
 		getcharGPSCHIP();
 
 		if(newNMEAreceived() == 1) {
 			if(parseData(lastNMEA())
 					== 1){
-				printf("Time:" );
-				printf("Hour: %d", hour );
-				printf("Minute: %d", minute );
-				printf("milliseconds: %d", milliseconds );
-				printf("Date: ");
-				printf("Day: %d", day);
-				printf("Month: %d", month);
-				printf("Year: %d", year);
-				printf("Latitude: %.2f", latitude);
-				printf("Longitude: %.2f", longitude);
+
+				int data = IORD_8DIRECT(keys, 0);
+				if(data == keys_off) {
+					continue;
+				}
+
+				alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 0);
+
+
+				char * format_str;
+				sprintf(format_str, "%s", format);
+				char * time;
+				sprintf(time, "%s Time:%d:%d:%d", format,hour, minute, milliseconds);
+				alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0,0);
+				alt_up_character_lcd_string(char_lcd_dev, time);
+				char * date;
+				sprintf(date, "Date:%d:%d:%d", day, month, year);
+				alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 6, 0);
+				alt_up_character_lcd_string(char_lcd_dev, date);
+				alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+				char * location_str = "";
+				sprintf(location_str,"Lat:%.2f %c Lon:%.2f %c",latitude, lat, longitude, lon);
+				alt_up_character_lcd_string(char_lcd_dev, location_str);
+
 			}
 		}
 
