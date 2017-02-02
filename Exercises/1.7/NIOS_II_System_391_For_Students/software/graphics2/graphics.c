@@ -290,8 +290,10 @@ int main()
 //	clock_t end = clock();
 //	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
+	DrawFilledRectangle(0, 800 , 0 ,480, WHITE);
 	clock_t begin2 = clock();
-	DrawMap2("/mnt/host/map3.bmp", 200, 450, 100, 100, 2);
+	DrawMap2("/mnt/host/map3.bmp", 300, 400, 100, 100, 4);
+	//DrawMap2("/mnt/host/map10.bmp", 300, 400, 300, 300, 1);
 	clock_t end2 = clock();
 	printf("%f\n", (double)(end2 - begin2) / CLOCKS_PER_SEC);
 

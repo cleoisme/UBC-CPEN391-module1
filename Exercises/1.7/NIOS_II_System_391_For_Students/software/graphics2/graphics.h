@@ -50,7 +50,8 @@ void DrawVerticalLine(int y1, int y2, int x, int Colour);
 void DrawBresenhamLine(int x1, int x2, int y1, int y2, int Colour);
 void ProgramPalette(int PaletteNumber, int RGB);
 int GetClosetColour(int r, int g, int b);
-void DrawMap();
+void DrawMap(char *fileName, int x, int y, int length, int width, int scale);
+void DrawMap2(char *fileName, int x, int y, int length, int width, int scale);
 void TestShapes();
 
 #endif

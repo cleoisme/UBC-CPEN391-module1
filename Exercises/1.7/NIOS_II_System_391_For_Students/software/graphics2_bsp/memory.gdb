@@ -3,7 +3,7 @@
 # Machine generated for CPU 'nios2_qsys_0' in SOPC Builder design 'nios_system'
 # SOPC Builder design path: C:/altera/13.0sp1/CPEN391/Exercises/1.7/NIOS_II_System_391_For_Students/nios_system.sopcinfo
 #
-# Generated: Mon Jan 30 22:43:54 PST 2017
+# Generated: Thu Feb 02 02:39:12 PST 2017
 
 # DO NOT MODIFY THIS FILE
 #
