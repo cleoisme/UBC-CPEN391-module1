@@ -119,6 +119,15 @@ void DrawFilledRectangle(int x1, int x2, int y1, int y2, int colour){
 	GraphicsCommandReg = DrawFilledRect;
 }
 
+void DrawBresenhamCircle(int x1, int y1, int radius, int colour){
+	WAIT_FOR_GRAPHICS;
+	GraphicsX1Reg = x1;
+	GraphicsY1Reg = y1;
+	GraphicsX2Reg = radius;
+	GraphicsColourReg = colour;
+	GraphicsCommandReg = DrawCircle;
+}
+
 int GetClosetColour(int r, int g, int b){
 	Colour c = 0;
 	int minDiff = 256 * 3;
@@ -288,20 +297,11 @@ int main()
 {
 	printf("Hello from Nios II!\n");
 
-//	clock_t begin = clock();
-//	DrawMap("/mnt/host/map3.bmp", 200, 450, 100, 100, 4);
-//	clock_t end = clock();
-//	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
-
-	DrawFilledRectangle(0, 400 , 0 , 300, RED);
-	DrawHorizontalLine(0, 300, 200, RED);
-	DrawVerticalLine(0, 200, 200, BLACK);
-
-//	clock_t begin2 = clock();
-//	DrawMap2("/mnt/host/map3.bmp", 300, 400, 100, 100, 4);
-	//DrawMap2("/mnt/host/map10.bmp", 300, 400, 300, 300, 1);
-//	clock_t end2 = clock();
-//	printf("%f\n", (double)(end2 - begin2) / CLOCKS_PER_SEC);
+	DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+	DrawBresenhamCircle(450, 300, 150, RED);
+	DrawBresenhamCircle(300, 250, 50, RED);
+	DrawBresenhamCircle(200, 150, 75, RED);
+	DrawBresenhamCircle(600, 200, 200, RED);
 
 	return 0;
 }

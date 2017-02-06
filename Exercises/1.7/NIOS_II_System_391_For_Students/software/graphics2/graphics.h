@@ -16,6 +16,7 @@
 #define DrawVLine		2
 #define DrawLine		3
 #define DrawFilledRect  4
+#define DrawCircle		5
 #define PutAPixel		0xA
 #define GetAPixel		0xB
 #define ProgramPaletteColour   	0x10

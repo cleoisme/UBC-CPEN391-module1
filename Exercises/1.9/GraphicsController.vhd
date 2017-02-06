@@ -132,6 +132,21 @@ architecture bhvr of GraphicsController is
 	constant DrawLine3				 	 			: Std_Logic_Vector(7 downto 0) := X"0D";		-- State for drawing any line
 	constant DrawLine4			 	 				: Std_Logic_Vector(7 downto 0) := X"0E";		-- State for drawing any line
 	constant DrawLine5				 	 			: Std_Logic_Vector(7 downto 0) := X"0F";		-- State for drawing any line
+	constant DrawFilledRectangle				 	: Std_Logic_Vector(7 downto 0) := X"10";		-- State for drawing any line
+	constant DrawFilledRectangle1				 	: Std_Logic_Vector(7 downto 0) := X"11";		-- State for drawing any line
+	constant DrawFilledRectangle2				 	: Std_Logic_Vector(7 downto 0) := X"12";		-- State for drawing any line
+	constant DrawCircle				 				: Std_Logic_Vector(7 downto 0) := X"13";		-- State for drawing any line
+	constant DrawCircle1				 				: Std_Logic_Vector(7 downto 0) := X"14";		-- State for drawing any line
+	constant DrawCircle2				 				: Std_Logic_Vector(7 downto 0) := X"15";		-- State for drawing any line
+	constant DrawCircle3				 				: Std_Logic_Vector(7 downto 0) := X"16";		-- State for drawing any line
+	constant DrawCircle4				 				: Std_Logic_Vector(7 downto 0) := X"17";		-- State for drawing any line
+	constant DrawCircle5				 				: Std_Logic_Vector(7 downto 0) := X"18";		-- State for drawing any line
+	constant DrawCircle6				 				: Std_Logic_Vector(7 downto 0) := X"19";		-- State for drawing any line
+	constant DrawCircle7				 				: Std_Logic_Vector(7 downto 0) := X"1A";		-- State for drawing any line
+	constant DrawCircle8				 				: Std_Logic_Vector(7 downto 0) := X"1B";		-- State for drawing any line
+	constant DrawCircle9				 				: Std_Logic_Vector(7 downto 0) := X"1C";		-- State for drawing any line
+	constant DrawCircle10				 			: Std_Logic_Vector(7 downto 0) := X"1D";		-- State for drawing any line
+
 	constant DrawPixel							 	: Std_Logic_Vector(7 downto 0) := X"05";		-- State for drawing a pixel
 	constant ReadPixel							 	: Std_Logic_Vector(7 downto 0) := X"06";		-- State for reading a pixel
 	constant ReadPixel1							 	: Std_Logic_Vector(7 downto 0) := X"07";		-- State for reading a pixel
@@ -146,6 +161,8 @@ architecture bhvr of GraphicsController is
 	constant Hline								 		: Std_Logic_Vector(15 downto 0) := X"0001";	-- command to Graphics chip from NIOS is draw Horizontal line
 	constant Vline									 	: Std_Logic_Vector(15 downto 0) := X"0002";	-- command to Graphics chip from NIOS is draw Vertical line
 	constant ALine									 	: Std_Logic_Vector(15 downto 0) := X"0003";	-- command to Graphics chip from NIOS is draw any line
+	constant FilledRectangle						: Std_Logic_Vector(15 downto 0) := X"0004";	-- command to Graphics chip from NIOS is draw any line
+	constant Circle									: Std_Logic_Vector(15 downto 0) := X"0005";	-- command to Graphics chip from NIOS is draw any line
 	constant	PutPixel									: Std_Logic_Vector(15 downto 0) := X"000a";	-- command to Graphics chip from NIOS to draw a pixel
 	constant	GetPixel									: Std_Logic_Vector(15 downto 0) := X"000b";	-- command to Graphics chip from NIOS to read a pixel
 	constant ProgramPallette						: Std_Logic_Vector(15 downto 0) := X"0010";	-- command to Graphics chip from NIOS is program one of the pallettes with a new RGB value
@@ -153,7 +170,6 @@ architecture bhvr of GraphicsController is
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -- Signals for Bresenham lines
 -------------------------------------------------------------------------------------------------------------------------------------------------
-
 	signal x				: std_logic_vector(15 downto 0);	
 	signal x_Data		: std_logic_vector(15 downto 0);	
 	signal x_Load_H	: std_logic;				
@@ -189,6 +205,12 @@ architecture bhvr of GraphicsController is
 	signal i				: std_logic_vector(15 downto 0);
 	signal i_Data		: std_logic_vector(15 downto 0);
 	signal i_Load_H	: std_logic;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+-- Filled Rectangle
+-------------------------------------------------------------------------------------------------------------------------------------------------	
+
+	signal original_x1 : std_logic_vector(15 downto 0);	
 	
 Begin
 
@@ -616,6 +638,11 @@ Begin
 		-- Bresenham Line
 		variable x2Minusx1 : std_logic_vector(15 downto 0);
 		variable y2Minusy1 : std_logic_vector(15 downto 0);
+		
+		-- Circle
+		variable xCircle : std_logic_vector(15 downto 0);
+		variable yCircle : std_logic_vector(15 downto 0);
+		variable s2_temp : std_logic_vector(15 downto 0);
 	begin
 	
 	----------------------------------------------------------------------------------------------------------------------------------
@@ -644,12 +671,12 @@ Begin
 		Sig_ColourPalletteAddr			<= X"00";				-- default address to the colour pallette
 		Sig_ColourPalletteData			<= X"00000000" ;		-- default 00RRGGBB value to the colour pallette
 		Sig_ColourPallette_WE_H			<= '0'; 					-- default is NO write to the colour pallette
-		
-		-- Bresenham Line Signals
-		
+				
 		X1_Inc_1_H 						   <= '0';
 		X1_Inc_2_H							<= '0';
 		Y1_Inc_1_H							<= '0';
+				
+		-- Bresenham Line Signals
 		
 		x_Load_H								<= '0';
 		x_Data								<= X"0000";
@@ -687,6 +714,9 @@ Begin
 		
 		x2Minusx1 := X"0000";
 		y2Minusy1 := X"0000";
+		xCircle := X"0000";
+		yCircle := X"0000";
+		s2_temp := X"0000";
 				
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------				
 		if(CurrentState = Idle ) then
@@ -723,7 +753,10 @@ Begin
 				NextState <= DrawVline;
 			elsif(Command = ALine) then
 				NextState <= DrawLine;	
-				
+			elsif(Command = FilledRectangle) then
+				NextState <= DrawFilledRectangle;	
+			elsif(Command = Circle) then
+				NextState <= DrawCircle;	
 			-- add other code to process any new commands here e.g. draw a circle if you decide to implement that
 			-- or draw a rectangle etc
 			
@@ -1057,6 +1090,288 @@ Begin
 			error_Load_H <= '1';
 			
 			NextState <= DrawLine3;
+		
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		-- Drawing filled rectangle register setup
+		elsif(CurrentState = DrawFilledRectangle) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			x_data <= x1;
+			x_load_H <= '1';
+			NextState <= DrawFilledRectangle1;
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		-- Main loop to draw each horizontal line in the filled rectangle
+		elsif(CurrentState = DrawFilledRectangle1) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			if(OKTODRAW_L = '0') then
+				Sig_AddressOut 	<= Y1(8 downto 0) & x(9 downto 1);
+				Sig_RW_Out <= '0';
+				
+				-- If even address, draw to the first pixel
+				if(x(0) = '0') then
+					Sig_UDS_Out_L 	<= '0';	
+					
+					-- Optimization: If still within x2 limit, write to the other pixel as well.
+					if(x + 1 <= x2) then
+						Sig_LDS_Out_L <= '0';
+					
+						x_data <= x + 2;
+						x_load_H <= '1';
+					end if;
+					
+				-- Otherwise, odd address, draw to second pixel (rest will now be even)
+				else 
+					Sig_LDS_Out_L <= '0';
+					
+					x_data <= x + 1;
+					x_load_h <= '1';
+				end if;
+				
+				-- We're done if x1 has reached x2
+				if(x >= x2) then
+					NextState <= DrawFilledRectangle2;
+				else
+					NextState <= DrawFilledRectangle1;
+				end if;
+			-- Wait in this state until ready to draw
+			else
+				NextState <= DrawFilledRectangle1;
+			end if;
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		-- Increment y axis in filled rectangle
+		elsif(CurrentState = DrawFilledRectangle2) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			-- We want to now draw the next horizontal line. Set x back to x1, increment y.
+			x_data <= X1;
+			x_load_H <= '1';
+			y1_Inc_1_H <= '1';
+			if(Y1 >= Y2) then
+				NextState <= IDLE;
+			else
+				NextState <= DRawFilledRectangle1;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Set up registers
+		elsif(CurrentState = DrawCircle) then
+------------------------------------------------------------------------------
+			-- X2 has the radius argument
+			x_Data <= X2;
+			x_Load_H <= '1';
+			y_Data <= X"0000";
+			y_Load_H <= '1';
+
+			s2_Data <= X"0000";
+			s2_Load_H <= '1';
+			
+			NextState <= DrawCircle1;
+
+------------------------------------------------------------------------------
+		-- Main loop while(x >= y)
+		elsif(CurrentState = DrawCircle1) then
+------------------------------------------------------------------------------		
+			if(y <= x) then
+				NextState <= DrawCircle2;
+			else
+				NextState <= IDLE;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Octant 1
+		elsif(CurrentState = DrawCircle2) then
+------------------------------------------------------------------------------
+			xCircle := x + X1;
+			yCircle := y + Y1;
+
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yCircle(8 downto 0) & xCircle(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xCircle(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+				
+				NextState <= DrawCircle3;
+			else
+				NextState <= DrawCircle2;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Octant 2
+		elsif(CurrentState = DrawCircle3) then
+------------------------------------------------------------------------------
+			xCircle := x1 + y;
+			yCircle := y1 + x;
+
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yCircle(8 downto 0) & xCircle(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xCircle(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle4;
+			else
+				NextState <= DrawCircle3;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Octant 3
+		elsif(CurrentState = DrawCircle4) then
+------------------------------------------------------------------------------
+			xCircle := x1 - y;
+			yCircle := y1 + x;
+
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yCircle(8 downto 0) & xCircle(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xCircle(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle5;
+			else
+				NextState <= DrawCircle4;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Octant 4
+		elsif(CurrentState = DrawCircle5) then
+------------------------------------------------------------------------------
+			xCircle := x1 - x;
+			yCircle := y1 + y;
+
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yCircle(8 downto 0) & xCircle(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xCircle(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle6;
+			else
+				NextState <= DrawCircle5;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Octant 5
+		elsif(CurrentState = DrawCircle6) then
+------------------------------------------------------------------------------
+			xCircle := x1 - x;
+			yCircle := Y1 - y;
+
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yCircle(8 downto 0) & xCircle(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xCircle(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle7;
+			else
+				NextState <= DrawCircle6;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Octant 6
+		elsif(CurrentState = DrawCircle7) then
+------------------------------------------------------------------------------
+			xCircle := X1 - y;
+			yCircle := Y1 - x;
+
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yCircle(8 downto 0) & xCircle(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xCircle(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle8;
+			else
+				NextState <= DrawCircle7;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Octant 7
+		elsif(CurrentState = DrawCircle8) then
+------------------------------------------------------------------------------
+			xCircle := x1 + y;
+			yCircle := y1 - x;
+
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yCircle(8 downto 0) & xCircle(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xCircle(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle9;
+			else
+				NextState <= DrawCircle8;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Octant 8
+		elsif(CurrentState = DrawCircle9) then
+------------------------------------------------------------------------------
+			xCircle := x1 + x;
+			yCircle := y1 - y;
+
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yCircle(8 downto 0) & xCircle(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xCircle(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle10;
+			else
+				NextState <= DrawCircle9;
+			end if;
+
+------------------------------------------------------------------------------
+		-- Check error bounds and update x/y accordignly
+		elsif(CurrentState = DrawCircle10) then
+------------------------------------------------------------------------------		
+			if(s2 <= X"0000") then
+				y_Data <= y + 1;
+				y_Load_H <= '1';
+			
+				s2_temp := (y + 1);
+				s2_Data <= s2 + (s2_temp(14 downto 0) & '0') + 1;
+				s2_Load_H <= '1';
+			else
+				x_Data <= x - 1;
+				x_Load_H <= '1';
+				
+				s2_temp := x - 1;
+				s2_Data <= s2 - ((s2_temp(14 downto 0) & '0') + 1);
+				s2_Load_H <= '1';
+			end if;
+
+			NextState <= DrawCircle1;
 		end if;
 	end process;
 end;
