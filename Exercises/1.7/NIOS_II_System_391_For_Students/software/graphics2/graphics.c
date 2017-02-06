@@ -129,7 +129,7 @@ void DrawBresenhamCircle(int x1, int y1, int radius, int colour){
 }
 
 int MapToColour(int r, int g, int b){
-	int index = ((r / ColourDiff) * 4 * 4) + ((g / ColourDiff)* 4) +  b / ColourDiff;
+	int index = ((r / ColourDiff) * 3 * 3) + ((g / ColourDiff)* 3) +  b / ColourDiff;
 }
 
 int GetClosetColour(int r, int g, int b){
@@ -301,12 +301,6 @@ int main()
 {
 	printf("Hello from Nios II!\n");
 
-	int i;
-	for(i = 0; i < 256; ++i){
-		if(ColourPalletteData[i] == 0x00F5F5F5){
-			printf("%d\n", i);
-		}
-	}
 	printf("%d", MapToColour(102, 105, 5));
 
 	return 0;
