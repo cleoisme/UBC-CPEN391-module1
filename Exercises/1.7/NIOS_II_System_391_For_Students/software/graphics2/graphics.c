@@ -128,6 +128,10 @@ void DrawBresenhamCircle(int x1, int y1, int radius, int colour){
 	GraphicsCommandReg = DrawCircle;
 }
 
+int MapToColour(int r, int g, int b){
+	int index = ((r / ColourDiff) * 4 * 4) + ((g / ColourDiff)* 4) +  b / ColourDiff;
+}
+
 int GetClosetColour(int r, int g, int b){
 	Colour c = 0;
 	int minDiff = 256 * 3;
@@ -297,11 +301,13 @@ int main()
 {
 	printf("Hello from Nios II!\n");
 
-	DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
-	DrawBresenhamCircle(450, 300, 150, RED);
-	DrawBresenhamCircle(300, 250, 50, RED);
-	DrawBresenhamCircle(200, 150, 75, RED);
-	DrawBresenhamCircle(600, 200, 200, RED);
+	int i;
+	for(i = 0; i < 256; ++i){
+		if(ColourPalletteData[i] == 0x00F5F5F5){
+			printf("%d\n", i);
+		}
+	}
+	printf("%d", MapToColour(102, 105, 5));
 
 	return 0;
 }

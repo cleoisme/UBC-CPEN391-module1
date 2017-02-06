@@ -19,6 +19,8 @@
 // You should include this as part of the project so it gets compiled, but if you want to reference it in multiple source file
 // you should put an "extern" declaration in those source files e.g. extern const unsigned int ColourPalletteData[256]
 
+// Index 150 is where my custom colors start
+
 const unsigned int ColourPalletteData[256] = {
 0x00000000, // Black
 0x00FFFFFF, // White
@@ -172,110 +174,32 @@ const unsigned int ColourPalletteData[256] = {
 0x00F5F5F5, // White Smoke
 0x00FFFFFF, // White
 
-// Repeating colour - change these if you like
-0x00000000, // Black
-0x00FFFFFF, // White
-0x00FF0000, // Red
-0x0000FF00, // Green/Lime
-0x000000FF, // Blue
-0x00FFFF00, // Yellow
-0x0000FFFF, // Cyan
-0x00FF00FF, // Magenta
-0x00C0C0C0, // Silver
-0x00808080, // Gray
-0x00800000, // Maroon
-0x00808000, // Olive
-0x00008000, // DarkGreen
-0x00800080, // Purple
-0x00008080, // Teal
-0x00000080, // Navy
-0x008B0000, // Dark Red
-0x00A52A2A, // Brown
-0x00B22222, // FireBrick
-0x00DC143C, // Crimson
-0x00FF6347, // Tomato
-0x00FF7F50, // Coral
-0x00Cd5C5C, // Indian Red
-0x00F08080, // Light Coral
-0x00E9967A, // Dark Salmon
-0x00FA8072, // Salmon
-0x00FFA07A, // Light Salmon
-0x00FF4500, // Orange Red
-0x00FF8C00, // Dark Orange
-0x00FFA500, // Orange
-0x00FFD700, // Gold
-0x00B8860B, // Dark Golden Rod
-0x00DAA520, // Golden Rod
-0x00EEE8AA, // Pale Golden Rod
-0x00BDB76B, // Dark Kharki
-0x00F0E68C, // Khaki
-0x00808000, // Olive
-0x00FFFF00, // Yellow
-0x009ACD32, // Yellow Green
-0x00556B2F, // Dark Olive Green
-0x006B8E23, // Olive Drab
-0x007CFC00, // Lawn Green
-0x007FFF00, // Chart Reuse
-0x00ADFF2F, // Green Yellow
-0x00006400, // Dark Green
-0x00008000, // Green
-0x00228B22, // Forest Green
-0x0000FF00, // Green/Lime
-0x0032CD32, // Lime Green
-0x0090EE90, // Light Green
-0x0098FB98, // Pale Green
-0x008FBC8F, // Dark See Green
-0x0000FA9A, // Medium Spring Green
-0x0000FF7F, // Spring Green
-0x002E8B57, // Sea Green
-0x0066CDAA, // Medium Aqua Marine
-0x003CB371, // Medium Sea Green
-0x0020B2AA, // Light Sea Green
-0x002F4F4F, // Dark Slate Gray
-0x00008080, // Teal
-0x00008B8B, // Dark Cyan
-0x0000FFFF, // Aqua/Cyan
-0x00E0FFFF, // Light Cyan
-0x0000CED1, // Dark Turquise
-0x0040E0D0, // Turquoise
-0x0048D1CC, // Medium Turquoise
-0x00AFEEEE, // Pale Turquoise
-0x007FFFD4, // Aqua Marine
-0x00B0E0E6, // Powder Blue
-0x005F9EA0, // Cadet Blue
-0x004682B4, // Steel Blue
-0x006495ED, // Corn Flower Blue
-0x0000BFFF, // Deep Sky Blue
-0x001E90FF, // Dodger Blue
-0x00ADD8E6, // Light Blue
-0x0087CEEB, // Sky Blue
-0x0087CEFA, // Light Sky Blue
-0x00191970, // Midnight Blue
-0x00000080, // Navy
-0x0000008B, // Bark Blue
-0x000000CD, // Medium Blue
-0x000000FF, // Blue
-0x004169E1, // Royal Blue
-0x008A2BE2, // Blue Violet
-0x004B0082, // Indigo
-0x00483D8B, // Dark Slate Blue
-0x006A5ACD, // Slate Blue
-0x007B68EE, // Medium Slate Blue
-0x009370DB, // Medium Purple
-0x008B008B, // Dark Magenta
-0x009400D3, // Dark Violet
-0x009932CC, // Dark Orchid
-0x00BA55D3, // Medium Orchid
-0x00800080, // Purple
-0x00D8BFD8, // Thistle
-0x00DDA0DD, // Plum
-0x00EE82EE, // Violet
-0x00FF00FF, // Magenta/Fuchia
-0x00DA70D6, // Orchid
-0x00C71585, // Medium Violet Red
-0x00DB7093, // Pale Violet Red
-0x00FF1493, // Deep Pink
-0x00FF69B4, // Hot Pink
-0x00ffB6C1, // Light Pink
-0x00FFC0CB // Pink
+// Custom colors
+0x00000000
+0x00000056
+0x000000AC
+0x00005600;
+0x00005656;
+0x000056AC;
+0x0000AC00;
+0x0000AC56;
+0x0000ACAC;
+0x00560000;
+0x00560056;
+0x005600AC;
+0x00565600;
+0x00565656;
+0x005656AC;
+0x0056AC00;
+0x0056AC56;
+0x0056ACAC;
+0x00AC0000;
+0x00AC0056;
+0x00AC00AC;
+0x00AC5600;
+0x00AC5656;
+0x00AC56AC;
+0x00ACAC00;
+0x00ACAC56;
+0x00ACACAC;
 };

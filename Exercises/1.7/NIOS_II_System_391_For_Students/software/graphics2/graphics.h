@@ -7,6 +7,8 @@
 #define XRES 800
 #define YRES 480
 
+#define ColourDiff 86
+#define CustomColorIndex 150
 
 // #defined constants representing values we write to the graphics 'command' register to get
 // it to do something. You will add more values as you add hardware to the graphics chip
@@ -50,6 +52,11 @@ int ReadAPixel (int x, int y);
 void DrawHorizontalLine(int x1, int x2, int y, int Colour);
 void DrawVerticalLine(int y1, int y2, int x, int Colour);
 void DrawBresenhamLine(int x1, int x2, int y1, int y2, int Colour);
+void DrawString1(int x, int y, int colour, int background, char* string, int erase);
+void DrawString2(int x, int y, int colour, int background, char* string, int erase);
+void DrawRectangle(int x1, int x2, int y1, int y2, int colour);
+void DrawFilledRectangle(int x1, int x2, int y1, int y2, int colour);
+void DrawBresenhamCircle(int x1, int y1, int radius, int colour);
 void ProgramPalette(int PaletteNumber, int RGB);
 int GetClosetColour(int r, int g, int b);
 void DrawMap(char *fileName, int x, int y, int length, int width, int scale);
