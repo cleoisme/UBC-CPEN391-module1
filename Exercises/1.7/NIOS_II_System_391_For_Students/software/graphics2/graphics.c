@@ -110,10 +110,13 @@ void DrawRectangle(int x1, int x2, int y1, int y2, int colour){
 }
 
 void DrawFilledRectangle(int x1, int x2, int y1, int y2, int colour){
-	int col;
-	for (col = y1; col <= y2; ++col){
-		DrawHorizontalLine(x1, x2, col, colour);
-	}
+	WAIT_FOR_GRAPHICS;
+	GraphicsX1Reg = x1;
+	GraphicsX2Reg = x2;
+	GraphicsY1Reg = y1;
+	GraphicsY2Reg = y2;
+	GraphicsColourReg = colour;
+	GraphicsCommandReg = DrawFilledRect;
 }
 
 int GetClosetColour(int r, int g, int b){
@@ -290,12 +293,15 @@ int main()
 //	clock_t end = clock();
 //	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
-	DrawFilledRectangle(0, 800 , 0 ,480, WHITE);
-	clock_t begin2 = clock();
-	DrawMap2("/mnt/host/map3.bmp", 300, 400, 100, 100, 4);
+	DrawFilledRectangle(0, 400 , 0 , 300, RED);
+	DrawHorizontalLine(0, 300, 200, RED);
+	DrawVerticalLine(0, 200, 200, BLACK);
+
+//	clock_t begin2 = clock();
+//	DrawMap2("/mnt/host/map3.bmp", 300, 400, 100, 100, 4);
 	//DrawMap2("/mnt/host/map10.bmp", 300, 400, 300, 300, 1);
-	clock_t end2 = clock();
-	printf("%f\n", (double)(end2 - begin2) / CLOCKS_PER_SEC);
+//	clock_t end2 = clock();
+//	printf("%f\n", (double)(end2 - begin2) / CLOCKS_PER_SEC);
 
 	return 0;
 }

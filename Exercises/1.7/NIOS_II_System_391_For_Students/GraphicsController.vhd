@@ -132,6 +132,9 @@ architecture bhvr of GraphicsController is
 	constant DrawLine3				 	 			: Std_Logic_Vector(7 downto 0) := X"0D";		-- State for drawing any line
 	constant DrawLine4			 	 				: Std_Logic_Vector(7 downto 0) := X"0E";		-- State for drawing any line
 	constant DrawLine5				 	 			: Std_Logic_Vector(7 downto 0) := X"0F";		-- State for drawing any line
+	constant DrawFilledRectangle				 	: Std_Logic_Vector(7 downto 0) := X"10";		-- State for drawing any line
+	constant DrawFilledRectangle1				 	: Std_Logic_Vector(7 downto 0) := X"11";		-- State for drawing any line
+	constant DrawFilledRectangle2				 	: Std_Logic_Vector(7 downto 0) := X"12";		-- State for drawing any line
 	constant DrawPixel							 	: Std_Logic_Vector(7 downto 0) := X"05";		-- State for drawing a pixel
 	constant ReadPixel							 	: Std_Logic_Vector(7 downto 0) := X"06";		-- State for reading a pixel
 	constant ReadPixel1							 	: Std_Logic_Vector(7 downto 0) := X"07";		-- State for reading a pixel
@@ -146,6 +149,7 @@ architecture bhvr of GraphicsController is
 	constant Hline								 		: Std_Logic_Vector(15 downto 0) := X"0001";	-- command to Graphics chip from NIOS is draw Horizontal line
 	constant Vline									 	: Std_Logic_Vector(15 downto 0) := X"0002";	-- command to Graphics chip from NIOS is draw Vertical line
 	constant ALine									 	: Std_Logic_Vector(15 downto 0) := X"0003";	-- command to Graphics chip from NIOS is draw any line
+	constant FilledRectangle						: Std_Logic_Vector(15 downto 0) := X"0004";	-- command to Graphics chip from NIOS is draw any line
 	constant	PutPixel									: Std_Logic_Vector(15 downto 0) := X"000a";	-- command to Graphics chip from NIOS to draw a pixel
 	constant	GetPixel									: Std_Logic_Vector(15 downto 0) := X"000b";	-- command to Graphics chip from NIOS to read a pixel
 	constant ProgramPallette						: Std_Logic_Vector(15 downto 0) := X"0010";	-- command to Graphics chip from NIOS is program one of the pallettes with a new RGB value
@@ -189,6 +193,12 @@ architecture bhvr of GraphicsController is
 	signal i				: std_logic_vector(15 downto 0);
 	signal i_Data		: std_logic_vector(15 downto 0);
 	signal i_Load_H	: std_logic;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+-- Filled Rectangle
+-------------------------------------------------------------------------------------------------------------------------------------------------	
+
+	signal original_x1 : std_logic_vector(15 downto 0);	
 	
 Begin
 
@@ -644,12 +654,12 @@ Begin
 		Sig_ColourPalletteAddr			<= X"00";				-- default address to the colour pallette
 		Sig_ColourPalletteData			<= X"00000000" ;		-- default 00RRGGBB value to the colour pallette
 		Sig_ColourPallette_WE_H			<= '0'; 					-- default is NO write to the colour pallette
-		
-		-- Bresenham Line Signals
-		
+				
 		X1_Inc_1_H 						   <= '0';
 		X1_Inc_2_H							<= '0';
 		Y1_Inc_1_H							<= '0';
+				
+		-- Bresenham Line Signals
 		
 		x_Load_H								<= '0';
 		x_Data								<= X"0000";
@@ -723,7 +733,8 @@ Begin
 				NextState <= DrawVline;
 			elsif(Command = ALine) then
 				NextState <= DrawLine;	
-				
+			elsif(Command = FilledRectangle) then
+				NextState <= DrawFilledRectangle;	
 			-- add other code to process any new commands here e.g. draw a circle if you decide to implement that
 			-- or draw a rectangle etc
 			
@@ -1057,6 +1068,65 @@ Begin
 			error_Load_H <= '1';
 			
 			NextState <= DrawLine3;
+		
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		-- Drawing filled rectangle register setup
+		elsif(CurrentState = DrawFilledRectangle) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			x_data <= x1;
+			x_load_H <= '1';
+			NextState <= DrawFilledRectangle1;
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		-- Main loop to draw each horizontal line in the filled rectangle
+		elsif(CurrentState = DrawFilledRectangle1) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			if(OKTODRAW_L = '0') then
+				Sig_AddressOut 	<= Y1(8 downto 0) & x(9 downto 1);
+				Sig_RW_Out <= '0';
+				
+				-- If even address, draw to the first pixel
+				if(x(0) = '0') then
+					Sig_UDS_Out_L 	<= '0';	
+					
+					-- Optimization: If still within x2 limit, write to the other pixel as well.
+					if(x + 1 <= x2) then
+						Sig_LDS_Out_L <= '0';
+					
+						x_data <= x + 2;
+						x_load_H <= '1';
+					end if;
+					
+				-- Otherwise, odd address, draw to second pixel (rest will now be even)
+				else 
+					Sig_LDS_Out_L <= '0';
+					
+					x_data <= x + 1;
+					x_load_h <= '1';
+				end if;
+				
+				-- We're done if x1 has reached x2
+				if(x >= x2) then
+					NextState <= DrawFilledRectangle2;
+				else
+					NextState <= DrawFilledRectangle1;
+				end if;
+			-- Wait in this state until ready to draw
+			else
+				NextState <= DrawFilledRectangle1;
+			end if;
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		-- Main loop to increment y axis in filled rectangle
+		elsif(CurrentState = DrawFilledRectangle2) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			-- We want to now draw the next horizontal line. Set x back to x1, increment y.
+			x_data <= X1;
+			x_load_H <= '1';
+			y1_Inc_1_H <= '1';
+			if(Y1 >= Y2) then
+				NextState <= IDLE;
+			else
+				NextState <= DRawFilledRectangle1;
+			end if;
 		end if;
 	end process;
 end;
