@@ -129,7 +129,10 @@ void DrawBresenhamCircle(int x1, int y1, int radius, int colour){
 }
 
 int MapToColour(int r, int g, int b){
-	int index = ((r / ColourDiff) * 3 * 3) + ((g / ColourDiff)* 3) +  b / ColourDiff;
+	int r2 = ((r + ColourDiff / 2) / ColourDiff) * ColoursInRGB * ColoursInRGB;
+	int g2 = ((g + ColourDiff / 2) / ColourDiff) * ColoursInRGB;
+	int b2 = ((b + ColourDiff / 2) / ColourDiff);
+	return r2 + g2 + b2 + CustomColorIndex;
 }
 
 int GetClosetColour(int r, int g, int b){
@@ -218,43 +221,57 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
 	 for(i=0; i<54; i++) getc(streamIn);  // strip out BMP header
 
 	 int row_padded = (length*3 + 3) & (~3);
-	 unsigned char data[row_padded];
-	 unsigned char tmp;
+	 unsigned char data[width][row_padded];
 
-	 int row, col, count;
-	 row = col = count = 0;
+	 int row, col;
+	 for(row = 0; row < width; ++row){
+		 fread(data[width - 1 - row], sizeof(unsigned char), row_padded, streamIn);
+	 }
+	 printf("boom\n");
 	 int currX = x;
 	 int currY = y;
 	 for(row = 0; row < width; ++row){
-		 fread(data, sizeof(unsigned char), row_padded, streamIn);
-		 for(col = 0; col < length * 3; col +=3){
-			 tmp = data[col];
-			 data[col] = data[col + 2];
-			 data[col + 2] = tmp;
+		 for(col = 0; col < length * 3; col += 3){
+			 //printf("Pixel: %d, R:%d, G:%d, B:%d\n", count++, (int)data[row][col], (int)data[row][col + 1], (int)data[row][col + 2]);
+			 int c = MapToColour(data[row][col + 2], data[row][col + 1], data[row][col]);
 
-			 Colour c = GetClosetColour(data[col], data[col + 1], data[col + 2]);
-
-			 int currX2;
-			 int currY2;
-			 for(currY2 = currY; currY2 > currY - scale; --currY2){
+			 int currX2, currY2;
+			 for(currY2 = currY; currY2 < currY + scale; ++currY2){
 				 for(currX2 = currX; currX2 < currX + scale; ++currX2){
-					 WriteAPixel(currX2, currY2, c) ;
+					 WriteAPixel(currX2, currY2, c);
 				 }
 			 }
-
 			 currX = currX2;
-			 //printf("Pixel: %d, R:%d, G:%d, B:%d\n", count++, (int)data[j], (int)data[j + 1], (int)data[j + 2]);
 		 }
 
-		 currY -= scale;
 		 currX = x;
-		 //printf("%d", row);
+		 currY += scale;
 	 }
 
-
-
-
 	 fclose(streamIn);
+}
+
+void DrawMap3(char *fileName, int x, int y, int length, int width, int scale){
+		 FILE *streamIn;
+		 streamIn = fopen(fileName, "rb");
+		 if (streamIn == (FILE *)0){
+		   perror("File opening error ocurred. Exiting program.\n");
+		   exit(0);
+		 }
+
+		 int i;
+
+		 unsigned char info[54];
+		 for(i=0; i<54; i++) getc(streamIn);  // strip out BMP header
+
+		 int row_padded = (length*3 + 3) & (~3);
+		 unsigned char data[row_padded * width];
+
+		 int row, col, count;
+		 row = col = count = 0;
+		 fread(data, sizeof(unsigned char), row_padded * width, streamIn);
+
+		 fclose(streamIn);
 }
 
 void TestShapes(){
@@ -301,7 +318,17 @@ int main()
 {
 	printf("Hello from Nios II!\n");
 
-	printf("%d", MapToColour(102, 105, 5));
+	int i;
+//	for(i = 0; i < 256; ++i){
+//		ProgramPalette(i, ColourPalletteData[i]);
+//	}
+	DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+
+	printf("start");
+	clock_t begin = clock();
+	DrawMap2("/mnt/host/map200x100v2.bmp", 0, 0, 200, 100, 4);
+	clock_t end = clock();
+	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
 	return 0;
 }
