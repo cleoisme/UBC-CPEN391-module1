@@ -2,6 +2,7 @@
 #include <altera_up_sd_card_avalon_interface.h>
 
 int main(void){
+	printf("Code working");
 	alt_up_sd_card_dev *device_reference = NULL;
 	int connected = 0;
 
