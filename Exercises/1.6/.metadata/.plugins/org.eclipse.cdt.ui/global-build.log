@@ -1,0 +1,106 @@
+
+**** Build of configuration Nios II for project bluetooth ****
+
+make all 
+      3 [main] sh 6756 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] sh 6620 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      3 [main] echo 5980 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+Info: Building ../bluetooth_bsp/
+the public mailing list cygwin@cygwin.com
+make --no-print-directory -C ../bluetooth_bsp/
+      1 [main] pwd 6504 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] sh 3572 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      1 [main] sh 5916 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+[BSP build complete]
+      2 [main] true 6640 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] sh 6456 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+[bluetooth build complete]
+
+**** Build Finished ****
+
+**** Build of configuration Nios II for project bluetooth ****
+
+make all 
+      2 [main] sh 6432 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] sh 7004 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] echo 6836 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+Info: Building ../bluetooth_bsp/
+the public mailing list cygwin@cygwin.com
+make --no-print-directory -C ../bluetooth_bsp/
+      2 [main] pwd 6492 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] sh 4876 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      1 [main] sh 2044 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+[BSP build complete]
+      2 [main] echo 1120 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+Info: Compiling hello_world.c to obj/default/hello_world.o
+the public mailing list cygwin@cygwin.com
+      2 [main] mkdir 1692 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+nios2-elf-gcc -xc -MP -MMD -c -I../bluetooth_bsp//HAL/inc -I../bluetooth_bsp/ -I../bluetooth_bsp//drivers/inc  -DSYSTEM_BUS_WIDTH=32 -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -EL -mhw-div -mhw-mul -mno-hw-mulx  -o obj/default/hello_world.o hello_world.c
+the public mailing list cygwin@cygwin.com
+hello_world.c: In function 'main':
+hello_world.c:135: warning: passing argument 1 of 'send_command' discards qualifiers from pointer target type
+hello_world.c:141: warning: passing argument 1 of 'send_command' discards qualifiers from pointer target type
+      3 [main] true 7040 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] echo 6132 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+Info: Linking bluetooth.elf
+the public mailing list cygwin@cygwin.com
+nios2-elf-g++  -T'../bluetooth_bsp//linker.x' -msys-crt0='../bluetooth_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../bluetooth_bsp/   -Wl,-Map=bluetooth.map   -O0 -g -Wall   -EL -mhw-div -mhw-mul -mno-hw-mulx  -o bluetooth.elf obj/default/hello_world.o -lm 
+nios2-elf-insert bluetooth.elf --thread_model hal --cpu_name nios2_qsys_0 --qsys true --simulation_enabled false --stderr_dev jtag_uart_0 --stdin_dev jtag_uart_0 --stdout_dev jtag_uart_0 --sopc_system_name nios_system --quartus_project_dir "F:/curriculum/VHDLRefresher/CPEN391/Exercises/1.6/NIOS_II_System_391_For_Students" --sopcinfo F:/curriculum/VHDLRefresher/CPEN391/Exercises/1.6/NIOS_II_System_391_For_Students/nios_system.sopcinfo
+      2 [main] sh 5288 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] uname 4680 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] sh 1328 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+Info: (bluetooth.elf) 61 KBytes program size (code + initialized data).
+Info:                 8123 KBytes free for stack + heap.
+      2 [main] echo 4768 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+Info: Creating bluetooth.objdump
+the public mailing list cygwin@cygwin.com
+nios2-elf-objdump --disassemble --syms --all-header --source bluetooth.elf >bluetooth.objdump
+      3 [main] sh 6468 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] sh 4688 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+[bluetooth build complete]
+
+**** Build Finished ****
+
+**** Build of configuration Nios II for project bluetooth ****
+
+make all 
+      2 [main] sh 7040 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      1 [main] sh 6516 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      1 [main] echo 6048 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+Info: Building ../bluetooth_bsp/
+the public mailing list cygwin@cygwin.com
+make --no-print-directory -C ../bluetooth_bsp/
+      2 [main] pwd 5328 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      1 [main] sh 6620 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      2 [main] sh 6508 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+[BSP build complete]
+      2 [main] true 3836 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+      1 [main] sh 4332 find_fast_cwd: WARNING: Couldn't compute FAST_CWD pointer.  Please report this problem to
+the public mailing list cygwin@cygwin.com
+[bluetooth build complete]
+
+**** Build Finished ****

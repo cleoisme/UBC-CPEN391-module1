@@ -103,7 +103,7 @@ ACDS_VERSION := 13.0sp1
 # BUILD_NUMBER: 232
 
 SETTINGS_FILE := settings.bsp
-SOPC_FILE := Z:/cpen391/VHDLRefresher/CPEN391/Exercises/1.6/NIOS_II_System_391_For_Students/nios_system.sopcinfo
+SOPC_FILE := F:/curriculum/VHDLRefresher/CPEN391/Exercises/1.6/NIOS_II_System_391_For_Students/nios_system.sopcinfo
 
 #-------------------------------------------------------------------------------
 #                             TOOL & COMMAND DEFINITIONS

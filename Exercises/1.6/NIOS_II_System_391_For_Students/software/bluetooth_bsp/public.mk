@@ -87,7 +87,7 @@ ACDS_VERSION := 13.0sp1
 
 # Qsys--generated SOPCINFO file. Required for resolving node instance ID's with 
 # design component names. 
-SOPCINFO_FILE := Z:/cpen391/VHDLRefresher/CPEN391/Exercises/1.6/NIOS_II_System_391_For_Students/nios_system.sopcinfo
+SOPCINFO_FILE := F:/curriculum/VHDLRefresher/CPEN391/Exercises/1.6/NIOS_II_System_391_For_Students/nios_system.sopcinfo
 
 # Big-Endian operation. 
 # setting BIG_ENDIAN is false
