@@ -1,5 +1,5 @@
 Flow report for lights
-Sun Feb 05 23:58:52 2017
+Mon Feb 06 11:05:29 2017
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -40,15 +40,15 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Flow Summary                                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Flow Status                        ; Successful - Sun Feb 05 23:58:48 2017           ;
+; Flow Status                        ; Successful - Mon Feb 06 11:05:24 2017           ;
 ; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
 ; Revision Name                      ; lights                                          ;
 ; Top-level Entity Name              ; SystemTopLevel                                  ;
 ; Family                             ; Cyclone II                                      ;
 ; Device                             ; EP2C35F672C6                                    ;
 ; Timing Models                      ; Final                                           ;
-; Total logic elements               ; 6,568 / 33,216 ( 20 % )                         ;
-;     Total combinational functions  ; 5,921 / 33,216 ( 18 % )                         ;
+; Total logic elements               ; 6,508 / 33,216 ( 20 % )                         ;
+;     Total combinational functions  ; 5,915 / 33,216 ( 18 % )                         ;
 ;     Dedicated logic registers      ; 3,208 / 33,216 ( 10 % )                         ;
 ; Total registers                    ; 3276                                            ;
 ; Total pins                         ; 240 / 475 ( 51 % )                              ;
@@ -64,7 +64,7 @@ applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 02/05/2017 23:57:13 ;
+; Start date & time ; 02/06/2017 11:03:12 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; lights              ;
 +-------------------+---------------------+
@@ -75,7 +75,7 @@ applicable agreement for further details.
 +-------------------------------------+---------------------------------------+---------------+----------------+----------------+
 ; Assignment Name                     ; Value                                 ; Default Value ; Entity Name    ; Section Id     ;
 +-------------------------------------+---------------------------------------+---------------+----------------+----------------+
-; COMPILER_SIGNATURE_ID               ; 91754621441.148636783309428           ; --            ; --             ; --             ;
+; COMPILER_SIGNATURE_ID               ; 128120928724933.148640779101428       ; --            ; --             ; --             ;
 ; CYCLONEII_OPTIMIZATION_TECHNIQUE    ; Speed                                 ; Balanced      ; --             ; --             ;
 ; EDA_OUTPUT_DATA_FORMAT              ; None                                  ; --            ; --             ; eda_simulation ;
 ; FITTER_EFFORT                       ; Standard Fit                          ; Auto Fit      ; --             ; --             ;
@@ -100,11 +100,11 @@ applicable agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:41     ; 1.0                     ; 698 MB              ; 00:00:41                           ;
-; Fitter                    ; 00:00:48     ; 1.0                     ; 848 MB              ; 00:00:48                           ;
-; Assembler                 ; 00:00:02     ; 1.0                     ; 481 MB              ; 00:00:02                           ;
-; TimeQuest Timing Analyzer ; 00:00:03     ; 1.0                     ; 529 MB              ; 00:00:03                           ;
-; Total                     ; 00:01:34     ; --                      ; --                  ; 00:01:34                           ;
+; Analysis & Synthesis      ; 00:00:58     ; 1.0                     ; 708 MB              ; 00:00:56                           ;
+; Fitter                    ; 00:01:07     ; 1.0                     ; 849 MB              ; 00:01:06                           ;
+; Assembler                 ; 00:00:03     ; 1.0                     ; 485 MB              ; 00:00:03                           ;
+; TimeQuest Timing Analyzer ; 00:00:04     ; 1.0                     ; 529 MB              ; 00:00:04                           ;
+; Total                     ; 00:02:12     ; --                      ; --                  ; 00:02:09                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
@@ -113,10 +113,10 @@ applicable agreement for further details.
 +---------------------------+------------------+-----------+------------+----------------+
 ; Module Name               ; Machine Hostname ; OS Name   ; OS Version ; Processor type ;
 +---------------------------+------------------+-----------+------------+----------------+
-; Analysis & Synthesis      ; AnthonyPC        ; Windows 7 ; 6.2        ; x86_64         ;
-; Fitter                    ; AnthonyPC        ; Windows 7 ; 6.2        ; x86_64         ;
-; Assembler                 ; AnthonyPC        ; Windows 7 ; 6.2        ; x86_64         ;
-; TimeQuest Timing Analyzer ; AnthonyPC        ; Windows 7 ; 6.2        ; x86_64         ;
+; Analysis & Synthesis      ; DESKTOP-37HR8HI  ; Windows 7 ; 6.2        ; x86_64         ;
+; Fitter                    ; DESKTOP-37HR8HI  ; Windows 7 ; 6.2        ; x86_64         ;
+; Assembler                 ; DESKTOP-37HR8HI  ; Windows 7 ; 6.2        ; x86_64         ;
+; TimeQuest Timing Analyzer ; DESKTOP-37HR8HI  ; Windows 7 ; 6.2        ; x86_64         ;
 +---------------------------+------------------+-----------+------------+----------------+
 
 

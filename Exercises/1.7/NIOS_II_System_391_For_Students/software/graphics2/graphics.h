@@ -7,8 +7,9 @@
 #define XRES 800
 #define YRES 480
 
-#define ColourDiff 86
-#define CustomColorIndex 150
+#define ColourDiff 86 // Difference between each colour in custom colors i.e 0x000000, 0x000056
+#define ColoursInRGB 4  // Number of Colours in each RGB: 0x00, 0x56, 0xAC, 0xFF
+#define CustomColorIndex 151 // Where the custom colors start in ColourPalleteData[]
 
 // #defined constants representing values we write to the graphics 'command' register to get
 // it to do something. You will add more values as you add hardware to the graphics chip
