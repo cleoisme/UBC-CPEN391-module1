@@ -45,7 +45,7 @@
 !*.qsf
 !*.qws
 ##
-!*.bdfs
+!*.bdf
 !*.vhd
 !*.v
 ##
@@ -60,7 +60,7 @@
 ##
 ## tbd
 
-!*.tcls
+!*.tcl
 
 # End of https://www.gitignore.io/api/alteraquartusii
 
@@ -111,6 +111,13 @@
 *.su
 *.idb
 *.pdb
+
+# Nios II files
+*.objdump
+*.map
+obj/
+*.bsp
+*.html
 
 # Kernel Module Compile Results
 *.mod*
