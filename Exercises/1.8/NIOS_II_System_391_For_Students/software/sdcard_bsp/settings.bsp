@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>6-Feb-2017 7:35:45 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1486438545544</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>6-Feb-2017 10:37:03 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1486449424006</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>F:\curriculum\CPEN391\Exercises\1.8\NIOS_II_System_391_For_Students\software\sdcard_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>F:\curriculum\CPEN391\Exercises\1.8\NIOS_II_System_391_For_Students\nios_system.sopcinfo</SopcDesignFile>
@@ -948,7 +948,7 @@
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>Altera_UP_SD_Card_Avalon_Interface_0</slaveDescriptor>
-                <addressRange>0x00002000 - 0x000023FF</addressRange>
+                <addressRange>0x00200400 - 0x002007FF</addressRange>
                 <addressSpan>1024</addressSpan>
                 <attributes/>
         </MemoryMap>

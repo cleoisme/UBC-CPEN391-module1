@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_qsys_0' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: F:/curriculum/CPEN391/Exercises/1.8/NIOS_II_System_391_For_Students/nios_system.sopcinfo
  *
- * Generated: Mon Feb 06 11:57:56 PST 2017
+ * Generated: Mon Feb 06 22:20:06 PST 2017
  */
 
 /*
@@ -60,7 +60,7 @@
  *
  */
 
-#define ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_BASE 0x2000
+#define ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_BASE 0x200400
 #define ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_IRQ -1
 #define ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_NAME "/dev/Altera_UP_SD_Card_Avalon_Interface_0"
