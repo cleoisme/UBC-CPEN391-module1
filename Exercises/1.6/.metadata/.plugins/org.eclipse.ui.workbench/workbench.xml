@@ -36,7 +36,7 @@
 </editorArea>
 <editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="hello_world.c" partName="hello_world.c" path="F:/curriculum/VHDLRefresher/CPEN391/Exercises/1.6/NIOS_II_System_391_For_Students/software/bluetooth/hello_world.c" title="hello_world.c" tooltip="bluetooth/hello_world.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/bluetooth/hello_world.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3385" selectionTopPixel="1933"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3381" selectionTopPixel="1933"/>
 </editor>
 </editors>
 <views>
