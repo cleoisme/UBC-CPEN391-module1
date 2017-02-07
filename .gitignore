@@ -39,14 +39,13 @@
 # software binary files
 ### tbd
 
-/*
 !/*.gitignore
 ##
 !*.qpf
 !*.qsf
 !*.qws
 ##
-!*.bdf
+!*.bdfs
 !*.vhd
 !*.v
 ##
@@ -61,7 +60,7 @@
 ##
 ## tbd
 
-!*.tcl
+!*.tcls
 
 # End of https://www.gitignore.io/api/alteraquartusii
 
