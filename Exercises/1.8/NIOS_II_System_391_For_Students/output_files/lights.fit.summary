@@ -1,12 +1,12 @@
-Fitter Status : Successful - Mon Feb 06 10:42:09 2017
+Fitter Status : Successful - Thu Feb 09 11:44:51 2017
 Quartus II 64-Bit Version : 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition
 Revision Name : lights
 Top-level Entity Name : NIOS_II_SYSTEM
 Family : Cyclone II
 Device : EP2C35F672C6
 Timing Models : Final
-Total logic elements : 8,359 / 33,216 ( 25 % )
-    Total combinational functions : 7,308 / 33,216 ( 22 % )
+Total logic elements : 8,250 / 33,216 ( 25 % )
+    Total combinational functions : 7,313 / 33,216 ( 22 % )
     Dedicated logic registers : 4,783 / 33,216 ( 14 % )
 Total registers : 4851
 Total pins : 194 / 475 ( 41 % )

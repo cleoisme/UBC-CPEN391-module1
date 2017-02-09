@@ -181,3 +181,7 @@ local.properties
 .recommenders/
 
 # End of https://www.gitignore.io/api/eclipse,c
+
+# Extra
+*db*/
+*bsp*/

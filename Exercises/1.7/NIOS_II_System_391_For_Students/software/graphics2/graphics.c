@@ -291,11 +291,13 @@ void TestShapes(){
 	DrawBresenhamLine(600, 300, 300, 0, YELLOW);
 
 	DrawString1(300, 150, RED, WHITE, "abcderfg", 1);
-	DrawString2(300, 150, RED, WHITE, "abcderfg", 0);
+	DrawString2(400, 150, RED, WHITE, "abcderfg", 0);
 
 	DrawRectangle(30, 200, 50, 150, CYAN);
 
 	DrawFilledRectangle(100, 200, 300, 350, 12);
+
+	DrawBresenhamCircle(400, 400, 50, BLUE);
 }
 
 
@@ -322,13 +324,15 @@ int main()
 //	for(i = 0; i < 256; ++i){
 //		ProgramPalette(i, ColourPalletteData[i]);
 //	}
-	DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+//	DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+//
+//	printf("start");
+//	clock_t begin = clock();
+//	DrawMap2("/mnt/host/map200x100v2.bmp", 0, 0, 200, 100, 4);
+//	clock_t end = clock();
+//	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
-	printf("start");
-	clock_t begin = clock();
-	DrawMap2("/mnt/host/map200x100v2.bmp", 0, 0, 200, 100, 4);
-	clock_t end = clock();
-	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
+	TestShapes();
 
 	return 0;
 }
