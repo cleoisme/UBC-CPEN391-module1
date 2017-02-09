@@ -185,3 +185,17 @@ local.properties
 # Extra
 *db*/
 *bsp*/
+*.qsys_edit/
+*.asm.rpt
+*.done
+*.fit*
+*.fit*
+*.flow.rpt
+*.jdi
+*.map*
+*.sta*
+*.qws
+*.sopcinfo
+*.cdf
+*.sof
+.
