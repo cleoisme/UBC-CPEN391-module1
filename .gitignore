@@ -184,7 +184,7 @@ local.properties
 
 # Extra
 *db*/
-*bsp*/
+*bsp/
 *.qsys_edit/
 *.asm.rpt
 *.done
