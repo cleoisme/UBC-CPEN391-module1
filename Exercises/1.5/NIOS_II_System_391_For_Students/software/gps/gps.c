@@ -718,9 +718,9 @@ void test() {
 				alt_up_character_lcd_string(char_lcd_dev, location_str);
 
 				printf("Format: %s", format);
-				printf("Time (HH: MM:ss) : %d, %d, %d", hour, minute, milliseconds);
+				printf("Time (HH: MM:ss) : %d, %d, %d", hour, minute, seconds);
 				printf("Date (day:month:year): %d, %d, %d", day, month, year);
-				printf("Location (latitude, longitude):%.2f, %c, %.2f, %c", latitude, lat, longitude, lon);
+				printf("Location (latitude, longitude):%f, %c, %f, %c", latitude, lat, longitude, lon);
 				printf("Geoidheight : %.2f", geoidheight);
 				printf("Altitude: %.2f", altitude);
 
@@ -734,6 +734,8 @@ void test() {
 
 int main() {
 
+	  while(1) {
 	  location loc = getLocationData();
+	  }
 	  return 0;
 }
