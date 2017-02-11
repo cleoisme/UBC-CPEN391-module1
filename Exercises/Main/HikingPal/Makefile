@@ -149,6 +149,7 @@ C_SRCS += SDCard_Test_Program.c
 C_SRCS += fonts.c
 C_SRCS += gps.c
 C_SRCS += graphics.c
+C_SRCS += wifi.c
 CXX_SRCS :=
 ASM_SRCS :=
 

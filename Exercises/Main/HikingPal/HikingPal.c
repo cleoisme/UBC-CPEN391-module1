@@ -18,6 +18,7 @@
 #include "graphics.h"
 #include "SDCard_Test_Program.h"
 #include "gps.h"
+#include "wifi.h"
 
 int main()
 {
@@ -26,6 +27,7 @@ int main()
   DrawFilledRectangle(0, 800, 0, 480, 0);
   getLocationData();
   TestSDCard();
+  Wifi_Init();
 
   return 0;
 }
