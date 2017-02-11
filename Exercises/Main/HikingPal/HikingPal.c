@@ -15,12 +15,13 @@
  */
 
 #include <stdio.h>
-#include "../../1.7/NIOS_II_System_391_For_Students/software/graphics2/graphics.h"
+#include "graphics.h"
 
 int main()
 {
   printf("Hello from Nios II!\n");
   TestShapes();
+  DrawFilledRectangle(0, 800, 0, 480, 0);
 
   return 0;
 }

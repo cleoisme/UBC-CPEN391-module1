@@ -142,7 +142,11 @@ ACDS_VERSION := 13.0sp1
 ELF := HikingPal.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := HikingPal.c
+C_SRCS += ColourPalletteData.c
+C_SRCS += OutGraphicsCharFont.c
+C_SRCS += fonts.c
+C_SRCS += graphics.c
+C_SRCS += HikingPal.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -177,7 +181,7 @@ CRT0 :=
 SYS_LIB :=
 
 # Define path to the root of the BSP.
-BSP_ROOT_DIR := C:/altera/13.0sp1/CPEN391/Exercises/HikingPal_bsp/
+BSP_ROOT_DIR := C:/altera/13.0sp1/CPEN391/Exercises/Main/HikingPal_bsp/
 
 # List of application specific include directories, library directories and library names
 APP_INCLUDE_DIRS :=
