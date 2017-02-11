@@ -16,12 +16,16 @@
 
 #include <stdio.h>
 #include "graphics.h"
+#include "SDCard_Test_Program.h"
+#include "gps.h"
 
 int main()
 {
   printf("Hello from Nios II!\n");
   TestShapes();
   DrawFilledRectangle(0, 800, 0, 480, 0);
+  getLocationData();
+  TestSDCard();
 
   return 0;
 }
