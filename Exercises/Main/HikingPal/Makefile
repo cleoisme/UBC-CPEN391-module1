@@ -183,6 +183,7 @@ SYS_LIB :=
 # Define path to the root of the BSP.
 BSP_ROOT_DIR := C:/altera/13.0sp1/CPEN391/Exercises/Main/HikingPal_bsp/
 
+
 # List of application specific include directories, library directories and library names
 APP_INCLUDE_DIRS :=
 APP_LIBRARY_DIRS :=
@@ -192,7 +193,7 @@ APP_LIBRARY_NAMES :=
 BUILD_PRE_PROCESS :=
 BUILD_POST_PROCESS :=
 
-QUARTUS_PROJECT_DIR := C:/altera/13.0sp1/CPEN391/Exercises/1.9/
+QUARTUS_PROJECT_DIR := F:/curriculum/CPEN391/Exercises/1.9/
 
 
 #END GENERATED
