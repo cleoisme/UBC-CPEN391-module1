@@ -1,36 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <altera_up_sd_card_avalon_interface.h>
+#include <SDCard_Test_Program.h>
 
-void WriteToFile(){
-	short int myFileHandle;
-	int i;
-	if(alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
-		if((myFileHandle = alt_up_sd_card_fopen("test.txt", true)) != -1) {
-			printf("File Opened\n");
-			for(i = 0; i < 1024; i ++){
-				if(alt_up_sd_card_write(myFileHandle,'A') == false){
-					printf("Error writing to file...\n");
-					return;
-				}
-			}
-			printf("Done!!!\n");
-			alt_up_sd_card_fclose(myFileHandle);
-		}
-		else
-			printf("File NOT Opened\n");
-		}
-}
 
-int main(void){
+void TestSDCard(){
 	alt_up_sd_card_dev *device_reference = NULL;
 	int connected = 0;
-
+	printf("--------------------------------\n");
 	printf("Opening SDCard\n");
 	if((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL)
 	{
 		printf("SDCard Open FAILED\n");
-		return 0 ;
 	}
 	else
 		printf("SDCard Open PASSED\n");
@@ -54,8 +35,6 @@ int main(void){
 							printf("Found file: %s\n", file_name);
 						}
 					}
-
-					//WriteToFile();
 				}
 				else {
 					printf("Unknown file system.\n");
@@ -69,6 +48,32 @@ int main(void){
 	}
 	else
 		printf("Can't open device\n");
+}
+
+void WriteToFile(){
+	short int myFileHandle;
+	int i;
+	if(alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
+		if((myFileHandle = alt_up_sd_card_fopen("test.txt", true)) != -1) {
+			printf("File Opened\n");
+			for(i = 0; i < 1024; i ++){
+				if(alt_up_sd_card_write(myFileHandle,'A') == false){
+					printf("Error writing to file...\n");
+					return;
+				}
+			}
+			printf("Done!!!\n");
+			alt_up_sd_card_fclose(myFileHandle);
+		}
+		else
+			printf("File NOT Opened\n");
+		}
+}
+
+int main(void){
+
+	printf("Hello from Nios II \n");
+	TestSDCard();
 
 	return 0;
 }
