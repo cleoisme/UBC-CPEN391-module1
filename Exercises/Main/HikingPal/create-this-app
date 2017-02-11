@@ -3,8 +3,8 @@
 # This script creates the hello_world application in this directory.
 
 
-BSP_DIR=C:/altera/13.0sp1/CPEN391/Exercises/HikingPal_bsp/
-QUARTUS_PROJECT_DIR=C:/altera/13.0sp1/CPEN391/Exercises/1.9/
+BSP_DIR=F:/curriculum/CPEN391/Exercises/Main/HikingPal_bsp/
+QUARTUS_PROJECT_DIR=F:/curriculum/CPEN391/Exercises/1.9/
 NIOS2_APP_GEN_ARGS="--elf-name HikingPal.elf --set OBJDUMP_INCLUDE_SOURCE 1 --src-files hello_world.c"
 
 
