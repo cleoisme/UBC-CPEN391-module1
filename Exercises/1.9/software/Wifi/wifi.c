@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#define WifiDongle_Control (*(volatile unsigned char *)(0x84000240))
-#define WifiDongle_Status (*(volatile unsigned char *)(0x84000240))
-#define WifiDongle_TxData (*(volatile unsigned char *)(0x84000242))
-#define WifiDongle_RxData (*(volatile unsigned char *)(0x84000242))
-#define WifiDongle_Baud (*(volatile unsigned char *)(0x84000244))
 
 void Wifi_Init(void) {
 	// Reset

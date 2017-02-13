@@ -198,4 +198,10 @@ local.properties
 *.sopcinfo
 *.cdf
 *.sof
-.
+synthesis/
+simulation/
+*.rpt
+*.pin
+*.sof
+*.cmp
+
