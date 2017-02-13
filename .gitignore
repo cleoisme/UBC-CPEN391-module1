@@ -204,4 +204,4 @@ simulation/
 *.pin
 *.sof
 *.cmp
-
+*.pof
