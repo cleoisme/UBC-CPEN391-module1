@@ -144,8 +144,8 @@ ELF := graphics2.elf
 # Paths to C, C++, and assembly source files.
 C_SRCS += OutGraphicsCharFont.c
 C_SRCS += fonts.c
-C_SRCS += graphics.c
 C_SRCS += ColourPalletteData.c
+C_SRCS += graphics.c
 CXX_SRCS :=
 ASM_SRCS :=
 

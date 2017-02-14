@@ -8,7 +8,11 @@
 #ifndef SDCARD_TEST_PROGRAM_H_
 #define SDCARD_TEST_PROGRAM_H_
 
+#define true 1
+#define false 0
+
 void TestSDCard();
 void WriteToFile();
+void GetBitmap(char* fileName, int bitmap[]);
 
 #endif /* SDCARD_TEST_PROGRAM_H_ */

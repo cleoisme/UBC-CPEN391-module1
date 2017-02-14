@@ -19,6 +19,8 @@
 #include <time.h>
 #include "graphics.h"
 #include "Colours.h"
+#include "SDCard_Test_Program.h"
+#include "touch.h"
 
 extern const unsigned int ColourPalletteData[256];
 
@@ -59,6 +61,7 @@ void DrawHorizontalLine(int x1, int x2, int y, int Colour)
 	GraphicsX1Reg = x1;
 	GraphicsX2Reg = x2;
 	GraphicsY1Reg = y;
+	GraphicsY2Reg = y;
 	GraphicsColourReg = Colour;
 	GraphicsCommandReg = DrawHLine;
 }
@@ -70,6 +73,7 @@ void DrawVerticalLine(int y1, int y2, int x, int Colour)
 	GraphicsY1Reg = y1;
 	GraphicsY2Reg = y2;
 	GraphicsX1Reg = x;
+	GraphicsX2Reg = x;
 	GraphicsColourReg = Colour;
 	GraphicsCommandReg = DrawVLine;
 }
@@ -103,6 +107,7 @@ void DrawString2(int x, int y, int colour, int background, char* string, int era
 }
 
 void DrawRectangle(int x1, int x2, int y1, int y2, int colour){
+	WAIT_FOR_GRAPHICS;
 	DrawHorizontalLine(x1, x2, y1, colour);
 	DrawHorizontalLine(x1, x2, y2, colour);
 	DrawVerticalLine(y1, y2, x1, colour);
@@ -251,27 +256,31 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
 	 fclose(streamIn);
 }
 
-void DrawMap3(char *fileName, int x, int y, int length, int width, int scale){
-		 FILE *streamIn;
-		 streamIn = fopen(fileName, "rb");
-		 if (streamIn == (FILE *)0){
-		   perror("File opening error ocurred. Exiting program.\n");
-		   exit(0);
-		 }
+void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale){
+	int bitmap[length*width + 54];
+	GetBitmap(fileName, bitmap);
 
-		 int i;
+	int row, col;
+	int currX = x;
+	int currY = y;
 
-		 unsigned char info[54];
-		 for(i=0; i<54; i++) getc(streamIn);  // strip out BMP header
+	for(row = 0; row < width; ++row){
+		for(col = 0; col < length * 3; col += 3){
+			//printf("Pixel: %d, R:%d, G:%d, B:%d\n", count++, (int)data[row][col], (int)data[row][col + 1], (int)data[row][col + 2]);
+			int c = MapToColour(bitmap[row * length + col + 2 + 54], bitmap[row * length + col + 1 + 54], bitmap[row * length + col + 54]);
 
-		 int row_padded = (length*3 + 3) & (~3);
-		 unsigned char data[row_padded * width];
+			int currX2, currY2;
+			for(currY2 = currY; currY2 < currY + scale; ++currY2){
+				for(currX2 = currX; currX2 < currX + scale; ++currX2){
+					WriteAPixel(currX2, currY2, c);
+				}
+			}
 
-		 int row, col, count;
-		 row = col = count = 0;
-		 fread(data, sizeof(unsigned char), row_padded * width, streamIn);
-
-		 fclose(streamIn);
+			currX = currX2;
+		}
+		currX = x;
+		currY += scale;
+	}
 }
 
 void TestShapes(){
@@ -282,6 +291,7 @@ void TestShapes(){
 	// read the pixels back and make sure we read 2 (RED) to prove it's working
 		//for(i = 0; i < 800; i ++)
 			//printf("Colour value (i.e. pallette number) = %d at [%d, 100]\n", ReadAPixel(i, 100), i);
+	//DrawFilledRectangle(0, 800, 0, 480, WHITE);
 
 	DrawHorizontalLine(0, 800, 400, CYAN);
 	DrawVerticalLine(0, 480, 400, MAGENTA);
@@ -313,4 +323,17 @@ void ProgramPalette(int PaletteNumber, int RGB)
     GraphicsX1Reg = RGB >> 16   ;          // program red value in ls.8 bit of X1 reg
     GraphicsY1Reg = RGB ;                	 // program green and blue into 16 bit of Y1 reg
     GraphicsCommandReg = ProgramPaletteColour;	// issue command
+}
+
+void ProgramAllPalette(){
+	int i;
+	for(i = 0; i < 256; ++i){
+		ProgramPalette(i, ColourPalletteData[i]);
+	}
+}
+
+void DrawButtons(){
+	DrawRectangle(20, 220, 350, 450, BLACK);
+	DrawRectangle(300, 500, 350, 450, BLACK);
+	DrawRectangle(580, 780, 350, 450, BLACK);
 }

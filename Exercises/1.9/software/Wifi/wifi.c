@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include "wifi.h"
 
 void Wifi_Init(void) {
 	// Reset

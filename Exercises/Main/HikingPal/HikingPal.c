@@ -20,16 +20,17 @@
 #include "gps.h"
 #include "wifi.h"
 #include "touch.h"
+#include "Colours.h"
 
 int main()
 {
   printf("Hello from Nios II!\n");
-  TestShapes();
-  //DrawFilledRectangle(0, 800, 0, 480, 0);
+  //DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+  //DrawButtons();
   //getLocationData();
   //TestSDCard();
-  Wifi_Init();
-  TouchLoop();
+  //Wifi_Init();
+  //TouchLoop();
 
   return 0;
 }

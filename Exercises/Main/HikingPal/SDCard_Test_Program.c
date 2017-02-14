@@ -54,10 +54,10 @@ void WriteToFile(){
 	short int myFileHandle;
 	int i;
 	if(alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
-		if((myFileHandle = alt_up_sd_card_fopen("test.txt", true)) != -1) {
+		if((myFileHandle = alt_up_sd_card_fopen("test.txt", true))) {
 			printf("File Opened\n");
 			for(i = 0; i < 1024; i ++){
-				if(alt_up_sd_card_write(myFileHandle,'A') == false){
+				if(!alt_up_sd_card_write(myFileHandle,'A')){
 					printf("Error writing to file...\n");
 					return;
 				}
@@ -68,4 +68,17 @@ void WriteToFile(){
 		else
 			printf("File NOT Opened\n");
 		}
+}
+
+void GetBitmap(char* fileName, int bitmap[]){
+	short int myFileHandle;
+	int i = 0;
+	int val = 0;
+	if(alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
+		if((myFileHandle = alt_up_sd_card_fopen(fileName, true))) {
+			while((val = alt_up_sd_card_read(alt_up_sd_card_read))){
+				bitmap[i++] = val;
+			}
+		}
+	}
 }
