@@ -25,10 +25,16 @@
 int main()
 {
   printf("Hello from Nios II!\n");
-  //DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
-  //DrawButtons();
+  DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+  DrawButtons();
   //getLocationData();
-  //TestSDCard();
+  ProgramAllPalette();
+  TestSDCard();
+  int bmp[160*80*3 + 54];
+  DrawMapSDCard("MAP.BMP", 0, 300, 160, 80, 5);
+  //DrawMap2("/mnt/host/map160x80final.bmp", 0, 0, 200, 100, 4);
+  //GetBitmap("MAP.BMP", bmp);
+  //ReadFromFile("MAP.BMP", bmp);
   //Wifi_Init();
   //TouchLoop();
 

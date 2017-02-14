@@ -215,6 +215,7 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
 	 //int image[400*400][3]; // first number here is 1024 pixels in my image, 3 is for RGB values
 	 FILE *streamIn;
 	 streamIn = fopen(fileName, "rb");
+	 printf("aaa");
 	 if (streamIn == (FILE *)0){
 	   perror("File opening error ocurred. Exiting program.\n");
 	   exit(0);
@@ -257,30 +258,37 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
 }
 
 void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale){
-	int bitmap[length*width + 54];
-	GetBitmap(fileName, bitmap);
+	short int bitmap[length*width * 3 + 54];
+	ReadFromFile(fileName, bitmap);
 
-	int row, col;
 	int currX = x;
-	int currY = y;
+	int currY = y + width;
+	int i;
 
-	for(row = 0; row < width; ++row){
-		for(col = 0; col < length * 3; col += 3){
-			//printf("Pixel: %d, R:%d, G:%d, B:%d\n", count++, (int)data[row][col], (int)data[row][col + 1], (int)data[row][col + 2]);
-			int c = MapToColour(bitmap[row * length + col + 2 + 54], bitmap[row * length + col + 1 + 54], bitmap[row * length + col + 54]);
+	printf("currX: %d", currX);
+	printf("currY: %d", currY);
 
-			int currX2, currY2;
-			for(currY2 = currY; currY2 < currY + scale; ++currY2){
-				for(currX2 = currX; currX2 < currX + scale; ++currX2){
-					WriteAPixel(currX2, currY2, c);
-				}
+	for(i = 0; i < length * width * 3; i += 3){
+		int c = MapToColour(bitmap[i + 2 + 54], bitmap[i + 1 + 54], bitmap[i + 54]);
+		int currX2, currY2;
+		for(currY2 = currY; currY2 > currY - scale; --currY2){
+			for(currX2 = currX; currX2 < currX + scale; ++currX2){
+				WriteAPixel(currX2, currY2, c);
+				//printf("currX: %d, currY: %d\n", currX2, currY2);
 			}
-
-			currX = currX2;
 		}
-		currX = x;
-		currY += scale;
+
+		currX = currX2;
+
+		if((i % (length * 3)) == 0){
+			currX = x;
+			currY -= scale;
+		}
 	}
+
+	printf("\n%d\n", i);
+	printf("currX: %d", currX);
+	printf("currY: %d", currY);
 }
 
 void TestShapes(){

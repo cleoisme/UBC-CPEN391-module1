@@ -3,7 +3,6 @@
 #include <altera_up_sd_card_avalon_interface.h>
 #include "SDCard_Test_Program.h"
 
-
 void TestSDCard(){
 	alt_up_sd_card_dev *device_reference = NULL;
 	int connected = 0;
@@ -18,6 +17,7 @@ void TestSDCard(){
 
 
 	if (device_reference != NULL ) {
+		printf("Reached level 1");
 		while(1) {
 			if ((connected == 0) && (alt_up_sd_card_is_Present())){
 				printf("Card connected.\n");
@@ -35,6 +35,9 @@ void TestSDCard(){
 							printf("Found file: %s\n", file_name);
 						}
 					}
+					WriteToFile();
+					return;
+
 				}
 				else {
 					printf("Unknown file system.\n");
@@ -51,13 +54,15 @@ void TestSDCard(){
 }
 
 void WriteToFile(){
-	short int myFileHandle;
+	int myFileHandle;
 	int i;
-	if(alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
-		if((myFileHandle = alt_up_sd_card_fopen("test.txt", true))) {
+	printf("Reached level 1");
+		myFileHandle = alt_up_sd_card_fopen("TEST.TXT", false);
+		printf("%d", myFileHandle);
+		if(myFileHandle != -1) {
 			printf("File Opened\n");
-			for(i = 0; i < 1024; i ++){
-				if(!alt_up_sd_card_write(myFileHandle,'A')){
+			for(i = 0; i < 1024; i++){
+				if(alt_up_sd_card_write(myFileHandle,'A') == false){
 					printf("Error writing to file...\n");
 					return;
 				}
@@ -67,18 +72,47 @@ void WriteToFile(){
 		}
 		else
 			printf("File NOT Opened\n");
-		}
+
 }
 
 void GetBitmap(char* fileName, int bitmap[]){
 	short int myFileHandle;
 	int i = 0;
 	int val = 0;
+	printf("dsfsdfsd");
 	if(alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
-		if((myFileHandle = alt_up_sd_card_fopen(fileName, true))) {
-			while((val = alt_up_sd_card_read(alt_up_sd_card_read))){
+		printf("hihih");
+		if((myFileHandle = alt_up_sd_card_fopen(fileName, true)) != -1) {
+			printf("aaa");
+			while((val = alt_up_sd_card_read(myFileHandle)) != - 1){
 				bitmap[i++] = val;
+				printf("%d + \n", val);
 			}
 		}
 	}
+}
+
+void ReadFromFile(char* fileName, short int bitmap[]){
+
+		int myFileHandle;
+		int i = 0;
+		printf("Reached level 1");
+		myFileHandle = alt_up_sd_card_fopen("MAP.BMP", false);
+		printf("%d", myFileHandle);
+		if(myFileHandle != -1){
+			printf("File Opened");
+
+		short int readChar =  alt_up_sd_card_read(myFileHandle);
+		while(readChar >= 0){
+			//printf("%d\n", readChar);
+			bitmap[i++] = readChar;
+			readChar = alt_up_sd_card_read(myFileHandle);
+		}
+
+		printf("\nlala %d\n", i);
+
+		printf("Done");
+		}else{
+			printf("File NOT OPENED");
+		}
 }
