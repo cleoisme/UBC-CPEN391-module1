@@ -142,7 +142,7 @@ ACDS_VERSION := 13.0sp1
 ELF := touch.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := hello_world.c
+C_SRCS := touch.c
 CXX_SRCS :=
 ASM_SRCS :=
 

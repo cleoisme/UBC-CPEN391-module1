@@ -15,6 +15,7 @@
  */
 
 #include <stdio.h>
+#include "touch.h"
 
 #define Touchscreen_Status 		(*(volatile unsigned char *)(0x84000230))
 #define Touchscreen_Control 	(*(volatile unsigned char *)(0x84000230))
@@ -82,9 +83,6 @@ void WaitForTouch()
 		;
 }
 
-/* a data type to hold a point/coord */
-typedef struct { int x, y; } Point ;
-
 Point GetPen(void){
 	Point p1;
 	int packets[4];
@@ -135,15 +133,10 @@ Point GetRelease(void)
 	 return GetPen();
 }
 
-int main()
-{
-  printf("Hello from Nios II!\n");
-  Init_Touch();
-
-  while(1){
-  	  GetPress();
-  	  GetRelease();
-  }
-
-  return 0;
+void TouchLoop(){
+	Init_Touch();
+	while(1){
+		GetPress();
+	  	GetRelease();
+	}
 }

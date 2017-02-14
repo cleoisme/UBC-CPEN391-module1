@@ -150,6 +150,7 @@ C_SRCS += fonts.c
 C_SRCS += gps.c
 C_SRCS += graphics.c
 C_SRCS += wifi.c
+C_SRCS += touch.c
 CXX_SRCS :=
 ASM_SRCS :=
 

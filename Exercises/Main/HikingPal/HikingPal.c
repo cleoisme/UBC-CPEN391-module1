@@ -19,15 +19,17 @@
 #include "SDCard_Test_Program.h"
 #include "gps.h"
 #include "wifi.h"
+#include "touch.h"
 
 int main()
 {
   printf("Hello from Nios II!\n");
   TestShapes();
-  DrawFilledRectangle(0, 800, 0, 480, 0);
-  getLocationData();
-  TestSDCard();
+  //DrawFilledRectangle(0, 800, 0, 480, 0);
+  //getLocationData();
+  //TestSDCard();
   Wifi_Init();
+  TouchLoop();
 
   return 0;
 }
