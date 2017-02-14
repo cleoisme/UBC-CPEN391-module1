@@ -63,5 +63,6 @@ int GetClosetColour(int r, int g, int b);
 void DrawMap(char *fileName, int x, int y, int length, int width, int scale);
 void DrawMap2(char *fileName, int x, int y, int length, int width, int scale);
 void TestShapes();
+void ProgramAllPalette();
 
 #endif

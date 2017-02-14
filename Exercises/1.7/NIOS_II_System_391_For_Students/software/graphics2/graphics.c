@@ -315,6 +315,13 @@ void ProgramPalette(int PaletteNumber, int RGB)
     GraphicsCommandReg = ProgramPaletteColour;	// issue command
 }
 
+void ProgramAllPalette(){
+	int i;
+	for(i = 0; i < 256; ++i){
+		ProgramPalette(i, ColourPalletteData[i]);
+	}
+}
+
 
 int main()
 {
@@ -328,7 +335,8 @@ int main()
 //
 //	printf("start");
 //	clock_t begin = clock();
-//	DrawMap2("/mnt/host/map200x100v2.bmp", 0, 0, 200, 100, 4);
+	//ProgramAllPalette();
+	//DrawMap2("/mnt/host/map200x100v2.bmp", 0, 0, 200, 100, 4);
 //	clock_t end = clock();
 //	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 

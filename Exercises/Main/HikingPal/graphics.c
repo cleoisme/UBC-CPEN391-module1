@@ -341,7 +341,8 @@ void ProgramAllPalette(){
 }
 
 void DrawButtons(){
-	DrawRectangle(20, 220, 350, 450, BLACK);
-	DrawRectangle(300, 500, 350, 450, BLACK);
-	DrawRectangle(580, 780, 350, 450, BLACK);
+	DrawRectangle(20, 220, 410, 470, BLACK);
+	DrawRectangle(300, 500, 410, 470, BLACK);
+	DrawRectangle(580, 780, 410, 470, BLACK);
+	DrawString2(80, 440, BLACK, WHITE, "View Trails", FALSE);
 }
