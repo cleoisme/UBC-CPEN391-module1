@@ -26,7 +26,7 @@ int main()
 {
   printf("Hello from Nios II!\n");
   DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
-  DrawButtons();
+
   //getLocationData();
   //ProgramAllPalette();
   //TestSDCard();

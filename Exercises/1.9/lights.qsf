@@ -341,6 +341,10 @@ set_location_assignment PIN_B22 -to ENET_WR_N
 set_location_assignment PIN_B23 -to ENET_RST_N
 set_location_assignment PIN_AE24 -to IRDA_TXD
 set_location_assignment PIN_AE25 -to IRDA_RXD
+set_location_assignment PIN_AD24 -to SD_DAT
+set_location_assignment PIN_AC23 -to SD_DAT3
+set_location_assignment PIN_Y21 -to SD_CMD
+set_location_assignment PIN_AD25 -to SD_CLK
 set_location_assignment PIN_K25 -to GPIO_1[0]
 set_location_assignment PIN_K26 -to GPIO_1[1]
 set_location_assignment PIN_M22 -to GPIO_1[2]
@@ -541,10 +545,4 @@ set_location_assignment PIN_V24 -to GPIO_1[32]
 set_location_assignment PIN_W25 -to GPIO_1[34]
 set_location_assignment PIN_V23 -to Wifi_RXD
 set_location_assignment PIN_W23 -to WiFi_TXD
-set_location_assignment PIN_V23 -to GPIO_1[33]
-set_location_assignment PIN_W23 -to GPIO_1[35]
-set_location_assignment PIN_AD25 -to SDCard_clock
-set_location_assignment PIN_Y21 -to SDCard_cmd
-set_location_assignment PIN_AD24 -to SDCard_dat
-set_location_assignment PIN_AC23 -to SDCard_dat3
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
