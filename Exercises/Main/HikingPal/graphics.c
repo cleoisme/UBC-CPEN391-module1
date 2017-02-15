@@ -379,3 +379,35 @@ int CheckButtonPress(int x, int y){
 
 	return -1;
 }
+
+void DrawSavedMaps(int savedMaps[10], MapButton maps[10]){
+	int i;
+	int j;
+	for(i = 0; i < 10; ++i){
+		if(savedMaps[i] != 0){
+			// draw the map
+			MapButton map;
+			map.x = 200;
+			map.y = (j * 30 + 10);
+			maps[j] = map;
+			j++;
+
+			// Draw the button
+			DrawRectangle(map.x, map.x + 100, map.y, map.y + 50, BLACK);
+			DrawString2(map.x + 35, map.y + 25, BLACK, WHITE, "map", 0);
+		}
+	}
+}
+
+int CheckMapButtonPress(MapButton maps[10], int x, int y){
+	int i;
+	for(i = 0; i < 10; ++i){
+		MapButton map = maps[i];
+		if(x >= map.x && x <= map.x + 100 && y >= map.y && y <= map.y + 50){
+			// pressed a button
+			return i;
+		}
+	}
+
+	return -1;
+}

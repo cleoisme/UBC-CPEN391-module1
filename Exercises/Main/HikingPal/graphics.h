@@ -48,6 +48,12 @@
 #define GraphicsColourReg		(*(volatile unsigned short int *)(0x8400000E))
 #define GraphicsBackGroundColourReg   		(*(volatile unsigned short int *)(0x84000010))
 
+typedef struct MapButton{
+	int x;
+	int y;
+	char* mapName;
+} MapButton;
+
 void WriteAPixel (int x, int y, int Colour);
 int ReadAPixel (int x, int y);
 void DrawHorizontalLine(int x1, int x2, int y, int Colour);
