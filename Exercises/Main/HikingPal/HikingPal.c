@@ -16,7 +16,6 @@
 
 #include <stdio.h>
 #include "graphics.h"
-#include "SDCard_Test_Program.h"
 #include "gps.h"
 #include "wifi.h"
 #include "touch.h"
@@ -26,6 +25,28 @@ int main()
 {
   printf("Hello from Nios II!\n");
   DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+  DrawButtons();
+  Init_Touch();
+
+  int press = 0;
+  while(1){
+	  if (CheckForTouch()){
+		  press++;
+		  if(press == 2){
+			  // release
+			  DrawButtons();
+			  press = 0;
+			  continue;
+		  }
+		  // press
+		  Point p = GetPen();
+		  int button = CheckButtonPress(p.x, p.y);
+		  DrawButtonPress(button);
+		  //printf("%d", p.x);
+		  //printf("%d", p.y);
+
+	  }
+  }
 
   //getLocationData();
   //ProgramAllPalette();

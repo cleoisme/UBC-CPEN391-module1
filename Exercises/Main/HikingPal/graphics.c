@@ -19,7 +19,6 @@
 #include <time.h>
 #include "graphics.h"
 #include "Colours.h"
-#include "SDCard_Test_Program.h"
 #include "touch.h"
 
 extern const unsigned int ColourPalletteData[256];
@@ -257,39 +256,39 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
 	 fclose(streamIn);
 }
 
-void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale){
-	short int bitmap[length*width * 3 + 54];
-	ReadFromFile(fileName, bitmap);
-
-	int currX = x;
-	int currY = y + width;
-	int i;
-
-	printf("currX: %d", currX);
-	printf("currY: %d", currY);
-
-	for(i = 0; i < length * width * 3; i += 3){
-		int c = MapToColour(bitmap[i + 2 + 54], bitmap[i + 1 + 54], bitmap[i + 54]);
-		int currX2, currY2;
-		for(currY2 = currY; currY2 > currY - scale; --currY2){
-			for(currX2 = currX; currX2 < currX + scale; ++currX2){
-				WriteAPixel(currX2, currY2, c);
-				//printf("currX: %d, currY: %d\n", currX2, currY2);
-			}
-		}
-
-		currX = currX2;
-
-		if((i % (length * 3)) == 0){
-			currX = x;
-			currY -= scale;
-		}
-	}
-
-	printf("\n%d\n", i);
-	printf("currX: %d", currX);
-	printf("currY: %d", currY);
-}
+//void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale){
+//	short int bitmap[length*width * 3 + 54];
+//	ReadFromFile(fileName, bitmap);
+//
+//	int currX = x;
+//	int currY = y + width;
+//	int i;
+//
+//	printf("currX: %d", currX);
+//	printf("currY: %d", currY);
+//
+//	for(i = 0; i < length * width * 3; i += 3){
+//		int c = MapToColour(bitmap[i + 2 + 54], bitmap[i + 1 + 54], bitmap[i + 54]);
+//		int currX2, currY2;
+//		for(currY2 = currY; currY2 > currY - scale; --currY2){
+//			for(currX2 = currX; currX2 < currX + scale; ++currX2){
+//				WriteAPixel(currX2, currY2, c);
+//				//printf("currX: %d, currY: %d\n", currX2, currY2);
+//			}
+//		}
+//
+//		currX = currX2;
+//
+//		if((i % (length * 3)) == 0){
+//			currX = x;
+//			currY -= scale;
+//		}
+//	}
+//
+//	printf("\n%d\n", i);
+//	printf("currX: %d", currX);
+//	printf("currY: %d", currY);
+//}
 
 void TestShapes(){
 	// draw a line across the screen in RED at y coord 100 and from x = 0 to 799
@@ -341,8 +340,42 @@ void ProgramAllPalette(){
 }
 
 void DrawButtons(){
+	DrawFilledRectangle(20, 220, 410, 470, WHITE);
+	DrawFilledRectangle(300, 500, 410, 470, WHITE);
+	DrawFilledRectangle(580, 780, 410, 470, WHITE);
 	DrawRectangle(20, 220, 410, 470, BLACK);
 	DrawRectangle(300, 500, 410, 470, BLACK);
 	DrawRectangle(580, 780, 410, 470, BLACK);
-	DrawString2(80, 440, BLACK, WHITE, "View Trails", FALSE);
+	DrawString2(40, 440, BLACK, WHITE, "View Trails", FALSE);
+	DrawString2(330, 440, BLACK, WHITE, "Save Trail", FALSE);
+	DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+}
+
+void DrawButtonPress(int button){
+	if (button == 1){
+		DrawFilledRectangle(20, 220, 410, 470, BLUE);
+	}
+	if (button == 2){
+		DrawFilledRectangle(300, 500, 410, 470, BLUE);
+	}
+	if (button == 3){
+		DrawFilledRectangle(580, 780, 410, 470, BLUE);
+	}
+	DrawString2(40, 440, BLACK, WHITE, "View Trails", FALSE);
+	DrawString2(330, 440, BLACK, WHITE, "Save Trail", FALSE);
+	DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+}
+
+int CheckButtonPress(int x, int y){
+	if (x >= 20 && x <= 220 && y >= 410 && y <= 470){
+		return 1;
+	}
+	if (x >= 300 && x <= 500 && y >= 410 && y <= 470){
+		return 2;
+	}
+	if (x >= 580 && x <= 780 && y >= 410 && y <= 470){
+		return 3;
+	}
+
+	return -1;
 }

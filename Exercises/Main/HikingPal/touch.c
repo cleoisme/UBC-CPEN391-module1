@@ -83,14 +83,15 @@ void WaitForTouch()
 		;
 }
 
-Point GetPen(void){
+int CheckForTouch(){
+	return ScreenTouched();
+}
+
+Point GetPen(){
 	Point p1;
 	int packets[4];
 	// wait for a pen down command then return the X,Y coord of the point
 	// calibrated correctly so that it maps to a pixel on screen
-
-	// Wait for first packet of touch
-	WaitForTouch();
 
 	int i;
 	for(i = 0; i < 4; i++){
@@ -116,10 +117,10 @@ Point GetPen(void){
 *****************************************************************************/
 Point GetPress(void)
 {
-	 Point p1;
 	 // wait for a pen down command then return the X,Y coord of the point
 	 // calibrated correctly so that it maps to a pixel on screen
 
+	 WaitForTouch();
 	 return GetPen();
 }
 /*****************************************************************************
@@ -127,9 +128,10 @@ Point GetPress(void)
 *****************************************************************************/
 Point GetRelease(void)
 {
-	 Point p1;
 	 // wait for a pen up command then return the X,Y coord of the point
 	 // calibrated correctly so that it maps to a pixel on screen
+
+	 WaitForTouch();
 	 return GetPen();
 }
 

@@ -25,6 +25,7 @@ void WaitForTouch();
 Point GetPen(void);
 Point GetPress(void);
 Point GetRelease(void);
+int CheckForTouch(void);
 void TouchLoop(void);
 
 #endif /* TOUCH_H_ */

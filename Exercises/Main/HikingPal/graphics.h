@@ -65,5 +65,6 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale);
 void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale);
 void DrawButtons();
 void TestShapes();
+int CheckButtonPress(int x, int y);
 
 #endif
