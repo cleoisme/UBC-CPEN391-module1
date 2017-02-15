@@ -14,7 +14,8 @@
    <frequency preferredWidth="231" />
   </columns>
  </clocktable>
- <library expandedCategories="Library,Project" />
+ <library
+   expandedCategories="Library/University Program/Memory,Library/University Program,Project,Library" />
  <window width="1100" height="729" x="254" y="670" />
- <generation synthesis="VHDL" path="_PROJECT_NAME_" />
+ <generation synthesis="VERILOG" path="_PROJECT_NAME_" />
 </preferences>
