@@ -24,6 +24,7 @@
 #include "touch.h"
 #include "Colours.h"
 #include "SDCard_Test_Program.h"
+#include "lcd.h"
 
 int main()
 {
@@ -32,9 +33,19 @@ int main()
   DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
   DrawButtons();
   Init_Touch();
-
+  InitializeLCD();
   ProgramAllPalette();
+
+  // Set up LCD
+  char* lo = malloc(sizeof(char) * 10);
+  char* la = malloc(sizeof(char) * 10);
+  AssignGPSData(1, lo, la);
+  printf("Lo:%s", lo);
+  printf("La: %s", la);
+  WriteToLCD(la, lo, 'N', 'W');
+
   TestSDCard();
+
   DrawMapSDCard("MAP1.BMP", 0, 400, 160, 80, 5);
 
   int currMap = 1;
@@ -54,6 +65,10 @@ int main()
 	  mapButtons[i].x = -100;
 	  mapButtons[i].y = -100;
 	  mapButtons[i].mapName = NULL;
+	  mapButtons[i].distance = 0;
+	  mapButtons[i].time = 0;
+	  mapButtons[i].latitude =0;
+	  mapButtons[i].longitude = 0;
   }
 
   while(1){
@@ -79,7 +94,6 @@ int main()
 		 currMapName = concat(currMapName, ".BMP");
 
 		 printf(currMapName);
-
 		 DrawMapSDCard(currMapName, 0, 400, 160, 80, 5);
 	 }
 
@@ -135,8 +149,8 @@ int main()
 					  ReleaseMapButtonPress(mapButtons[mapButton]);
 					  printf("HERE:");
 					  printf(mapButtons[mapButton].mapName);
-					  //DrawFilledRectangle(420, 800, 0, 480, WHITE);
-					  DrawMapSDCard(mapButtons[mapButton].mapName, 450, 320, 160, 80, 2);
+					  DrawMapData(mapButtons[mapButton], currMap);
+					  DrawMapSDCard(mapButtons[mapButton].mapName, 450, 280, 160, 80, 2);
 				  }
 			  }
 

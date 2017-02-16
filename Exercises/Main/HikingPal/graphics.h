@@ -52,6 +52,10 @@ typedef struct MapButton{
 	int x;
 	int y;
 	char* mapName;
+	int distance;
+	int time;
+	double latitude;
+	double longitude;
 } MapButton;
 
 void WriteAPixel (int x, int y, int Colour);
@@ -76,5 +80,6 @@ void ReleaseButtonPress(int button);
 void ReleaseStopOrPause(int stop);
 void DrawBackButtonPress();
 char* concat(const char *s1, const char *s2);
+void AssignGPSData(int map, char* longitude, char *latitude);
 
 #endif

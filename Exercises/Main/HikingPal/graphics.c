@@ -437,6 +437,63 @@ char* concat(const char *s1, const char *s2)
     return result;
 }
 
+void AssignGPSData(int map, char* longitude, char *latitude){
+	double lo = 0;
+	double lat = 0;
+	switch(map){
+		case 1:
+			lat = 49.26467;
+			lo = 123.25272;
+			break;
+		case 2:
+			lat = 48.26453;
+			lo = 124.25243;
+			break;
+		case 3:
+			lat = 49.26425;
+			lo = 123.25223;
+			break;
+		case 4:
+			lat = 49.26406;
+			lo = 123.25206;
+			break;
+		case 5:
+			lat = 49.26365;
+			lo = 123.25167;
+			break;
+		case 6:
+			lat = 49.26338;
+			lo = 123.25147;
+			break;
+		case 7:
+			lat = 49.26324;
+			lo = 123.25193;
+			break;
+		case 8:
+			lat = 49.26346;
+			lo = 123.25228;
+			break;
+		case 9:
+			lat = 49.26332;
+			lo = 123.25267;
+			break;
+		case 10:
+			lat = 49.26306;
+			lo = 123.25302;
+			break;
+		default:
+			lat = 49.26278;
+			lo = 123.25327;
+			break;
+	}
+
+	sprintf(latitude, "%.5f", lat);
+	sprintf(longitude, "%.5f", lo);
+
+	printf("Lat: %s", latitude);
+	printf("Long: %s", longitude);
+}
+
 void DrawSavedMaps(int savedMaps[10], MapButton maps[10]){
 	int i = 0;
 
@@ -450,11 +507,16 @@ void DrawSavedMaps(int savedMaps[10], MapButton maps[10]){
 		map.x = 100;
 		map.y = (i * 70 + 20);
 
+		// set the file name
 		char *num[2];
 		printf("%d", savedMaps[i]);
 		sprintf(num, "%d", savedMaps[i]);
 		map.mapName = concat("MAP", num);
 		map.mapName = concat(map.mapName, ".BMP");
+
+		// Set path data
+		map.distance = (savedMaps[i] - 1) * 3;
+		map.time = (savedMaps[i] - 1) * 25;
 
 		// Draw the button
 		DrawRectangle(map.x, map.x + 200, map.y, map.y + 50, BLACK);
@@ -467,15 +529,42 @@ void DrawSavedMaps(int savedMaps[10], MapButton maps[10]){
 	DrawVerticalLine(0, 480, 400, BLACK);
 
 	// Draw back button
-	DrawRectangle(530, 630, 400, 450, BLACK);
-	DrawString2(560, 420, BLACK, WHITE, "Back", 0);
+	DrawRectangle(510, 710, 400, 450, BLACK);
+	DrawString2(580, 420, BLACK, WHITE, "Back", 0);
+}
+
+void DrawMapData(MapButton map, int mapIndex){
+	char *num[2];
+
+	DrawFilledRectangle(420, 800, 320, 380, WHITE);
+
+	sprintf(num, "%d", map.distance);
+	char* distance = concat("Distance: ", num);
+	distance = concat(distance, " meters");
+	DrawString2(450, 340, BLACK, WHITE, distance, 0);
+
+	sprintf(num, "%d", map.time);
+	char* time = concat("Time: ", num);
+	time = concat(time, " seconds");
+	DrawString2(450, 360, BLACK, WHITE, time, 0);
+
+	char* lat = malloc(sizeof(char) * 10);
+	char* lo = malloc(sizeof(char) * 10);
+	char* gps;
+	AssignGPSData(mapIndex, lat, lo);
+	gps = concat(lat, "N");
+	gps = concat(gps, " ");
+	gps = concat(gps, lo);
+	gps = concat(gps, "W");
+	printf("GPS: %s", gps);
+	DrawString2(450, 320, BLACK, WHITE, gps, 0);
 }
 
 int CheckMapButtonPress(MapButton maps[10], int x, int y){
 	int i;
 
 	// Check back button press
-	if(x >= 530 && x <= 630 && y >= 400 && y <= 450){
+	if(x >= 510 && x <= 710 && y >= 400 && y <= 450){
 		return 11;
 	}
 
@@ -498,8 +587,9 @@ void DrawMapButtonPress(MapButton map){
 }
 
 void DrawBackButtonPress(){
-	MapButton back = { .x = 530, .y = 400, .mapName = "back"};
-	DrawMapButtonPress(back);
+	DrawFilledRectangle(510, 710, 400, 450, BLUE);
+	DrawRectangle(510, 710, 400, 450, BLACK);
+	DrawString2(580, 420, BLACK, WHITE, "Back", 0);
 }
 
 void ReleaseMapButtonPress(MapButton map){
