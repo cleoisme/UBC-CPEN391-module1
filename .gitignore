@@ -183,25 +183,4 @@ local.properties
 # End of https://www.gitignore.io/api/eclipse,c
 
 # Extra
-*db*/
 *bsp/
-*.qsys_edit/
-*.asm.rpt
-*.done
-*.fit*
-*.fit*
-*.flow.rpt
-*.jdi
-*.map*
-*.sta*
-*.qws
-*.sopcinfo
-*.cdf
-*.sof
-synthesis/
-simulation/
-*.rpt
-*.pin
-*.sof
-*.cmp
-*.pof

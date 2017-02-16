@@ -16,10 +16,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include "graphics.h"
 #include "Colours.h"
 #include "touch.h"
+#include "SDCard_Test_Program.h"
 
 extern const unsigned int ColourPalletteData[256];
 
@@ -256,39 +258,39 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
 	 fclose(streamIn);
 }
 
-//void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale){
-//	short int bitmap[length*width * 3 + 54];
-//	ReadFromFile(fileName, bitmap);
-//
-//	int currX = x;
-//	int currY = y + width;
-//	int i;
-//
-//	printf("currX: %d", currX);
-//	printf("currY: %d", currY);
-//
-//	for(i = 0; i < length * width * 3; i += 3){
-//		int c = MapToColour(bitmap[i + 2 + 54], bitmap[i + 1 + 54], bitmap[i + 54]);
-//		int currX2, currY2;
-//		for(currY2 = currY; currY2 > currY - scale; --currY2){
-//			for(currX2 = currX; currX2 < currX + scale; ++currX2){
-//				WriteAPixel(currX2, currY2, c);
-//				//printf("currX: %d, currY: %d\n", currX2, currY2);
-//			}
-//		}
-//
-//		currX = currX2;
-//
-//		if((i % (length * 3)) == 0){
-//			currX = x;
-//			currY -= scale;
-//		}
-//	}
-//
-//	printf("\n%d\n", i);
-//	printf("currX: %d", currX);
-//	printf("currY: %d", currY);
-//}
+void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale){
+	short int bitmap[length*width * 3 + 54];
+	ReadFromFile(fileName, bitmap);
+
+	int currX = x;
+	int currY = y;
+	int i;
+
+	printf("currX: %d", currX);
+	printf("currY: %d", currY);
+
+	for(i = 0; i < length * width * 3; i += 3){
+		int c = MapToColour(bitmap[i + 2 + 54], bitmap[i + 1 + 54], bitmap[i + 54]);
+		int currX2, currY2;
+		for(currY2 = currY; currY2 > currY - scale; --currY2){
+			for(currX2 = currX; currX2 < currX + scale; ++currX2){
+				WriteAPixel(currX2, currY2, c);
+				//printf("currX: %d, currY: %d\n", currX2, currY2);
+			}
+		}
+
+		currX = currX2;
+
+		if((i % (length * 3)) == 0){
+			currX = x;
+			currY -= scale;
+		}
+	}
+
+	printf("\n%d\n", i);
+	printf("currX: %d", currX);
+	printf("currY: %d", currY);
+}
 
 void TestShapes(){
 	// draw a line across the screen in RED at y coord 100 and from x = 0 to 799
@@ -354,16 +356,45 @@ void DrawButtons(){
 void DrawButtonPress(int button){
 	if (button == 1){
 		DrawFilledRectangle(20, 220, 410, 470, BLUE);
+		DrawString2(40, 440, BLACK, WHITE, "View Trails", FALSE);
 	}
 	if (button == 2){
 		DrawFilledRectangle(300, 500, 410, 470, BLUE);
+		DrawString2(330, 440, BLACK, WHITE, "Save Trail", FALSE);
 	}
 	if (button == 3){
 		DrawFilledRectangle(580, 780, 410, 470, BLUE);
+		DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
 	}
-	DrawString2(40, 440, BLACK, WHITE, "View Trails", FALSE);
-	DrawString2(330, 440, BLACK, WHITE, "Save Trail", FALSE);
-	DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+}
+
+void ReleaseButtonPress(int button){
+	if (button == 1){
+		DrawFilledRectangle(20, 220, 410, 470, WHITE);
+		DrawRectangle(20, 220, 410, 470, BLACK);
+		DrawString2(40, 440, BLACK, WHITE, "View Trails", FALSE);
+	}
+	if (button == 2){
+		DrawFilledRectangle(300, 500, 410, 470, WHITE);
+		DrawRectangle(300, 500, 410, 470, BLACK);
+		DrawString2(330, 440, BLACK, WHITE, "Save Trail", FALSE);
+	}
+	if (button == 3){
+		DrawFilledRectangle(580, 780, 410, 470, WHITE);
+		DrawRectangle(580, 780, 410, 470, BLACK);
+		DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+	}
+}
+
+void ReleaseStopOrPause(int stop){
+	DrawFilledRectangle(580, 780, 410, 470, WHITE);
+	DrawRectangle(580, 780, 410, 470, BLACK);
+	if(stop == 1){
+		DrawString2(640, 440, BLACK, WHITE, "Continue", FALSE);
+	}
+	else{
+		DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+	}
 }
 
 int CheckButtonPress(int x, int y){
@@ -380,34 +411,72 @@ int CheckButtonPress(int x, int y){
 	return -1;
 }
 
+char* concat(const char *s1, const char *s2)
+{
+    char *result = malloc(strlen(s1)+strlen(s2)+1);//+1 for the zero-terminator
+    //in real code you would check for errors in malloc here
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
+
 void DrawSavedMaps(int savedMaps[10], MapButton maps[10]){
-	int i;
-	int j;
+	int i = 0;
+	int j = 0;
+
 	for(i = 0; i < 10; ++i){
 		if(savedMaps[i] != 0){
 			// draw the map
 			MapButton map;
-			map.x = 200;
-			map.y = (j * 30 + 10);
-			maps[j] = map;
+			map.x = 100;
+			map.y = (j * 70 + 20);
 			j++;
 
+			char *num[2];
+			printf("%d", savedMaps[i]);
+			sprintf(num, "%d", savedMaps[i]);
+			map.mapName = concat("MAP", num);
+			map.mapName = concat(map.mapName, ".BMP");
+
 			// Draw the button
-			DrawRectangle(map.x, map.x + 100, map.y, map.y + 50, BLACK);
-			DrawString2(map.x + 35, map.y + 25, BLACK, WHITE, "map", 0);
+			DrawRectangle(map.x, map.x + 200, map.y, map.y + 50, BLACK);
+			DrawString2(map.x + 80, map.y + 30, BLACK, WHITE, map.mapName, 0);
+
+			maps[j] = map;
+		}
+		else{
+			break;
 		}
 	}
+
+	DrawVerticalLine(0, 480, 400, BLACK);
+	DrawRectangle(600, 700, 400, 450, BLACK);
+	DrawString2(620, 420, BLACK, WHITE, "Back", 0);
 }
 
 int CheckMapButtonPress(MapButton maps[10], int x, int y){
 	int i;
 	for(i = 0; i < 10; ++i){
 		MapButton map = maps[i];
-		if(x >= map.x && x <= map.x + 100 && y >= map.y && y <= map.y + 50){
+		if(x >= map.x && (x <= (map.x + 200)) && y >= map.y && (y <= (map.y + 50))){
 			// pressed a button
+			printf("lala:%d", i);
 			return i;
 		}
 	}
 
 	return -1;
+}
+
+void DrawMapButtonPress(MapButton map){
+	DrawFilledRectangle(map.x, map.x + 200, map.y, map.y + 50, BLUE);
+	DrawRectangle(map.x, map.x + 200, map.y, map.y + 50, BLACK);
+	DrawString2(map.x + 80, map.y + 30, BLACK, WHITE, map.mapName, 0);
+}
+
+void ReleaseMapButtonPress(MapButton map){
+	// Draw the button
+	DrawFilledRectangle(map.x, map.x + 200, map.y, map.y + 50, WHITE);
+	DrawRectangle(map.x, map.x + 200, map.y, map.y + 50, BLACK);
+	DrawString2(map.x + 80, map.y + 30, BLACK, WHITE, map.mapName, 0);
 }
