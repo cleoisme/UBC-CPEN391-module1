@@ -96,6 +96,8 @@ void ReadFromFile(char* fileName, short int bitmap[]){
 	int myFileHandle;
 	int i = 0;
 	printf("Reached level 1");
+	printf("READING");
+	printf(fileName);
 	myFileHandle = alt_up_sd_card_fopen(fileName, false);
 	printf("%d", myFileHandle);
 	if(myFileHandle != -1){
@@ -110,6 +112,8 @@ void ReadFromFile(char* fileName, short int bitmap[]){
 		printf("\nlala %d\n", i);
 
 		printf("Done");
+
+		alt_up_sd_card_fclose(myFileHandle);
 	}else{
 		printf("File NOT OPENED");
 	}

@@ -259,6 +259,8 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
 }
 
 void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale){
+	printf("DRAWING NOW");
+	printf(fileName);
 	short int bitmap[length*width * 3 + 54];
 	ReadFromFile(fileName, bitmap);
 
@@ -342,70 +344,85 @@ void ProgramAllPalette(){
 }
 
 void DrawButtons(){
-	DrawFilledRectangle(20, 220, 410, 470, WHITE);
-	DrawFilledRectangle(300, 500, 410, 470, WHITE);
-	DrawFilledRectangle(580, 780, 410, 470, WHITE);
-	DrawRectangle(20, 220, 410, 470, BLACK);
-	DrawRectangle(300, 500, 410, 470, BLACK);
-	DrawRectangle(580, 780, 410, 470, BLACK);
-	DrawString2(40, 440, BLACK, WHITE, "View Trails", FALSE);
-	DrawString2(330, 440, BLACK, WHITE, "Save Trail", FALSE);
-	DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+	DrawFilledRectangle(20, 180, 410, 470, WHITE);
+	DrawFilledRectangle(220, 380, 410, 470, WHITE);
+	DrawFilledRectangle(420, 580, 410, 470, WHITE);
+	DrawFilledRectangle(620, 780, 410, 470, WHITE);
+	DrawRectangle(20, 180, 410, 470, BLACK);
+	DrawRectangle(220, 380, 410, 470, BLACK);
+	DrawRectangle(420, 580, 410, 470, BLACK);
+	DrawRectangle(620, 780, 410, 470, BLACK);
+	DrawString2(25, 440, BLACK, WHITE, "View Trails", FALSE);
+	DrawString2(230, 440, BLACK, WHITE, "Save Trail", FALSE);
+	DrawString2(480, 440, BLACK, WHITE, "Stop", FALSE);
+	DrawString2(660, 440, BLACK, WHITE, "Refresh", FALSE);
 }
 
 void DrawButtonPress(int button){
 	if (button == 1){
-		DrawFilledRectangle(20, 220, 410, 470, BLUE);
-		DrawString2(40, 440, BLACK, WHITE, "View Trails", FALSE);
+		DrawFilledRectangle(20, 180, 410, 470, BLUE);
+		DrawString2(25, 440, BLACK, WHITE, "View Trails", FALSE);
 	}
 	if (button == 2){
-		DrawFilledRectangle(300, 500, 410, 470, BLUE);
-		DrawString2(330, 440, BLACK, WHITE, "Save Trail", FALSE);
+		DrawFilledRectangle(220, 380, 410, 470, BLUE);
+		DrawString2(230, 440, BLACK, WHITE, "Save Trail", FALSE);
 	}
 	if (button == 3){
-		DrawFilledRectangle(580, 780, 410, 470, BLUE);
-		DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+		DrawFilledRectangle(420, 580, 410, 470, BLUE);
+		DrawString2(480, 440, BLACK, WHITE, "Stop", FALSE);
+	}
+	if (button == 4){
+		DrawFilledRectangle(620, 780, 410, 470, BLUE);
+		DrawString2(660, 440, BLACK, WHITE, "Refresh", FALSE);
 	}
 }
 
 void ReleaseButtonPress(int button){
 	if (button == 1){
-		DrawFilledRectangle(20, 220, 410, 470, WHITE);
-		DrawRectangle(20, 220, 410, 470, BLACK);
-		DrawString2(40, 440, BLACK, WHITE, "View Trails", FALSE);
+		DrawFilledRectangle(20, 180, 410, 470, WHITE);
+		DrawRectangle(20, 180, 410, 470, BLACK);
+		DrawString2(25, 440, BLACK, WHITE, "View Trails", FALSE);
 	}
 	if (button == 2){
-		DrawFilledRectangle(300, 500, 410, 470, WHITE);
-		DrawRectangle(300, 500, 410, 470, BLACK);
-		DrawString2(330, 440, BLACK, WHITE, "Save Trail", FALSE);
+		DrawFilledRectangle(220, 380, 410, 470, WHITE);
+		DrawRectangle(220, 380, 410, 470, BLACK);
+		DrawString2(230, 440, BLACK, WHITE, "Save Trail", FALSE);
 	}
 	if (button == 3){
-		DrawFilledRectangle(580, 780, 410, 470, WHITE);
-		DrawRectangle(580, 780, 410, 470, BLACK);
-		DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+		DrawFilledRectangle(420, 580, 410, 470, WHITE);
+		DrawRectangle(420, 580, 410, 470, BLACK);
+		DrawString2(480, 440, BLACK, WHITE, "Stop", FALSE);
+	}
+	if (button == 4){
+		DrawFilledRectangle(620, 780, 410, 470, WHITE);
+		DrawRectangle(620, 780, 410, 470, BLACK);
+		DrawString2(660, 440, BLACK, WHITE, "Refresh", FALSE);
 	}
 }
 
 void ReleaseStopOrPause(int stop){
-	DrawFilledRectangle(580, 780, 410, 470, WHITE);
-	DrawRectangle(580, 780, 410, 470, BLACK);
+	DrawFilledRectangle(420, 580, 410, 470, WHITE);
+	DrawRectangle(420, 580, 410, 470, BLACK);
 	if(stop == 1){
-		DrawString2(640, 440, BLACK, WHITE, "Continue", FALSE);
+		DrawString2(450, 440, BLACK, WHITE, "Continue", FALSE);
 	}
 	else{
-		DrawString2(670, 440, BLACK, WHITE, "Stop", FALSE);
+		DrawString2(480, 440, BLACK, WHITE, "Stop", FALSE);
 	}
 }
 
 int CheckButtonPress(int x, int y){
-	if (x >= 20 && x <= 220 && y >= 410 && y <= 470){
+	if (x >= 20 && x <= 180 && y >= 410 && y <= 470){
 		return 1;
 	}
-	if (x >= 300 && x <= 500 && y >= 410 && y <= 470){
+	if (x >= 220 && x <= 380 && y >= 410 && y <= 470){
 		return 2;
 	}
-	if (x >= 580 && x <= 780 && y >= 410 && y <= 470){
+	if (x >= 420 && x <= 580 && y >= 410 && y <= 470){
 		return 3;
+	}
+	if (x >= 620 && x <= 780 && y >= 410 && y <= 470){
+		return 4;
 	}
 
 	return -1;
@@ -422,45 +439,51 @@ char* concat(const char *s1, const char *s2)
 
 void DrawSavedMaps(int savedMaps[10], MapButton maps[10]){
 	int i = 0;
-	int j = 0;
 
 	for(i = 0; i < 10; ++i){
-		if(savedMaps[i] != 0){
-			// draw the map
-			MapButton map;
-			map.x = 100;
-			map.y = (j * 70 + 20);
-			j++;
-
-			char *num[2];
-			printf("%d", savedMaps[i]);
-			sprintf(num, "%d", savedMaps[i]);
-			map.mapName = concat("MAP", num);
-			map.mapName = concat(map.mapName, ".BMP");
-
-			// Draw the button
-			DrawRectangle(map.x, map.x + 200, map.y, map.y + 50, BLACK);
-			DrawString2(map.x + 80, map.y + 30, BLACK, WHITE, map.mapName, 0);
-
-			maps[j] = map;
-		}
-		else{
+		// reached end of array
+		if(savedMaps[i] == 0){
 			break;
 		}
+		// draw the map
+		MapButton map;
+		map.x = 100;
+		map.y = (i * 70 + 20);
+
+		char *num[2];
+		printf("%d", savedMaps[i]);
+		sprintf(num, "%d", savedMaps[i]);
+		map.mapName = concat("MAP", num);
+		map.mapName = concat(map.mapName, ".BMP");
+
+		// Draw the button
+		DrawRectangle(map.x, map.x + 200, map.y, map.y + 50, BLACK);
+		DrawString2(map.x + 80, map.y + 30, BLACK, WHITE, map.mapName, 0);
+
+		maps[i] = map;
 	}
 
+	// Draw separation pane
 	DrawVerticalLine(0, 480, 400, BLACK);
-	DrawRectangle(600, 700, 400, 450, BLACK);
-	DrawString2(620, 420, BLACK, WHITE, "Back", 0);
+
+	// Draw back button
+	DrawRectangle(530, 630, 400, 450, BLACK);
+	DrawString2(560, 420, BLACK, WHITE, "Back", 0);
 }
 
 int CheckMapButtonPress(MapButton maps[10], int x, int y){
 	int i;
+
+	// Check back button press
+	if(x >= 530 && x <= 630 && y >= 400 && y <= 450){
+		return 11;
+	}
+
 	for(i = 0; i < 10; ++i){
 		MapButton map = maps[i];
 		if(x >= map.x && (x <= (map.x + 200)) && y >= map.y && (y <= (map.y + 50))){
 			// pressed a button
-			printf("lala:%d", i);
+			printf(map.mapName);
 			return i;
 		}
 	}
@@ -472,6 +495,11 @@ void DrawMapButtonPress(MapButton map){
 	DrawFilledRectangle(map.x, map.x + 200, map.y, map.y + 50, BLUE);
 	DrawRectangle(map.x, map.x + 200, map.y, map.y + 50, BLACK);
 	DrawString2(map.x + 80, map.y + 30, BLACK, WHITE, map.mapName, 0);
+}
+
+void DrawBackButtonPress(){
+	MapButton back = { .x = 530, .y = 400, .mapName = "back"};
+	DrawMapButtonPress(back);
 }
 
 void ReleaseMapButtonPress(MapButton map){

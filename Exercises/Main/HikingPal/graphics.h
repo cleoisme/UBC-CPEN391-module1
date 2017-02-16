@@ -72,5 +72,9 @@ void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scal
 void DrawButtons();
 void TestShapes();
 int CheckButtonPress(int x, int y);
+void ReleaseButtonPress(int button);
+void ReleaseStopOrPause(int stop);
+void DrawBackButtonPress();
+char* concat(const char *s1, const char *s2);
 
 #endif

@@ -46,6 +46,7 @@ int main()
   int state = 0;
   int stop = 0;
   int press = 0;
+  int refresh = 0;
 
   int i;
   for(i = 0; i < 10; ++i){
@@ -57,14 +58,16 @@ int main()
 
   while(1){
 	 endTime = time(NULL);
-	 if (state == 0 && endTime - startTime >= 25){
-		 if(stop){
+	 if (state == 0 && (endTime - startTime) >= 25){
+		 if(stop && !refresh){
 			 startTime = endTime;
 			 printf("NOPE");
 			 continue;
 		 }
+
 		 startTime = endTime;
 		 currMap++;
+		 refresh = 0;
 
 		 // Draw the next map on the screen
 
@@ -78,7 +81,6 @@ int main()
 		 printf(currMapName);
 
 		 DrawMapSDCard(currMapName, 0, 400, 160, 80, 5);
-
 	 }
 
 	  if (CheckForTouch()){
@@ -91,12 +93,24 @@ int main()
 		  if(press == 1){
 			  // Press
 			  printf("Press");
+
+			  // Check if button pressed in main mode
 			  if(state == 0){
 				  DrawButtonPress(button);
 			  }
+
+			  // Check map button pressed in 'View Trails' mode
 			  if(state == 1 && mapButton != -1){
-				  printf(mapButtons[mapButton].mapName);
-				  DrawMapButtonPress(mapButtons[mapButton]);
+
+				  // Check if back button pressed
+				  if(mapButton == 11){
+					  DrawBackButtonPress();
+				  }
+				  // Map button was pressed
+				  else{
+					  printf(mapButtons[mapButton].mapName);
+					  DrawMapButtonPress(mapButtons[mapButton]);
+				  }
 			  }
 		  }
 		  else{
@@ -106,9 +120,24 @@ int main()
 			  if(state == 0){
 				  ReleaseButtonPress(button);
 			  }
+
+			  // Check if map button released in 'View Trails' mode
 			  if(state == 1 && mapButton != -1){
-				  ReleaseMapButtonPress(mapButtons[mapButton]);
-				  DrawMapSDCard(mapButtons[mapButton].mapName, 450, 320, 160, 80, 2);
+				  if(mapButton == 11){
+					  // Back button released, go back to main mode
+					  state = 0;
+					  stop = 0;
+					  startTime = endTime - 25;
+					  DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+					  DrawButtons();
+				  }
+				  else{
+					  ReleaseMapButtonPress(mapButtons[mapButton]);
+					  printf("HERE:");
+					  printf(mapButtons[mapButton].mapName);
+					  //DrawFilledRectangle(420, 800, 0, 480, WHITE);
+					  DrawMapSDCard(mapButtons[mapButton].mapName, 450, 320, 160, 80, 2);
+				  }
 			  }
 
 			  // View Saved Maps
@@ -133,9 +162,9 @@ int main()
 				  // Add to saved maps array
 				  for(i = 0; i < 10; ++i){
 					  if (savedMaps[i] == 0){
-						  if (i == 0 || (i > 0 && savedMaps[i - 1] != savedMaps[i])){
+						  if (i == 0 || (i > 0 && savedMaps[i - 1] != currMap)){
 							  savedMaps[i] = currMap;
-							  printf("%d", savedMaps[i]);
+							  printf("Save Index: %d", i);
 						  }
 						  break;
 					  }
@@ -149,6 +178,16 @@ int main()
 			  else if(state == 0 && button == 3){
 				  stop = stop == 0 ? 1 : 0;
 				  ReleaseStopOrPause(stop);
+				  if(stop == 0){
+					  startTime = time(NULL);
+				  }
+			  }
+
+			  // Refresh map
+			  else if(state == 0 && button == 4){
+				  currMap++;
+				  startTime = endTime - 25;
+				  refresh = 1;
 			  }
 		  }
 		  //printf("%d", p.x);
