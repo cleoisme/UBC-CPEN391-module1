@@ -25,8 +25,18 @@
 #include "Colours.h"
 #include "SDCard_Test_Program.h"
 #include "lcd.h"
+#include "bluetooth.h"
+#include "bluetooth2.h"
 
-int main()
+int main(){
+
+	printf("Hello from Nios II!\n");
+	setup_all_bluetooth2();
+
+	return 0;
+}
+
+int run_hiking_pal()
 {
   printf("Hello from Nios II!\n");
 
