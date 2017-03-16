@@ -65,7 +65,9 @@ char getchar_btport(void)
 }
 
 char getchar_poll(void){
-	while(!(BT_STATUS & BT_STATUS_RX_MASK));
+	while(!(BT_STATUS & BT_STATUS_RX_MASK)){
+
+	}
 
 	return BT_RXDATA;
 }
@@ -149,40 +151,45 @@ void set_dongle_pass(char pass[], int length)
 	command_end();
 }
 
-int setup_all_bluetooth2()
-{
-//	const char dongleName[] = DONGLENAME;
-//	const int nameLen = NAMELEN;
-//	const char donglePass[] = DONGLEPASS;
-//	const int passLen = PASSLEN;
+void set_user_pass(){
+	const char dongleName[] = DONGLENAME;
+	const int nameLen = NAMELEN;
+	const char donglePass[] = DONGLEPASS;
+	const int passLen = PASSLEN;
 
-//	printf("Begin programming Bluetooth dongle...\n");
+	printf("Begin programming Bluetooth dongle...\n");
 	init_btport();
 
-//	printf("Setting name to '%s'.\n", dongleName);
-//	set_dongle_name(dongleName, nameLen);
-//
-//	printf("Setting password to '%s'.\n", donglePass);
-//	set_dongle_pass(donglePass, passLen);
+	printf("Setting name to '%s'.\n", dongleName);
+	set_dongle_name(dongleName, nameLen);
+
+	printf("Setting password to '%s'.\n", donglePass);
+	set_dongle_pass(donglePass, passLen);
 
 
 	printf("Programming finished.\n");
+
+}
+
+int setup_all_bluetooth2()
+{
+	set_user_pass();
+
 	char str[] = "A";
-	char str2[] = "ABC";
+	char str2[] = "I love you";
 	char buf[1024];
 
 	while(1){
-		//usleep(1000000);
+		usleep(1000000);
 //		send_string(str, 1);
 //		usleep(1000000);
 //		send_string(str2, 1);
-		//send_string(str2, 3);
+		send_string(str2, sizeof(str2) / sizeof(str[0]));
 		//printf("hihi\n");
 		//receive_string(buf, 1024);
 		//printf(buf);
-		char c = getchar_poll();
-		printf("%c\n", c);
-		//putchar_btport('A');
+		//char c = getchar_poll();
+		//printf("%c\n", c);
 	}
 
 

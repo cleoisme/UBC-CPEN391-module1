@@ -81,5 +81,8 @@ void ReleaseStopOrPause(int stop);
 void DrawBackButtonPress();
 char* concat(const char *s1, const char *s2);
 void AssignGPSData(int map, char* longitude, char *latitude);
+void DrawStar(int x, int y, int length, int colour);
+void DrawRatings(int n, int colour);
+int CheckRatingPress(int x, int y);
 
 #endif

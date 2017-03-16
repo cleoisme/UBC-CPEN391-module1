@@ -598,3 +598,35 @@ void ReleaseMapButtonPress(MapButton map){
 	DrawRectangle(map.x, map.x + 200, map.y, map.y + 50, BLACK);
 	DrawString2(map.x + 80, map.y + 30, BLACK, WHITE, map.mapName, 0);
 }
+
+void DrawStar(int x, int y, int length, int colour){
+	DrawHorizontalLine(x, x + length, y, colour);
+	DrawBresenhamLine(x + length, (x + length * 1.5), y, y - length, colour);
+	DrawBresenhamLine(x + length * 1.5, x + 2*length, y - length, y, colour);
+	DrawHorizontalLine(x + 2*length, x + 3*length, y, colour);
+	DrawBresenhamLine(x + 3*length, x + 2.2 * length, y, y + length * 0.7, colour);
+	DrawBresenhamLine(x, x + 0.8 * length, y, y + length * 0.7, colour);
+	DrawBresenhamLine(x + 2.2 * length, x + 2.4 * length, y + length * 0.7, y + length * 1.7, colour);
+	DrawBresenhamLine(x + 0.8 * length, x + 0.6 * length, y + length * 0.7, y + length * 1.7, colour);
+	DrawBresenhamLine(x + 2.4 * length, x + 1.5 * length, y + length * 1.7, y + length * 1.1, colour);
+	DrawBresenhamLine(x + 0.6 * length, x + 1.5 * length, y + length * 1.7, y + length * 1.1, colour);
+}
+
+void DrawRatings(int n, int colour){
+	int i = 0;
+	for(i = 0; i < n; ++i){
+		DrawStar(150 + 100 * i, 200, 30, colour);
+	}
+}
+
+int CheckRatingPress(int x, int y){
+	if(y < 200 || y > 280)
+		return -1;
+
+	int res = (x - 150) / 100;
+	if(res < 0 || res > 4){
+		return - 1;
+	}
+
+	return res;
+}
