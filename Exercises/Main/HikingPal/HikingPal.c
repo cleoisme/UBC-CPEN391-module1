@@ -35,6 +35,7 @@ int main(){
 	init_btport();
 	Init_Touch();
 	DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+	DrawString2Center(100, BLACK, WHITE, "Connect a bluetooth device!", 0);
 	char weatherData[150];
 	int i = 0;
 
@@ -46,8 +47,8 @@ int main(){
 			printf("%c\n", c);
 			if(c == 'Q'){
 				DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
-				DrawString2(150, 400, BLACK, WHITE, weatherData, 0);
-				DrawString2(300, 100, BLACK, WHITE, "Rate the trail!", 0);
+				DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+				DrawString2Center(100, BLACK, WHITE, "Rate the trail!", 0);
 				DrawRatings(5, BLACK);
 				break;
 			}
@@ -60,7 +61,7 @@ int main(){
 					weather = 0;
 					printf(weatherData);
 					DrawFilledRectangle(0, XRES, 390, YRES, WHITE);
-					DrawString2(150, 400, BLACK, WHITE, weatherData, 0);
+					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 				}
 			}
 			else if(weather){
@@ -79,11 +80,11 @@ int main(){
 					send_string(send, 1);
 
 					DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
-					DrawString2(150, 400, BLACK, WHITE, weatherData, 0);
+					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 					DrawRatings(star + 1, YELLOW);
 					char msg[50];
 					sprintf(msg, "You rated %d stars!", star + 1);
-					DrawString2(300, 100, BLACK, WHITE, msg, 0);
+					DrawString2Center(100, BLACK, WHITE, msg, 0);
 					break;
 				}
 			}

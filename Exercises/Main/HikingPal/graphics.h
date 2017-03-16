@@ -65,6 +65,7 @@ void DrawVerticalLine(int y1, int y2, int x, int Colour);
 void DrawBresenhamLine(int x1, int x2, int y1, int y2, int Colour);
 void DrawString1(int x, int y, int colour, int background, char* string, int erase);
 void DrawString2(int x, int y, int colour, int background, char* string, int erase);
+void DrawString2Center(int y, int colour, int background, char* string, int erase);
 void DrawRectangle(int x1, int x2, int y1, int y2, int colour);
 void DrawFilledRectangle(int x1, int x2, int y1, int y2, int colour);
 void DrawBresenhamCircle(int x1, int y1, int radius, int colour);
