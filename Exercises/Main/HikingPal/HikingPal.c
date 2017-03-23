@@ -28,15 +28,20 @@
 #include "bluetooth.h"
 #include "bluetooth2.h"
 
+#define BT_RATE_TRAIL 'Q'
+#define BT_WEATHER 'Z'
+#define BT_MAP 'X'
+
 int main(){
 
 	printf("Hello from Nios II!\n");
 	//set_user_pass();
 	init_btport();
 	Init_Touch();
-	DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+	ResetScreen();
 	DrawString2Center(100, BLACK, WHITE, "Connect a bluetooth device!", 0);
 	char weatherData[150];
+	SavedMapButton** maps;
 	int i = 0;
 
 	int weather = 0;
@@ -45,18 +50,23 @@ int main(){
 		while(1){
 			char c = getchar_poll();
 			printf("%c\n", c);
-			if(c == 'Q'){
-				DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+
+			// Rate trail init
+			if(c == BT_RATE_TRAIL){
+				ResetScreen();
 				DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 				DrawString2Center(100, BLACK, WHITE, "Rate the trail!", 0);
 				DrawRatings(5, BLACK);
 				break;
 			}
-			else if(c == 'Z'){
+
+			// Weather data init
+			else if(c == BT_WEATHER){
 				if(weather == 0){
 					weather = 1;
 					i = 0;
 				}
+				// Done parsing weather data
 				else{
 					weather = 0;
 					printf(weatherData);
@@ -64,13 +74,22 @@ int main(){
 					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 				}
 			}
+
+			// Saved map data init
+			else if(c == BT_MAP){
+
+			}
+
+			// Start parsing weather data
 			else if(weather){
 				weatherData[i++] = c;
 			}
 		}
 
+		// Done receiving data for now. Check for touch input.
 		while(1){
 			if (CheckForTouch()){
+				// Rate the trail
 				Point p = GetPen();
 				int star = CheckRatingPress(p.x, p.y);
 				printf("%d\n", star);
@@ -79,7 +98,7 @@ int main(){
 					send[0] = star + 1 + '0';
 					send_string(send, 1);
 
-					DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+					ResetScreen();
 					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 					DrawRatings(star + 1, YELLOW);
 					char msg[50];

@@ -11,6 +11,9 @@
 #define ColoursInRGB 4  // Number of Colours in each RGB: 0x00, 0x56, 0xAC, 0xFF
 #define CustomColorIndex 151 // Where the custom colors start in ColourPalleteData[]
 
+#define BUTTON_WIDTH 200
+#define BUTTON_HEIGHT 50
+
 // #defined constants representing values we write to the graphics 'command' register to get
 // it to do something. You will add more values as you add hardware to the graphics chip
 // Note DrawHLine, DrawVLine and DrawLine at the moment do nothing - you will modify these
@@ -48,6 +51,7 @@
 #define GraphicsColourReg		(*(volatile unsigned short int *)(0x8400000E))
 #define GraphicsBackGroundColourReg   		(*(volatile unsigned short int *)(0x84000010))
 
+// Struct for Module1 maps
 typedef struct MapButton{
 	int x;
 	int y;
@@ -57,6 +61,18 @@ typedef struct MapButton{
 	double latitude;
 	double longitude;
 } MapButton;
+
+// Struct for Module2 maps (data provided via Android)
+typedef struct SavedMapButton{
+	int x;
+	int y;
+	char *name;
+	int rating;
+	int distance;
+	int duration;
+	char **locations;
+	char *date;
+} SavedMapButton;
 
 void WriteAPixel (int x, int y, int Colour);
 int ReadAPixel (int x, int y);
@@ -85,5 +101,9 @@ void AssignGPSData(int map, char* longitude, char *latitude);
 void DrawStar(int x, int y, int length, int colour);
 void DrawRatings(int n, int colour);
 int CheckRatingPress(int x, int y);
-
+void ResetScreen();
+int CheckSavedMapButtonPress(SavedMapButton** buttons, int x, int y);
+void DrawSavedMapButton(SavedMapButton* button);
+void DrawString2CenterRange(int x1, int x2, int y, colour, background, char * string, int erase);
+void DrawSavedMapData(SavedMapButton* button);
 #endif

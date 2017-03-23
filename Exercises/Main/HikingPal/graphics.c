@@ -113,6 +113,12 @@ void DrawString2Center(int y, int colour, int background, char* string, int eras
 	DrawString2(offset, y, colour, background, string, erase);
 }
 
+void DrawString2CenterRange(int x1, int x2, int y, colour, background, char * string, int erase){
+	size_t length = strlen(string) * 14;
+	size_t offset = (x2 - x1)/2;
+	DrawString2(offset, y, colour, background, string, erase);
+}
+
 void DrawRectangle(int x1, int x2, int y1, int y2, int colour){
 	WAIT_FOR_GRAPHICS;
 	DrawHorizontalLine(x1, x2, y1, colour);
@@ -635,4 +641,46 @@ int CheckRatingPress(int x, int y){
 	}
 
 	return res;
+}
+
+void ResetScreen(){
+	DrawFilledRectangle(0, XRES, 0, YRES, WHITE);
+}
+
+// Checks the input buttons array to see if the input x,y touches one of them
+// Return the index of the button that it presses. -1 otherwise.
+int CheckSavedMapButtonPress(SavedMapButton** buttons, int x, int y){
+	int i;
+	for(i = 0; buttons[i] != NULL; ++i){
+		if(!(x >= buttons[i].x && x <= buttons[i].x + BUTTON_WIDTH))
+			continue;
+		if(!(y >= buttons[i].y && y <= buttons[i].y + BUTTON_HEIGHT))
+			continue;
+
+		return i;
+	}
+
+	return -1;
+}
+
+// Draw the given button onto the screen as a rectangle, with its name as the label
+void DrawSavedMapButton(SavedMapButton* button){
+	DrawRectangle(button->x, button->y, button->x + BUTTON_WIDTH, button->y + BUTTON_WIDTH, BLACK);
+	DrawString2CenterRange(button->x, button->x + BUTTON_WIDTH, button->y + BUTTON_HEIGHT/2, BLACK, WHITE, button->name, 0);
+}
+
+
+// Draws the data of the map on the right half of the screen
+void DrawSavedMapData(SavedMapButton* button){
+	char buffer[50];
+
+	DrawString2CenterRange(XRES / 2, XRES, 150, BLACK, WHITE, button->name, 0);
+	sprintf(buffer, "Rating: %d Stars!", button->rating);
+	DrawString2CenterRange(XRES / 2, XRES, 175, BLACK, WHITE, buffer, 0);
+	sprintf(buffer, "Distance: %d Meters", button->distance);
+	DrawString2CenterRange(XRES / 2, XRES, 200, BLACK, WHITE, buffer, 0);
+	sprintf(buffer, "Duration: %d Seconds", button->duration);
+	DrawString2CenterRange(XRES / 2, XRES, 225, BLACK, WHITE, buffer, 0);
+	sprintf(buffer, "Date: %c", button->date);
+	DrawString2CenterRange(XRES / 2, XRES, 250, BLACK, WHITE, buffer, 0);
 }
