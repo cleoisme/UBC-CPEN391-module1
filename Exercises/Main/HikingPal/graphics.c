@@ -108,14 +108,14 @@ void DrawString2(int x, int y, int colour, int background, char* string, int era
 }
 
 void DrawString2Center(int y, int colour, int background, char* string, int erase){
-	size_t length = strlen(string) * 14;
+	size_t length = strlen(string) * 10;
 	size_t offset = (XRES - length)/2;
 	DrawString2(offset, y, colour, background, string, erase);
 }
 
-void DrawString2CenterRange(int x1, int x2, int y, colour, background, char * string, int erase){
-	size_t length = strlen(string) * 14;
-	size_t offset = (x2 - x1)/2;
+void DrawString2CenterRange(int x1, int x2, int y, int colour, int background, char * string, int erase){
+	size_t length = strlen(string) * 10;
+	size_t offset = x1 + (x2 - x1 - length)/2;
 	DrawString2(offset, y, colour, background, string, erase);
 }
 
@@ -652,9 +652,9 @@ void ResetScreen(){
 int CheckSavedMapButtonPress(SavedMapButton** buttons, int x, int y){
 	int i;
 	for(i = 0; buttons[i] != NULL; ++i){
-		if(!(x >= buttons[i].x && x <= buttons[i].x + BUTTON_WIDTH))
+		if(!(x >= buttons[i]->x && x <= buttons[i]->x + BUTTON_WIDTH))
 			continue;
-		if(!(y >= buttons[i].y && y <= buttons[i].y + BUTTON_HEIGHT))
+		if(!(y >= buttons[i]->y && y <= buttons[i]->y + BUTTON_HEIGHT))
 			continue;
 
 		return i;
@@ -665,15 +665,30 @@ int CheckSavedMapButtonPress(SavedMapButton** buttons, int x, int y){
 
 // Draw the given button onto the screen as a rectangle, with its name as the label
 void DrawSavedMapButton(SavedMapButton* button){
-	DrawRectangle(button->x, button->y, button->x + BUTTON_WIDTH, button->y + BUTTON_WIDTH, BLACK);
+	DrawRectangle(button->x, button->x + BUTTON_WIDTH, button->y, button->y + BUTTON_HEIGHT, BLACK);
 	DrawString2CenterRange(button->x, button->x + BUTTON_WIDTH, button->y + BUTTON_HEIGHT/2, BLACK, WHITE, button->name, 0);
 }
 
+// Refreshes all buttons (to remove previous highlight) and highlights the selected button
+void HighlightSavedMapButton(SavedMapButton** map, SavedMapButton* button){
+	DrawAllSavedMapButtons(map);
+	DrawRectangle(button->x, button->x + BUTTON_WIDTH, button->y, button->y + BUTTON_HEIGHT, YELLOW);
+	DrawString2CenterRange(button->x, button->x + BUTTON_WIDTH, button->y + BUTTON_HEIGHT/2, BLACK, WHITE, button->name, 0);
+}
+
+// Draws every button in the map array
+void DrawAllSavedMapButtons(SavedMapButton** map){
+	int i = 0;
+	while(map[i]->x != 0){
+		DrawSavedMapButton(map[i++]);
+	}
+}
 
 // Draws the data of the map on the right half of the screen
 void DrawSavedMapData(SavedMapButton* button){
 	char buffer[50];
 
+	DrawFilledRectangle(XRES / 2, XRES, 0, YRES, WHITE);
 	DrawString2CenterRange(XRES / 2, XRES, 150, BLACK, WHITE, button->name, 0);
 	sprintf(buffer, "Rating: %d Stars!", button->rating);
 	DrawString2CenterRange(XRES / 2, XRES, 175, BLACK, WHITE, buffer, 0);
@@ -681,6 +696,22 @@ void DrawSavedMapData(SavedMapButton* button){
 	DrawString2CenterRange(XRES / 2, XRES, 200, BLACK, WHITE, buffer, 0);
 	sprintf(buffer, "Duration: %d Seconds", button->duration);
 	DrawString2CenterRange(XRES / 2, XRES, 225, BLACK, WHITE, buffer, 0);
-	sprintf(buffer, "Date: %c", button->date);
+	sprintf(buffer, "Date: %s", button->date);
 	DrawString2CenterRange(XRES / 2, XRES, 250, BLACK, WHITE, buffer, 0);
+}
+
+void SetMockedMapData(SavedMapButton** maps){
+	int i;
+	for(i = 0; i < 5; ++i){
+		SavedMapButton *map = malloc(sizeof(SavedMapButton));
+		map->date = "Date";
+		map->distance = i;
+		map->duration = i;
+		map->locations = 'a' + i;
+		map->name = "ABCD";
+		map->rating = i;
+		map->x = 50;
+		map->y = 20 + i * (BUTTON_HEIGHT * 1.2);
+		maps[i] = map;
+	}
 }

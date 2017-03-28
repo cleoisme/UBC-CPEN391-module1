@@ -70,7 +70,7 @@ typedef struct SavedMapButton{
 	int rating;
 	int distance;
 	int duration;
-	char **locations;
+	char *locations;
 	char *date;
 } SavedMapButton;
 
@@ -104,6 +104,10 @@ int CheckRatingPress(int x, int y);
 void ResetScreen();
 int CheckSavedMapButtonPress(SavedMapButton** buttons, int x, int y);
 void DrawSavedMapButton(SavedMapButton* button);
-void DrawString2CenterRange(int x1, int x2, int y, colour, background, char * string, int erase);
+void HighlightSavedMapButton(SavedMapButton** map, SavedMapButton* button);
+void DrawAllSavedMapButtons(SavedMapButton** map);
+void DrawString2CenterRange(int x1, int x2, int y, int colour, int background, char * string, int erase);
 void DrawSavedMapData(SavedMapButton* button);
+void SetMockedMapData(SavedMapButton** maps);
+
 #endif

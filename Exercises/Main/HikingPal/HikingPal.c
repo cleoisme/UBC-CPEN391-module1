@@ -31,23 +31,39 @@
 #define BT_RATE_TRAIL 'Q'
 #define BT_WEATHER 'Z'
 #define BT_MAP 'X'
+#define MAX_MAPS 20
+
+typedef enum{
+	None,
+	Weather,
+	Rating,
+	Map,
+} State;
 
 int main(){
 
 	printf("Hello from Nios II!\n");
 	//set_user_pass();
+
+	// Initialize hardware
 	init_btport();
 	Init_Touch();
 	ResetScreen();
 	DrawString2Center(100, BLACK, WHITE, "Connect a bluetooth device!", 0);
-	char weatherData[150];
-	SavedMapButton** maps;
-	int i = 0;
 
-	int weather = 0;
+	// Initialize helper variables
+	char weatherData[150];
+	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
+	int i = 0;
+	State state = None;
+
+	SetMockedMapData(maps);
+	DrawAllSavedMapButtons(maps);
+
+	state = Map;
 
 	while(1){
-		while(1){
+		while(0){
 			char c = getchar_poll();
 			printf("%c\n", c);
 
@@ -57,18 +73,19 @@ int main(){
 				DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 				DrawString2Center(100, BLACK, WHITE, "Rate the trail!", 0);
 				DrawRatings(5, BLACK);
+				state = Rating;
 				break;
 			}
 
 			// Weather data init
 			else if(c == BT_WEATHER){
-				if(weather == 0){
-					weather = 1;
+				if(state == None){
+					state = Weather;
 					i = 0;
 				}
 				// Done parsing weather data
 				else{
-					weather = 0;
+					state = None;
 					printf(weatherData);
 					DrawFilledRectangle(0, XRES, 390, YRES, WHITE);
 					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
@@ -81,7 +98,7 @@ int main(){
 			}
 
 			// Start parsing weather data
-			else if(weather){
+			else if(state == Weather){
 				weatherData[i++] = c;
 			}
 		}
@@ -89,22 +106,35 @@ int main(){
 		// Done receiving data for now. Check for touch input.
 		while(1){
 			if (CheckForTouch()){
-				// Rate the trail
 				Point p = GetPen();
-				int star = CheckRatingPress(p.x, p.y);
-				printf("%d\n", star);
-				if(star != -1){
-					char send[1];
-					send[0] = star + 1 + '0';
-					send_string(send, 1);
+				// Rate the trail
+				if(state == Rating){
+					int star = CheckRatingPress(p.x, p.y);
+					printf("%d\n", star);
+					if(star != -1){
+						char send[1];
+						send[0] = star + 1 + '0';
+						send_string(send, 1);
 
-					ResetScreen();
-					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
-					DrawRatings(star + 1, YELLOW);
-					char msg[50];
-					sprintf(msg, "You rated %d stars!", star + 1);
-					DrawString2Center(100, BLACK, WHITE, msg, 0);
-					break;
+						ResetScreen();
+						DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+						DrawRatings(star + 1, YELLOW);
+						char msg[50];
+						sprintf(msg, "You rated %d stars!", star + 1);
+						DrawString2Center(100, BLACK, WHITE, msg, 0);
+
+						state = None;
+						break;
+					}
+				}
+				// Display map trail history
+				else if(state == Map){
+					int button = CheckSavedMapButtonPress(maps, p.x, p.y);
+					if(button != -1){
+						printf("%d", button);
+						DrawSavedMapData(maps[button]);
+						HighlightSavedMapButton(maps, maps[button]);
+					}
 				}
 			}
 		}
