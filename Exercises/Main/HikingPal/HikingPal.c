@@ -27,11 +27,14 @@
 #include "lcd.h"
 #include "bluetooth.h"
 #include "bluetooth2.h"
+#include "io.h"
 
 #define BT_RATE_TRAIL 'Q'
 #define BT_WEATHER 'Z'
 #define BT_MAP 'X'
 #define MAX_MAPS 20
+
+#define SWITCHES (volatile char *) 0x00001050
 
 typedef enum{
 	None,
@@ -54,6 +57,7 @@ int main(){
 	// Initialize helper variables
 	char weatherData[150];
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
+	volatile int switches = IORD_16DIRECT(SWITCHES, 0);
 	int i = 0;
 	State state = None;
 
@@ -103,8 +107,30 @@ int main(){
 			}
 		}
 
-		// Done receiving data for now. Check for touch input.
+		switches = IORD_16DIRECT(SWITCHES, 0);
+		printf("lala");
+
+		// Done receiving data for now. Check for touch/switch/button input.
 		while(1){
+			int switchesNew = IORD_16DIRECT(SWITCHES, 0);
+			printf("%d, %d\n", switchesNew, switches);
+			int bit = 0;
+			// Find first switch that is different. That will be the input switch.
+			if(switches != switchesNew){
+				printf("lol");
+				for(bit = 0; bit < 16; ++bit){
+					if((switches & (1 << bit)) != (switchesNew & (1 << bit))){
+						break;
+					}
+				}
+				if(bit == 16){
+					bit = -1;
+				}
+				switches = switchesNew;
+			}
+
+			//printf("%d\n", bit);
+
 			if (CheckForTouch()){
 				Point p = GetPen();
 				// Rate the trail
