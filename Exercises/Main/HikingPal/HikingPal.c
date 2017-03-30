@@ -57,12 +57,14 @@ int main(){
 	// Initialize helper variables
 	char weatherData[150];
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
+	size_t num_maps = 5;
+	int selectedMap = -1;
 	volatile int switches = IORD_16DIRECT(SWITCHES, 0);
 	int i = 0;
 	State state = None;
 
 	SetMockedMapData(maps);
-	DrawAllSavedMapButtons(maps);
+	DrawAllSavedMapButtons(maps, num_maps);
 
 	state = Map;
 
@@ -108,34 +110,39 @@ int main(){
 		}
 
 		switches = IORD_16DIRECT(SWITCHES, 0);
-		printf("lala");
 
 		// Done receiving data for now. Check for touch/switch/button input.
 		while(1){
 			int switchesNew = IORD_16DIRECT(SWITCHES, 0);
-			printf("%d, %d\n", switchesNew, switches);
-			int bit = 0;
+			int bit = -1;
 			// Find first switch that is different. That will be the input switch.
 			if(switches != switchesNew){
-				printf("lol");
 				for(bit = 0; bit < 16; ++bit){
 					if((switches & (1 << bit)) != (switchesNew & (1 << bit))){
 						break;
 					}
 				}
 				if(bit == 16){
+					printf("boom");
 					bit = -1;
 				}
 				switches = switchesNew;
+				printf("%d\n", bit);
 			}
 
-			//printf("%d\n", bit);
-
+			Point p = {.x = -1, .y = -1};
 			if (CheckForTouch()){
-				Point p = GetPen();
+				p = GetPen();
+			}
+
+			if (p.x != -1 || bit != -1){
 				// Rate the trail
 				if(state == Rating){
 					int star = CheckRatingPress(p.x, p.y);
+					// If no touch input, check switches
+					if(star == -1 && bit >= 0 && bit <= 4){
+						star = bit;
+					}
 					printf("%d\n", star);
 					if(star != -1){
 						char send[1];
@@ -156,10 +163,15 @@ int main(){
 				// Display map trail history
 				else if(state == Map){
 					int button = CheckSavedMapButtonPress(maps, p.x, p.y);
-					if(button != -1){
+					// If no touch input, check switches
+					if(button == -1 && bit >= 0 && bit < num_maps){
+						button = bit;
+					}
+					if(button != -1 && button != selectedMap){
 						printf("%d", button);
+						selectedMap = button;
 						DrawSavedMapData(maps[button]);
-						HighlightSavedMapButton(maps, maps[button]);
+						HighlightSavedMapButton(maps, maps[button], num_maps);
 					}
 				}
 			}

@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
+#include <stddef.h>
+
 #define TRUE 1
 #define FALSE 0
 
@@ -104,8 +106,8 @@ int CheckRatingPress(int x, int y);
 void ResetScreen();
 int CheckSavedMapButtonPress(SavedMapButton** buttons, int x, int y);
 void DrawSavedMapButton(SavedMapButton* button);
-void HighlightSavedMapButton(SavedMapButton** map, SavedMapButton* button);
-void DrawAllSavedMapButtons(SavedMapButton** map);
+void HighlightSavedMapButton(SavedMapButton** map, SavedMapButton* button, size_t num_maps);
+void DrawAllSavedMapButtons(SavedMapButton** map, size_t num_maps);
 void DrawString2CenterRange(int x1, int x2, int y, int colour, int background, char * string, int erase);
 void DrawSavedMapData(SavedMapButton* button);
 void SetMockedMapData(SavedMapButton** maps);

@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 #include <time.h>
 #include "graphics.h"
 #include "Colours.h"
@@ -670,16 +671,16 @@ void DrawSavedMapButton(SavedMapButton* button){
 }
 
 // Refreshes all buttons (to remove previous highlight) and highlights the selected button
-void HighlightSavedMapButton(SavedMapButton** map, SavedMapButton* button){
-	DrawAllSavedMapButtons(map);
+void HighlightSavedMapButton(SavedMapButton** map, SavedMapButton* button, size_t num_maps){
+	DrawAllSavedMapButtons(map, num_maps);
 	DrawRectangle(button->x, button->x + BUTTON_WIDTH, button->y, button->y + BUTTON_HEIGHT, YELLOW);
 	DrawString2CenterRange(button->x, button->x + BUTTON_WIDTH, button->y + BUTTON_HEIGHT/2, BLACK, WHITE, button->name, 0);
 }
 
 // Draws every button in the map array
-void DrawAllSavedMapButtons(SavedMapButton** map){
+void DrawAllSavedMapButtons(SavedMapButton** map, size_t num_maps){
 	int i = 0;
-	while(map[i]->x != 0){
+	while(i < num_maps){
 		DrawSavedMapButton(map[i++]);
 	}
 }
