@@ -27,21 +27,9 @@
 #include "lcd.h"
 #include "bluetooth.h"
 #include "bluetooth2.h"
+#include "switches.h"
 #include "io.h"
-
-#define BT_RATE_TRAIL 'Q'
-#define BT_WEATHER 'Z'
-#define BT_MAP 'X'
-#define MAX_MAPS 20
-
-#define SWITCHES (volatile char *) 0x00001050
-
-typedef enum{
-	None,
-	Weather,
-	Rating,
-	Map,
-} State;
+#include "HikingPal.h"
 
 int main(){
 
