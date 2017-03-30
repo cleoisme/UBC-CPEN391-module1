@@ -31,6 +31,59 @@
 #include "io.h"
 #include "HikingPal.h"
 
+void ParseMapData(char mapData[], int length, SavedMapButton** maps){
+	int i;
+	char data[100];
+	SavedMapButton* button;
+
+	for(i = 0; i < length; ++i){
+		// Indicates start of a new map
+		if(mapData[i] == BT_MAP_DELIMITER){
+			button = malloc(sizeof(SavedMapButton*));
+			continue;
+		}
+		// Parse each data of the map until we hit the delimiter again
+		int j = 0;
+		int k = 0;
+		while(mapData[i] != BT_MAP_DELIMITER){
+			// Indicates start of a new property
+			if(mapData[i] == BT_MAP_FIELD_DELIMITER){
+				memset(&data[0], 0, sizeof(data));
+				k = 0;
+				i++;
+				continue;
+			}
+			// Parse the property data
+			while(mapData[i] != BT_MAP_FIELD_DELIMITER){
+				data[k++] = mapData[i++];
+			}
+
+			switch(j){
+				case 0:
+					strcpy(button->name, data);
+					break;
+				case 1:
+					sscanf(data, "%d", &button->rating);
+					break;
+				case 2:
+					sscanf(data, "%d", &button->distance);
+					break;
+				case 3:
+					sscanf(data, "%d", &button->duration);
+					break;
+				case 4:
+					strcpy(button->locations, data);
+					break;
+				case 5:
+					strcpy(button->date, data);
+					break;
+			}
+
+			j++;
+		}
+	}
+}
+
 int main(){
 
 	printf("Hello from Nios II!\n");
@@ -44,6 +97,7 @@ int main(){
 
 	// Initialize helper variables
 	char weatherData[150];
+	char mapData[500];
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
 	size_t num_maps = 5;
 	int selectedMap = -1;

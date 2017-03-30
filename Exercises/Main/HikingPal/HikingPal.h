@@ -10,7 +10,9 @@
 
 #define BT_RATE_TRAIL 'Q'
 #define BT_WEATHER 'Z'
-#define BT_MAP 'X'
+#define BT_MAP_INIT 'W'
+#define BT_MAP_DELIMITER 'Q'
+#define BT_MAP_FIELD_DELIMITER 'V'
 #define MAX_MAPS 20
 
 typedef enum{
