@@ -14,6 +14,7 @@
 #define BT_MAP_DELIMITER 'Q'
 #define BT_MAP_FIELD_DELIMITER 'V'
 #define MAX_MAPS 20
+#define MAX_DATA_SIZE 50
 
 typedef enum{
 	None,

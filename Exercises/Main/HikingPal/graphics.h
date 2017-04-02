@@ -104,7 +104,7 @@ void DrawStar(int x, int y, int length, int colour);
 void DrawRatings(int n, int colour);
 int CheckRatingPress(int x, int y);
 void ResetScreen();
-int CheckSavedMapButtonPress(SavedMapButton** buttons, int x, int y);
+int CheckSavedMapButtonPress(SavedMapButton** buttons, size_t num_maps, int x, int y);
 void DrawSavedMapButton(SavedMapButton* button);
 void HighlightSavedMapButton(SavedMapButton** map, SavedMapButton* button, size_t num_maps);
 void DrawAllSavedMapButtons(SavedMapButton** map, size_t num_maps);

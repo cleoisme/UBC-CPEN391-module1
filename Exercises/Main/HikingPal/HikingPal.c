@@ -31,23 +31,59 @@
 #include "io.h"
 #include "HikingPal.h"
 
-void ParseMapData(char mapData[], int length, SavedMapButton** maps){
-	int i;
-	char data[100];
-	SavedMapButton* button;
+char testData[] = "QVtestV5V10V7VlalaVSeptVQVfuctV7V13V7VlfuckaVSeptVQVfuckitV5V10V7VlalaVSfuckeptVQVloveaaV69V1322V7VlalaaVJan21VQ";
 
-	for(i = 0; i < length; ++i){
+void FreeAllMaps(SavedMapButton** maps, size_t num_maps){
+	int i;
+	for(i = 0; i < num_maps; ++i){
+		FreeMap(maps[i]);
+	}
+}
+
+void FreeMap(SavedMapButton* map){
+	if(map == NULL){
+		return;
+	}
+
+	free(map->name);
+	free(map->date);
+	free(map->locations);
+	free(map);
+}
+
+int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
+	int i;
+	int currMap = 0;
+	char data[MAX_DATA_SIZE];
+
+	// Clear all map data first
+	FreeAllMaps(maps, num_maps);
+
+	for(i = 0; mapData[i] != '\0'; i++){
 		// Indicates start of a new map
 		if(mapData[i] == BT_MAP_DELIMITER){
-			button = malloc(sizeof(SavedMapButton*));
+			// Check if it's the last map delimiter. If so, we're done.
+			if(mapData[i + 1] == '\0'){
+				break;
+			}
+
+			currMap++;
+			maps[currMap - 1] =  malloc(sizeof(SavedMapButton));
 			continue;
 		}
 		// Parse each data of the map until we hit the delimiter again
+		// j keeps track of property (name, rating, distance, duration, locations, date respectively)
+		// k keeps track of data index
 		int j = 0;
 		int k = 0;
 		while(mapData[i] != BT_MAP_DELIMITER){
 			// Indicates start of a new property
 			if(mapData[i] == BT_MAP_FIELD_DELIMITER){
+				// Check if last property
+				if(mapData[i + 1] == BT_MAP_DELIMITER){
+					i++;
+					continue;
+				}
 				memset(&data[0], 0, sizeof(data));
 				k = 0;
 				i++;
@@ -58,30 +94,41 @@ void ParseMapData(char mapData[], int length, SavedMapButton** maps){
 				data[k++] = mapData[i++];
 			}
 
+			printf("%s\n", data);
+
 			switch(j){
 				case 0:
-					strcpy(button->name, data);
+					maps[currMap - 1]->name = malloc(sizeof(char) * k);
+					strcpy(maps[currMap - 1]->name, data);
 					break;
 				case 1:
-					sscanf(data, "%d", &button->rating);
+					sscanf(data, "%d", &maps[currMap - 1]->rating);
 					break;
 				case 2:
-					sscanf(data, "%d", &button->distance);
+					sscanf(data, "%d", &maps[currMap - 1]->distance);
 					break;
 				case 3:
-					sscanf(data, "%d", &button->duration);
+					sscanf(data, "%d", &maps[currMap - 1]->duration);
 					break;
 				case 4:
-					strcpy(button->locations, data);
+					maps[currMap - 1]->locations = malloc(sizeof(char) * k);
+					strcpy(maps[currMap - 1]->locations, data);
 					break;
 				case 5:
-					strcpy(button->date, data);
+					maps[currMap - 1]->date = malloc(sizeof(char) * k);
+					strcpy(maps[currMap - 1]->date, data);
 					break;
 			}
 
 			j++;
 		}
+
+		i--;
+		maps[currMap - 1]->x = 50;
+		maps[currMap - 1]->y = 20 + (currMap - 1) * (BUTTON_HEIGHT * 1.2);
 	}
+
+	return currMap;
 }
 
 int main(){
@@ -99,16 +146,19 @@ int main(){
 	char weatherData[150];
 	char mapData[500];
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
-	size_t num_maps = 5;
+	size_t num_maps = 0;
 	int selectedMap = -1;
 	volatile int switches = IORD_16DIRECT(SWITCHES, 0);
 	int i = 0;
 	State state = None;
 
-	SetMockedMapData(maps);
-	DrawAllSavedMapButtons(maps, num_maps);
+	//SetMockedMapData(maps);
 
 	state = Map;
+
+	num_maps = ParseMapData(testData, maps, num_maps);
+
+	DrawAllSavedMapButtons(maps, num_maps);
 
 	while(1){
 		while(0){
@@ -127,11 +177,13 @@ int main(){
 
 			// Weather data init
 			else if(c == BT_WEATHER){
-				if(state == None){
+				// First time we see BT_WEATHER, go to Weather state
+				if(state != Weather){
 					state = Weather;
+					memset(&weatherData, 0, sizeof(weatherData));
 					i = 0;
 				}
-				// Done parsing weather data
+				// Done parsing weather data if we see BT_WEATHER again
 				else{
 					state = None;
 					printf(weatherData);
@@ -141,13 +193,26 @@ int main(){
 			}
 
 			// Saved map data init
-			else if(c == BT_MAP){
+			else if(c == BT_MAP_INIT){
+				if(state != Map){
+					state = Map;
+					memset(&mapData, 0, sizeof(mapData));
+					i = 0;
+				}
+				else{
+					state = None;
+					printf(mapData);
 
+				}
 			}
 
 			// Start parsing weather data
 			else if(state == Weather){
 				weatherData[i++] = c;
+			}
+
+			else if(state == Map){
+				mapData[i++] = c;
 			}
 		}
 
@@ -204,11 +269,13 @@ int main(){
 				}
 				// Display map trail history
 				else if(state == Map){
-					int button = CheckSavedMapButtonPress(maps, p.x, p.y);
+					int button = CheckSavedMapButtonPress(maps, num_maps, p.x, p.y);
+
 					// If no touch input, check switches
 					if(button == -1 && bit >= 0 && bit < num_maps){
 						button = bit;
 					}
+
 					if(button != -1 && button != selectedMap){
 						printf("%d", button);
 						selectedMap = button;

@@ -650,9 +650,9 @@ void ResetScreen(){
 
 // Checks the input buttons array to see if the input x,y touches one of them
 // Return the index of the button that it presses. -1 otherwise.
-int CheckSavedMapButtonPress(SavedMapButton** buttons, int x, int y){
+int CheckSavedMapButtonPress(SavedMapButton** buttons, size_t num_maps, int x, int y){
 	int i;
-	for(i = 0; buttons[i] != NULL; ++i){
+	for(i = 0; i < num_maps; ++i){
 		if(!(x >= buttons[i]->x && x <= buttons[i]->x + BUTTON_WIDTH))
 			continue;
 		if(!(y >= buttons[i]->y && y <= buttons[i]->y + BUTTON_HEIGHT))
