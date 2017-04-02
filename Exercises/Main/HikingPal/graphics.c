@@ -691,14 +691,16 @@ void DrawSavedMapData(SavedMapButton* button){
 
 	DrawFilledRectangle(XRES / 2, XRES, 0, YRES, WHITE);
 	DrawString2CenterRange(XRES / 2, XRES, 150, BLACK, WHITE, button->name, 0);
-	sprintf(buffer, "Rating: %d Stars!", button->rating);
+	sprintf(buffer, "Rating: %s Stars!", button->rating);
 	DrawString2CenterRange(XRES / 2, XRES, 175, BLACK, WHITE, buffer, 0);
-	sprintf(buffer, "Distance: %d Meters", button->distance);
+	sprintf(buffer, "Distance: %s Meters", button->distance);
 	DrawString2CenterRange(XRES / 2, XRES, 200, BLACK, WHITE, buffer, 0);
-	sprintf(buffer, "Duration: %d Seconds", button->duration);
+	sprintf(buffer, "Duration: %s Seconds", button->duration);
 	DrawString2CenterRange(XRES / 2, XRES, 225, BLACK, WHITE, buffer, 0);
-	sprintf(buffer, "Date: %s", button->date);
+	sprintf(buffer, "Locations: %s", button->locations);
 	DrawString2CenterRange(XRES / 2, XRES, 250, BLACK, WHITE, buffer, 0);
+	sprintf(buffer, "Date: %s", button->date);
+	DrawString2CenterRange(XRES / 2, XRES, 275, BLACK, WHITE, buffer, 0);
 }
 
 void SetMockedMapData(SavedMapButton** maps){
@@ -706,11 +708,11 @@ void SetMockedMapData(SavedMapButton** maps){
 	for(i = 0; i < 5; ++i){
 		SavedMapButton *map = malloc(sizeof(SavedMapButton));
 		map->date = "Date";
-		map->distance = i;
-		map->duration = i;
-		map->locations = 'a' + i;
+		map->distance = "10";
+		map->duration = "5";
+		map->locations = "loc";
 		map->name = "ABCD";
-		map->rating = i;
+		map->rating = "4";
 		map->x = 50;
 		map->y = 20 + i * (BUTTON_HEIGHT * 1.2);
 		maps[i] = map;

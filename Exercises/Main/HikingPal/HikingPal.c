@@ -48,6 +48,9 @@ void FreeMap(SavedMapButton* map){
 	free(map->name);
 	free(map->date);
 	free(map->locations);
+	free(map->distance);
+	free(map->duration);
+	free(map->rating);
 	free(map);
 }
 
@@ -69,6 +72,8 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 
 			currMap++;
 			maps[currMap - 1] =  malloc(sizeof(SavedMapButton));
+			maps[currMap - 1]->x = 50;
+			maps[currMap - 1]->y = 20 + (currMap - 1) * (BUTTON_HEIGHT * 1.2);
 			continue;
 		}
 		// Parse each data of the map until we hit the delimiter again
@@ -102,13 +107,16 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 					strcpy(maps[currMap - 1]->name, data);
 					break;
 				case 1:
-					sscanf(data, "%d", &maps[currMap - 1]->rating);
+					maps[currMap - 1]->rating = malloc(sizeof(char) * k);
+					strcpy(maps[currMap - 1]->rating, data);
 					break;
 				case 2:
-					sscanf(data, "%d", &maps[currMap - 1]->distance);
+					maps[currMap - 1]->distance = malloc(sizeof(char) * k);
+					strcpy(maps[currMap - 1]->distance, data);
 					break;
 				case 3:
-					sscanf(data, "%d", &maps[currMap - 1]->duration);
+					maps[currMap - 1]->duration = malloc(sizeof(char) * k);
+					strcpy(maps[currMap - 1]->duration, data);
 					break;
 				case 4:
 					maps[currMap - 1]->locations = malloc(sizeof(char) * k);
@@ -124,8 +132,6 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 		}
 
 		i--;
-		maps[currMap - 1]->x = 50;
-		maps[currMap - 1]->y = 20 + (currMap - 1) * (BUTTON_HEIGHT * 1.2);
 	}
 
 	return currMap;
@@ -157,8 +163,9 @@ int main(){
 	state = Map;
 
 	num_maps = ParseMapData(testData, maps, num_maps);
-
 	DrawAllSavedMapButtons(maps, num_maps);
+
+	DrawString2Center(100, WHITE, WHITE, "Connect a bluetooth device!", 0);
 
 	while(1){
 		while(0){

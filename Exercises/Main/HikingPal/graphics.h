@@ -69,9 +69,9 @@ typedef struct SavedMapButton{
 	int x;
 	int y;
 	char *name;
-	int rating;
-	int distance;
-	int duration;
+	char *rating;
+	char *distance;
+	char *duration;
 	char *locations;
 	char *date;
 } SavedMapButton;
