@@ -33,6 +33,8 @@
 
 char testData[] = "QVtestV5V10V7VlalaVSeptVQVfuctV7V13V7VlfuckaVSeptVQVfuckitV5V10V7VlalaVSfuckeptVQVloveaaV69V1322V7VlalaaVJan21VQ";
 
+char testd[] = "QV744066575V5V0V1VlocVSun Apr 02 09:48:38 GMT+08:00 2017VQ";
+
 void FreeAllMaps(SavedMapButton** maps, size_t num_maps){
 	int i;
 	for(i = 0; i < num_maps; ++i){
@@ -160,15 +162,13 @@ int main(){
 
 	//SetMockedMapData(maps);
 
-	state = Map;
-
-	num_maps = ParseMapData(testData, maps, num_maps);
-	DrawAllSavedMapButtons(maps, num_maps);
-
-	DrawString2Center(100, WHITE, WHITE, "Connect a bluetooth device!", 0);
+	//state = Map;
+	//num_maps = ParseMapData(testd, maps, num_maps);
+	//DrawAllSavedMapButtons(maps, num_maps);
+	//DrawString2Center(100, WHITE, WHITE, "Connect a bluetooth device!", 0);
 
 	while(1){
-		while(0){
+		while(1){
 			char c = getchar_poll();
 			printf("%c\n", c);
 
@@ -194,8 +194,8 @@ int main(){
 				else{
 					state = None;
 					printf(weatherData);
-					DrawFilledRectangle(0, XRES, 390, YRES, WHITE);
-					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+					ResetScreen();
+					DrawString2CenterRange(0, XRES, 400, BLACK, WHITE, weatherData, 0);
 				}
 			}
 
@@ -205,11 +205,14 @@ int main(){
 					state = Map;
 					memset(&mapData, 0, sizeof(mapData));
 					i = 0;
+					printf("Got it\n");
 				}
 				else{
-					state = None;
+					num_maps = ParseMapData(testd, maps, num_maps);
+					DrawAllSavedMapButtons(maps, num_maps);
+					break;
+					//state = None;
 					printf(mapData);
-
 				}
 			}
 
@@ -220,6 +223,7 @@ int main(){
 
 			else if(state == Map){
 				mapData[i++] = c;
+				printf("%c", mapData[i]);
 			}
 		}
 
