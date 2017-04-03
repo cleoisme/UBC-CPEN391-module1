@@ -109,13 +109,13 @@ void DrawString2(int x, int y, int colour, int background, char* string, int era
 }
 
 void DrawString2Center(int y, int colour, int background, char* string, int erase){
-	size_t length = strlen(string) * 10;
+	size_t length = strlen(string) * 14;
 	size_t offset = (XRES - length)/2;
 	DrawString2(offset, y, colour, background, string, erase);
 }
 
 void DrawString2CenterRange(int x1, int x2, int y, int colour, int background, char * string, int erase){
-	size_t length = strlen(string) * 10;
+	size_t length = strlen(string) * 14;
 	size_t offset = x1 + (x2 - x1 - length)/2;
 	DrawString2(offset, y, colour, background, string, erase);
 }

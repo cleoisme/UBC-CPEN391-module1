@@ -195,7 +195,7 @@ int main(){
 					state = None;
 					printf(weatherData);
 					ResetScreen();
-					DrawString2CenterRange(0, XRES, 400, BLACK, WHITE, weatherData, 0);
+					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 				}
 			}
 
@@ -263,9 +263,10 @@ int main(){
 					}
 					printf("%d\n", star);
 					if(star != -1){
-						char send[1];
-						send[0] = star + 1 + '0';
-						send_string(send, 1);
+						char send[4];
+						sprintf(send, "%c%d%c", BT_RATE_TRAIL, star + 1, BT_RATE_TRAIL);
+						printf(send);
+						send_string(send, 3);
 
 						ResetScreen();
 						DrawString2Center(400, BLACK, WHITE, weatherData, 0);

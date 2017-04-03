@@ -8,7 +8,7 @@
 #ifndef HIKINGPAL_H_
 #define HIKINGPAL_H_
 
-#define BT_RATE_TRAIL 'P'  //Q
+#define BT_RATE_TRAIL 'P'
 #define BT_WEATHER 'Z'
 #define BT_MAP_INIT 'W'
 #define BT_MAP_DELIMITER 'Q'
