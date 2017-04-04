@@ -155,9 +155,12 @@ void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
 	ResetScreen();
 	char weatherBuffer[8];
 	sprintf(weatherBuffer, "%s.BMP", weatherIcon);
-	DrawMapSDCard(weatherBuffer, 30, 440, 72, 72, 1);
-	DrawRectangle(30, 30 + 72, 440 - 72, 440, BLACK);
 	DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+	DrawMapSDCard(weatherBuffer, 20, 440, 72, 72, 1);
+	DrawRectangle(20, 20 + 72, 440 - 72, 440, BLACK);
+	DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1);
+	DrawRectangle(XRES - 20 - 72, XRES - 20, 440 - 72, 440, BLACK);
+	DrawHorizontalLine(0, XRES, 420 - 72, BLACK);
 }
 
 void ResetUpperScreen(){
