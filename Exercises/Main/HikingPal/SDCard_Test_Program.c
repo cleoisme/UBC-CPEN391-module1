@@ -35,7 +35,7 @@ void TestSDCard(){
 							printf("Found file: %s\n", file_name);
 						}
 					}
-					WriteToFile();
+					// WriteToFile();
 					return;
 
 				}

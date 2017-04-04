@@ -151,6 +151,19 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 	return currMap;
 }
 
+void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
+	ResetScreen();
+	char weatherBuffer[8];
+	sprintf(weatherBuffer, "%s.BMP", weatherIcon);
+	DrawMapSDCard(weatherBuffer, 30, 440, 72, 72, 1);
+	DrawRectangle(30, 30 + 72, 440 - 72, 440, BLACK);
+	DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+}
+
+void ResetUpperScreen(){
+	DrawFilledRectangle(0, XRES, 0, 360, WHITE);
+}
+
 int main(){
 
 	printf("Hello from Nios II!\n");
@@ -159,11 +172,16 @@ int main(){
 	// Initialize hardware
 	init_btport();
 	Init_Touch();
+	InitializeLCD();
+	ProgramAllPalette();
+	TestSDCard();
+
 	ResetScreen();
 	DrawString2Center(100, BLACK, WHITE, "Connect a bluetooth device!", 0);
 
 	// Initialize helper variables
 	char weatherData[150];
+	char weatherIcon[4];
 	char mapData[500];
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
 	size_t num_maps = 0;
@@ -179,10 +197,13 @@ int main(){
 	//DrawAllSavedMapButtons(maps, num_maps);
 	//DrawString2Center(100, WHITE, WHITE, "Connect a bluetooth device!", 0);
 
-	while(1){
-		usleep(1000000);
-		send_string("Y", 1);
-	}
+//	while(1){
+//		usleep(1000000);
+//		send_string("Y", 1);
+//	}
+
+	//DrawMapSDCard("02D.BMP", 30, 460, 72, 72, 1);
+	//DrawRectangle(30, 30 + 72, 460 - 72, 460, BLACK);
 
 	while(1){
 		while(1){
@@ -191,8 +212,8 @@ int main(){
 
 			// Rate trail init
 			if((state == None || state == Rating) && c == BT_RATE_TRAIL){
-				ResetScreen();
-				DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+				ResetUpperScreen();
+
 				DrawString2Center(100, BLACK, WHITE, "Rate the trail!", 0);
 				DrawRatings(5, BLACK);
 				state = Rating;
@@ -205,14 +226,16 @@ int main(){
 				if(state != Weather){
 					state = Weather;
 					memset(&weatherData, 0, sizeof(weatherData));
+					memset(&weatherIcon, 0, sizeof(weatherIcon));
 					i = 0;
 				}
 				// Done parsing weather data if we see BT_WEATHER again
 				else{
 					state = None;
 					printf(weatherData);
-					ResetScreen();
-					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+					printf(weatherIcon);
+
+					ResetScreenWithWeather(weatherData, weatherIcon);
 				}
 			}
 
@@ -226,8 +249,7 @@ int main(){
 				}
 				else{
 					num_maps = ParseMapData(mapData, maps, num_maps);
-					ResetScreen();
-					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+					ResetUpperScreen();
 					DrawAllSavedMapButtons(maps, num_maps);
 					printf(mapData);
 					break;
@@ -236,7 +258,12 @@ int main(){
 
 			// Start parsing weather data
 			else if(state == Weather){
-				weatherData[i++] = c;
+				if(i < 3){
+					weatherIcon[i++] = c;
+				}
+				else{
+					weatherData[i++ - 3] = c;
+				}
 			}
 
 			else if(state == Map){
@@ -285,8 +312,8 @@ int main(){
 						printf(send);
 						send_string(send, 3);
 
-						ResetScreen();
-						DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+						ResetUpperScreen();
+
 						DrawRatings(star + 1, YELLOW);
 						char msg[50];
 						sprintf(msg, "You rated %d stars!", star + 1);
