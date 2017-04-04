@@ -74,6 +74,12 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 
 			currMap++;
 			maps[currMap - 1] =  malloc(sizeof(SavedMapButton));
+			maps[currMap - 1]->date = NULL;
+			maps[currMap - 1]->distance = NULL;
+			maps[currMap - 1]->duration = NULL;
+			maps[currMap - 1]->locations = NULL;
+			maps[currMap - 1]->name = NULL;
+			maps[currMap - 1]->rating = NULL;
 			maps[currMap - 1]->x = 50;
 			maps[currMap - 1]->y = 20 + (currMap - 1) * (BUTTON_HEIGHT * 1.2);
 			continue;
@@ -86,6 +92,12 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 		while(mapData[i] != BT_MAP_DELIMITER){
 			// Indicates start of a new property
 			if(mapData[i] == BT_MAP_FIELD_DELIMITER){
+				// Check if empty property
+				if(mapData[i + 1] == BT_MAP_FIELD_DELIMITER){
+					i++;
+					j++;
+					continue;
+				}
 				// Check if last property
 				if(mapData[i + 1] == BT_MAP_DELIMITER){
 					i++;
@@ -168,12 +180,17 @@ int main(){
 	//DrawString2Center(100, WHITE, WHITE, "Connect a bluetooth device!", 0);
 
 	while(1){
+		usleep(1000000);
+		send_string("Y", 1);
+	}
+
+	while(1){
 		while(1){
 			char c = getchar_poll();
 			printf("%c\n", c);
 
 			// Rate trail init
-			if(c == BT_RATE_TRAIL){
+			if((state == None || state == Rating) && c == BT_RATE_TRAIL){
 				ResetScreen();
 				DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 				DrawString2Center(100, BLACK, WHITE, "Rate the trail!", 0);
@@ -183,7 +200,7 @@ int main(){
 			}
 
 			// Weather data init
-			else if(c == BT_WEATHER){
+			else if((state == None || state == Weather) && c == BT_WEATHER){
 				// First time we see BT_WEATHER, go to Weather state
 				if(state != Weather){
 					state = Weather;
@@ -200,7 +217,7 @@ int main(){
 			}
 
 			// Saved map data init
-			else if(c == BT_MAP_INIT){
+			else if((state == None || state == Map) && c == BT_MAP_INIT){
 				if(state != Map){
 					state = Map;
 					memset(&mapData, 0, sizeof(mapData));
@@ -208,11 +225,12 @@ int main(){
 					printf("Got it\n");
 				}
 				else{
-					num_maps = ParseMapData(testd, maps, num_maps);
+					num_maps = ParseMapData(mapData, maps, num_maps);
+					ResetScreen();
+					DrawString2Center(400, BLACK, WHITE, weatherData, 0);
 					DrawAllSavedMapButtons(maps, num_maps);
-					break;
-					//state = None;
 					printf(mapData);
+					break;
 				}
 			}
 
@@ -241,7 +259,6 @@ int main(){
 					}
 				}
 				if(bit == 16){
-					printf("boom");
 					bit = -1;
 				}
 				switches = switchesNew;
@@ -294,6 +311,15 @@ int main(){
 						DrawSavedMapData(maps[button]);
 						HighlightSavedMapButton(maps, maps[button], num_maps);
 					}
+				}
+			}
+			else{
+				// No input, check for incoming bluetooth data
+				if(test_getchar()){
+					printf("Bluetooth inc\n");
+					state = None;
+					selectedMap = -1;
+					break;
 				}
 			}
 		}

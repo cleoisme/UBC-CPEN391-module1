@@ -689,18 +689,45 @@ void DrawAllSavedMapButtons(SavedMapButton** map, size_t num_maps){
 void DrawSavedMapData(SavedMapButton* button){
 	char buffer[50];
 
-	DrawFilledRectangle(XRES / 2, XRES, 0, YRES, WHITE);
-	DrawString2CenterRange(XRES / 2, XRES, 150, BLACK, WHITE, button->name, 0);
-	sprintf(buffer, "Rating: %s Stars!", button->rating);
-	DrawString2CenterRange(XRES / 2, XRES, 175, BLACK, WHITE, buffer, 0);
-	sprintf(buffer, "Distance: %s Meters", button->distance);
-	DrawString2CenterRange(XRES / 2, XRES, 200, BLACK, WHITE, buffer, 0);
-	sprintf(buffer, "Duration: %s Seconds", button->duration);
-	DrawString2CenterRange(XRES / 2, XRES, 225, BLACK, WHITE, buffer, 0);
-	sprintf(buffer, "Locations: %s", button->locations);
-	DrawString2CenterRange(XRES / 2, XRES, 250, BLACK, WHITE, buffer, 0);
-	sprintf(buffer, "Date: %s", button->date);
-	DrawString2CenterRange(XRES / 2, XRES, 275, BLACK, WHITE, buffer, 0);
+	DrawFilledRectangle(XRES / 2, XRES, 0, YRES * 3/4, WHITE);
+	if(button->name != NULL){
+		DrawString2CenterRange(XRES / 2, XRES, 150, BLACK, WHITE, button->name, 0);
+	}
+	if(button->rating != NULL){
+		sprintf(buffer, "Rating: %s Stars!", button->rating);
+		DrawString2CenterRange(XRES / 2, XRES, 175, BLACK, WHITE, buffer, 0);
+	}
+	else{
+		DrawString2CenterRange(XRES / 2, XRES, 175, BLACK, WHITE, "Rating:", 0);
+	}
+	if(button->distance != NULL){
+		sprintf(buffer, "Distance: %s Meters", button->distance);
+		DrawString2CenterRange(XRES / 2, XRES, 200, BLACK, WHITE, buffer, 0);
+	}
+	else{
+		DrawString2CenterRange(XRES / 2, XRES, 200, BLACK, WHITE, "Distance", 0);
+	}
+	if(button->duration != NULL){
+		sprintf(buffer, "Duration: %s Seconds", button->duration);
+		DrawString2CenterRange(XRES / 2, XRES, 225, BLACK, WHITE, buffer, 0);
+	}
+	else{
+		DrawString2CenterRange(XRES / 2, XRES, 225, BLACK, WHITE, "Duration:", 0);
+	}
+	if(button->locations != NULL){
+		sprintf(buffer, "Locations: %s", button->locations);
+		DrawString2CenterRange(XRES / 2, XRES, 250, BLACK, WHITE, buffer, 0);
+	}
+	else{
+		DrawString2CenterRange(XRES / 2, XRES, 250, BLACK, WHITE, "Locations:", 0);
+	}
+	if(button->date != NULL){
+		sprintf(buffer, "Date: %s", button->date);
+		DrawString2CenterRange(XRES / 2, XRES, 275, BLACK, WHITE, buffer, 0);
+	}
+	else{
+		DrawString2CenterRange(XRES / 2, XRES, 275, BLACK, WHITE, "Date:", 0);
+	}
 }
 
 void SetMockedMapData(SavedMapButton** maps){

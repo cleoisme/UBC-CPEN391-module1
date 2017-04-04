@@ -14,5 +14,6 @@ char getchar_poll(void);
 void set_user_pass();
 void init_btport();
 void receive_string(char buffer[], int maxlen);
+int test_getchar(void);
 
 #endif /* BLUETOOTH2_H_ */
