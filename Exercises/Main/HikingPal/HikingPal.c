@@ -160,11 +160,11 @@ void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
 	DrawRectangle(20, 20 + 72, 440 - 72, 440, BLACK);
 	DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1);
 	DrawRectangle(XRES - 20 - 72, XRES - 20, 440 - 72, 440, BLACK);
-	DrawHorizontalLine(0, XRES, 420 - 72, BLACK);
+	DrawHorizontalLine(0, XRES, 430 - 72, BLACK);
 }
 
 void ResetUpperScreen(){
-	DrawFilledRectangle(0, XRES, 0, 360, WHITE);
+	DrawFilledRectangle(0, XRES, 0, 350, WHITE);
 }
 
 int main(){
@@ -174,6 +174,7 @@ int main(){
 
 	// Initialize hardware
 	init_btport();
+	removeBtBuffer();
 	Init_Touch();
 	InitializeLCD();
 	ProgramAllPalette();

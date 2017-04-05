@@ -689,13 +689,13 @@ void DrawAllSavedMapButtons(SavedMapButton** map, size_t num_maps){
 void DrawSavedMapData(SavedMapButton* button){
 	char buffer[50];
 
-	DrawFilledRectangle(XRES / 2, XRES, 0, YRES * 3/4, WHITE);
+	DrawFilledRectangle(XRES / 2, XRES, 0, YRES * 0.7, WHITE);
 	if(button->name != NULL){
 		DrawString2CenterRange(XRES / 2, XRES, 150, BLACK, WHITE, button->name, 0);
 	}
 	if(button->rating != NULL){
 		sprintf(buffer, "Rating: %s Stars!", button->rating);
-		DrawString2CenterRange(XRES / 2, XRES, 175, BLACK, WHITE, buffer, 0);
+		DrawString2CenterRange(XRES / 2 , XRES, 175, BLACK, WHITE, buffer, 0);
 	}
 	else{
 		DrawString2CenterRange(XRES / 2, XRES, 175, BLACK, WHITE, "Rating:", 0);
@@ -723,7 +723,7 @@ void DrawSavedMapData(SavedMapButton* button){
 	}
 	if(button->date != NULL){
 		sprintf(buffer, "Date: %s", button->date);
-		DrawString2CenterRange(XRES / 2, XRES, 275, BLACK, WHITE, buffer, 0);
+		DrawString2CenterRange(XRES / 2 - 80, XRES, 275, BLACK, WHITE, buffer, 0);
 	}
 	else{
 		DrawString2CenterRange(XRES / 2, XRES, 275, BLACK, WHITE, "Date:", 0);

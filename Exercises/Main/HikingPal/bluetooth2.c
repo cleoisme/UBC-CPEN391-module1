@@ -195,3 +195,9 @@ int setup_all_bluetooth2()
 
 	return 0;
 }
+
+void removeBtBuffer(){
+	while(getchar_btport() != '-'){
+
+	}
+}

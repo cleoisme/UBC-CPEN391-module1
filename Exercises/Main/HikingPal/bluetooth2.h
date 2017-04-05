@@ -15,5 +15,6 @@ void set_user_pass();
 void init_btport();
 void receive_string(char buffer[], int maxlen);
 int test_getchar(void);
+void removeBtBuffer(void);
 
 #endif /* BLUETOOTH2_H_ */
