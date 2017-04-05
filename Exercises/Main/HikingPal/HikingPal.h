@@ -11,9 +11,9 @@
 #define BT_RATE_TRAIL 'P'
 #define BT_WEATHER 'Z'
 #define BT_GPS 'Y'
-#define BT_MAP_INIT 'W'
+#define BT_MAP_INIT 'X'
 #define BT_MAP_DELIMITER 'Q'
-#define BT_MAP_FIELD_DELIMITER 'V'
+#define BT_MAP_FIELD_DELIMITER 'U'
 #define MAX_MAPS 20
 #define MAX_DATA_SIZE 50
 

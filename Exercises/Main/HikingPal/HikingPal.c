@@ -186,7 +186,7 @@ int main(){
 	// Initialize helper variables
 	char weatherData[150];
 	char weatherIcon[4];
-	char gpsData[15];
+	char gpsData[20];
 	char mapData[500];
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
 	size_t num_maps = 0;
@@ -256,7 +256,7 @@ int main(){
 					num_maps = ParseMapData(mapData, maps, num_maps);
 					ResetUpperScreen();
 					DrawAllSavedMapButtons(maps, num_maps);
-					printf(mapData);
+					//printf(mapData);
 					break;
 				}
 			}
@@ -284,6 +284,7 @@ int main(){
 		}
 
 		switches = IORD_16DIRECT(SWITCHES, 0);
+		printf("hereaa");
 
 		// Done receiving data for now. Check for touch/switch/button input.
 		while(1){

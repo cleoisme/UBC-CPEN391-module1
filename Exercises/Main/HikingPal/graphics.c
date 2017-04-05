@@ -723,7 +723,7 @@ void DrawSavedMapData(SavedMapButton* button){
 	}
 	if(button->date != NULL){
 		sprintf(buffer, "Date: %s", button->date);
-		DrawString2CenterRange(XRES / 2 - 80, XRES, 275, BLACK, WHITE, buffer, 0);
+		DrawString2CenterRange(XRES / 2 - 50, XRES, 275, BLACK, WHITE, buffer, 0);
 	}
 	else{
 		DrawString2CenterRange(XRES / 2, XRES, 275, BLACK, WHITE, "Date:", 0);
