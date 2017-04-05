@@ -31,9 +31,7 @@
 #include "io.h"
 #include "HikingPal.h"
 
-char testData[] = "QVtestV5V10V7VlalaVSeptVQVfuctV7V13V7VlfuckaVSeptVQVfuckitV5V10V7VlalaVSfuckeptVQVloveaaV69V1322V7VlalaaVJan21VQ";
-
-char testd[] = "QV744066575V5V0V1VlocVSun Apr 02 09:48:38 GMT+08:00 2017VQ";
+char testData[] = "XQU1030900670U0U0U1UU2017-04-05 02:29:12UQU1030911502U0U0U3UU2017-04-05 02:29:23UQU1032221705U1U0U6UU2017-04-05 02:51:13UQX";
 
 void FreeAllMaps(SavedMapButton** maps, size_t num_maps){
 	int i;
@@ -156,11 +154,11 @@ void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
 	char weatherBuffer[8];
 	sprintf(weatherBuffer, "%s.BMP", weatherIcon);
 	DrawString2Center(400, BLACK, WHITE, weatherData, 0);
-	DrawMapSDCard(weatherBuffer, 20, 440, 72, 72, 1);
-	DrawRectangle(20, 20 + 72, 440 - 72, 440, BLACK);
-	DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1);
-	DrawRectangle(XRES - 20 - 72, XRES - 20, 440 - 72, 440, BLACK);
+	DrawRectangle(18, 22 + 72, 438 -  72, 442, BLACK);
+	DrawRectangle(XRES - 22 - 72, XRES - 18, 438 - 72, 442, BLACK);
 	DrawHorizontalLine(0, XRES, 430 - 72, BLACK);
+	DrawMapSDCard(weatherBuffer, 20, 440, 72, 72, 1);
+	DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1);
 }
 
 void ResetUpperScreen(){
@@ -284,7 +282,6 @@ int main(){
 		}
 
 		switches = IORD_16DIRECT(SWITCHES, 0);
-		printf("hereaa");
 
 		// Done receiving data for now. Check for touch/switch/button input.
 		while(1){
