@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include <time.h>
 #include "graphics.h"
+#include "OutGraphicsCharFont.h"
 #include "Colours.h"
 #include "touch.h"
 #include "SDCard_Test_Program.h"

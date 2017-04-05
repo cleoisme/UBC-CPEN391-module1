@@ -153,7 +153,21 @@ void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
 	ResetScreen();
 	char weatherBuffer[8];
 	sprintf(weatherBuffer, "%s.BMP", weatherIcon);
-	DrawString2Center(400, BLACK, WHITE, weatherData, 0);
+
+	char weatherData1[100];
+	char weatherData2[100];
+	int i;
+	for(i = 0; weatherData[i] != '\n' && weatherData[i] != '\0' && i < 100; ++i){
+		weatherData1[i] = weatherData[i];
+	}
+	int j;
+	for(j = 0; weatherData[i] != '\0' && j < 100; ++j){
+		weatherData2[j] = weatherData[i++];
+	}
+
+	DrawString2Center(400, BLACK, WHITE, weatherData1, 0);
+	DrawString2Center(430, BLACK, WHITE, weatherData2, 0);
+
 	DrawRectangle(18, 22 + 72, 438 -  72, 442, BLACK);
 	DrawRectangle(XRES - 22 - 72, XRES - 18, 438 - 72, 442, BLACK);
 	DrawHorizontalLine(0, XRES, 430 - 72, BLACK);
