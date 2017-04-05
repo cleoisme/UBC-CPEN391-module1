@@ -29,6 +29,7 @@
 #include "bluetooth2.h"
 #include "switches.h"
 #include "io.h"
+#include "keyboard.h"
 #include "HikingPal.h"
 
 char testData[] = "XQU1030900670U0U0U1UU2017-04-05 02:29:12UQU1030911502U0U0U3UU2017-04-05 02:29:23UQU1032221705U1U0U6UU2017-04-05 02:51:13UQX";
@@ -54,6 +55,8 @@ void FreeMap(SavedMapButton* map){
 	free(map);
 }
 
+
+// Parse the map data sent by bluetooth into structs
 int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 	int i;
 	int currMap = 0;
@@ -149,6 +152,7 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 	return currMap;
 }
 
+// Reset the entire screen and re-draw weather data
 void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
 	ResetScreen();
 	char weatherBuffer[8];
@@ -175,6 +179,7 @@ void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
 	DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1);
 }
 
+// Reset just the upper screen (ignore weather portion)
 void ResetUpperScreen(){
 	DrawFilledRectangle(0, XRES, 0, 350, WHITE);
 }
@@ -206,6 +211,38 @@ int main(){
 	volatile int switches = IORD_16DIRECT(SWITCHES, 0);
 	int i = 0;
 	State state = None;
+
+	DrawKeyboard();
+
+	char keyInput[100];
+	int keyIndex = 0;
+	while(1){
+		Point p = {.x = -1, .y = -1};
+		if (CheckForTouch()){
+			p = GetPen();
+			char c = GetCharPress(p.x, p.y);
+			if(c != '\0'){
+				printf("%c\n", c);
+				DrawFilledRectangle(0, XRES, 250, 275, WHITE);
+				if(c == 'B' && keyIndex > 0){
+					keyInput[keyIndex - 1] = '\0';
+					keyIndex--;
+				}
+				else if (c == 'E'){
+					// Send String
+				}
+				else{
+					keyInput[keyIndex++] = c;
+					keyInput[keyIndex + 1] = '\0';
+				}
+				DrawString2Center(250, BLACK, WHITE, keyInput, 0);
+			}
+
+			// Skip check for release (otherwise double input
+			while(!CheckForTouch());
+			GetPen();
+		}
+	}
 
 	while(1){
 		while(1){
@@ -331,7 +368,7 @@ int main(){
 					printf("%d\n", star);
 					if(star != -1){
 						char send[4];
-						sprintf(send, "%c%d%c", BT_RATE_TRAIL, star + 1, BT_RATE_TRAIL);
+						sprintf(send, "%c%d%c", BT_RATE_TRAIL, star + 123456789, BT_RATE_TRAIL);
 						printf(send);
 						send_string(send, 3);
 
