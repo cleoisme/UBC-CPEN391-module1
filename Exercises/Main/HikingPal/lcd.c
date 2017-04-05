@@ -17,6 +17,11 @@ void InitializeLCD() {
 
 }
 
+void WriteStringToLCD(char* str){
+	alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+	alt_up_character_lcd_string(char_lcd_dev, str);
+}
+
 void WriteToLCD(char* latitude, char* longitude, char lat_direction, char lon_direction){
    alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
    char * location_str = "";

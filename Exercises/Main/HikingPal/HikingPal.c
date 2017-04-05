@@ -186,6 +186,7 @@ int main(){
 	// Initialize helper variables
 	char weatherData[150];
 	char weatherIcon[4];
+	char gpsData[15];
 	char mapData[500];
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
 	size_t num_maps = 0;
@@ -193,21 +194,6 @@ int main(){
 	volatile int switches = IORD_16DIRECT(SWITCHES, 0);
 	int i = 0;
 	State state = None;
-
-	//SetMockedMapData(maps);
-
-	//state = Map;
-	//num_maps = ParseMapData(testd, maps, num_maps);
-	//DrawAllSavedMapButtons(maps, num_maps);
-	//DrawString2Center(100, WHITE, WHITE, "Connect a bluetooth device!", 0);
-
-//	while(1){
-//		usleep(1000000);
-//		send_string("Y", 1);
-//	}
-
-	//DrawMapSDCard("02D.BMP", 30, 460, 72, 72, 1);
-	//DrawRectangle(30, 30 + 72, 460 - 72, 460, BLACK);
 
 	while(1){
 		while(1){
@@ -243,6 +229,21 @@ int main(){
 				}
 			}
 
+			// GPS data init
+			else if((state == None || state == Gps) && c == BT_GPS){
+				if(state != Gps){
+					state =  Gps;
+					memset(&gpsData, 0, sizeof(gpsData));
+					i = 0;
+				}
+				// Done parsing GPS data if we see BT_GPS again
+				else{
+					state = None;
+					printf(gpsData);
+					WriteStringToLCD(gpsData);
+				}
+			}
+
 			// Saved map data init
 			else if((state == None || state == Map) && c == BT_MAP_INIT){
 				if(state != Map){
@@ -270,6 +271,12 @@ int main(){
 				}
 			}
 
+			// Start parsing gps data
+			else if (state == Gps){
+				gpsData[i++] = c;
+			}
+
+			// Start parsing map data
 			else if(state == Map){
 				mapData[i++] = c;
 				printf("%c", mapData[i]);

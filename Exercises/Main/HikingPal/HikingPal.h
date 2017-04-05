@@ -10,6 +10,7 @@
 
 #define BT_RATE_TRAIL 'P'
 #define BT_WEATHER 'Z'
+#define BT_GPS 'Y'
 #define BT_MAP_INIT 'W'
 #define BT_MAP_DELIMITER 'Q'
 #define BT_MAP_FIELD_DELIMITER 'V'
@@ -19,6 +20,7 @@
 typedef enum{
 	None,
 	Weather,
+	Gps,
 	Rating,
 	Map,
 } State;

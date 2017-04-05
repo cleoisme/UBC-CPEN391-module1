@@ -9,6 +9,7 @@
 #define LCD_H_
 
 void InitializeLCD();
+void WriteStringToLCD(char* str);
 void WriteToLCD(char* latitude, char* longitude, char lat_direction, char lon_direction);
 
 #endif /* LCD_H_ */
