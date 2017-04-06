@@ -690,7 +690,7 @@ void DrawAllSavedMapButtons(SavedMapButton** map, size_t num_maps){
 void DrawSavedMapData(SavedMapButton* button){
 	char buffer[50];
 
-	DrawFilledRectangle(XRES / 2, XRES, 0, YRES * 0.7, WHITE);
+	DrawFilledRectangle(XRES / 2, XRES, 30, YRES * 0.7, WHITE);
 	if(button->name != NULL){
 		DrawString2CenterRange(XRES / 2, XRES, 150, BLACK, WHITE, button->name, 0);
 	}

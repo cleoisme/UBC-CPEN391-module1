@@ -230,6 +230,8 @@ int main(){
 	char keyInput[100];
 	char message[100];
 	int keyIndex = 0;
+	keyInput[0] = '\0';
+	message[0] = '\0';
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
 	size_t num_maps = 0;
 	int selectedMap = -1;
@@ -339,6 +341,7 @@ int main(){
 				}
 				else{
 					hasMessage = true;
+					message[i] = '\0';
 					if(prevState == Keyboard){
 						DrawKeyboard();
 						DrawKeyInput(keyInput);
@@ -495,6 +498,7 @@ int main(){
 					if(state == Keyboard){
 						ResetScreen();
 						DrawMessage(hasMessage, message);
+						printf("here\n");
 					}
 
 					prevState = state;
@@ -522,6 +526,7 @@ int main(){
 					else{
 						DrawKeyboard();
 						DrawMessage(hasMessage, message);
+						DrawKeyInput(keyInput);
 						state = Keyboard;
 					}
 				}
