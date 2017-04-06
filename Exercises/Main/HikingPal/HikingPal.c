@@ -440,18 +440,26 @@ int main(){
 					char c = GetCharPress(p.x, p.y);
 					if(c != '\0'){
 						printf("%c\n", c);
-						DrawFilledRectangle(0, XRES, 250, 275, WHITE);
+
+						// Handle regular character
 						if(c != 'B' && c != 'E'){
 							keyInput[keyIndex++] = c;
 							keyInput[keyIndex + 1] = '\0';
 						}
+						// Handle backspace
 						if(c == 'B' && keyIndex > 0){
 							keyInput[keyIndex - 1] = '\0';
 							keyIndex--;
 						}
+						// Handle enter key
 						else if (c == 'E'){
-							// Send String
+							char message[100];
+							sprintf(message, "%c%s%c", BT_MESSAGE, keyInput, BT_MESSAGE);
+							send_string(message, keyInput + 2);
+							printf("Message: %s\n", message);
 						}
+
+						DrawFilledRectangle(0, XRES, 250, 275, WHITE);
 						DrawString2Center(250, BLACK, WHITE, keyInput, 0);
 					}
 
