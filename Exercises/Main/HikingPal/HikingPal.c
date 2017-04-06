@@ -177,8 +177,8 @@ void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
 	DrawRectangle(18, 22 + 72, 438 -  72, 442, BLACK);
 	DrawRectangle(XRES - 22 - 72, XRES - 18, 438 - 72, 442, BLACK);
 	DrawHorizontalLine(0, XRES, 430 - 72, BLACK);
-	DrawMapSDCard(weatherBuffer, 20, 440, 72, 72, 1);
-	DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1);
+	DrawMapSDCard(weatherBuffer, 20, 440, 72, 72, 1, false);
+	DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1, true);
 }
 
 // Reset just the upper screen (ignore weather portion)
@@ -220,42 +220,6 @@ int main(){
 	State state = None;
 
 	ResetScreenWithMessage();
-
-//	while(1){
-//		int buttons = IORD_8DIRECT(BUTTONS, 0);
-//		if(buttons == BUTTON1_ON){
-//			break;
-//		}
-//	}
-//
-//	DrawKeyboard();
-//	while(1){
-//		Point p = {.x = -1, .y = -1};
-//		if (CheckForTouch()){
-//			p = GetPen();
-//			char c = GetCharPress(p.x, p.y);
-//			if(c != '\0'){
-//				printf("%c\n", c);
-//				DrawFilledRectangle(0, XRES, 250, 275, WHITE);
-//				if(c == 'B' && keyIndex > 0){
-//					keyInput[keyIndex - 1] = '\0';
-//					keyIndex--;
-//				}
-//				else if (c == 'E'){
-//					// Send String
-//				}
-//				else{
-//					keyInput[keyIndex++] = c;
-//					keyInput[keyIndex + 1] = '\0';
-//				}
-//				DrawString2Center(250, BLACK, WHITE, keyInput, 0);
-//			}
-//
-//			// Skip check for release (otherwise double input
-//			while(!CheckForTouch());
-//			GetPen();
-//		}
-//	}
 
 	while(1){
 		while(1){
@@ -434,6 +398,11 @@ int main(){
 						DrawSavedMapData(maps[button]);
 						HighlightSavedMapButton(maps, maps[button], num_maps);
 					}
+
+					char mapName[100];
+					sprintf(mapName, "%c%s%c", BT_MAP_ID, maps[button]->name, BT_MAP_ID);
+					send_string(mapName, 100);
+					printf("ID Sent: %s", mapName);
 				}
 
 				else if(state == Keyboard && p.x != -1){
@@ -535,7 +504,7 @@ int run_hiking_pal()
 
   TestSDCard();
 
-  DrawMapSDCard("MAP1.BMP", 0, 400, 160, 80, 5);
+  DrawMapSDCard("MAP1.BMP", 0, 400, 160, 80, 5, true);
 
   int currMap = 1;
   char* currMapName = "MAP1.BMP";
@@ -583,7 +552,7 @@ int run_hiking_pal()
 		 currMapName = concat(currMapName, ".BMP");
 
 		 printf(currMapName);
-		 DrawMapSDCard(currMapName, 0, 400, 160, 80, 5);
+		 DrawMapSDCard(currMapName, 0, 400, 160, 80, 5, true);
 	 }
 
 	  if (CheckForTouch()){
@@ -639,7 +608,7 @@ int run_hiking_pal()
 					  printf("HERE:");
 					  printf(mapButtons[mapButton].mapName);
 					  DrawMapData(mapButtons[mapButton], currMap);
-					  DrawMapSDCard(mapButtons[mapButton].mapName, 450, 280, 160, 80, 2);
+					  DrawMapSDCard(mapButtons[mapButton].mapName, 450, 280, 160, 80, 2, 1);
 				  }
 			  }
 

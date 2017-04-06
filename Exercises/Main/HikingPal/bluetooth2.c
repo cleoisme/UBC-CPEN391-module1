@@ -79,7 +79,6 @@ void receive_string(char buffer[], int maxlen)
 	{
 		if ((buffer[i] = getchar_btport()) != '\0')
 		{
-			//printf("FDFD\n");
 			printf("%c", buffer[i]);
 			if (buffer[i] == '\0' || buffer[i] == '?')
 			{
@@ -100,7 +99,7 @@ void send_string(char string[], int length)
 	for (i = 0; i < length && string[i] != '\0'; i++)
 	{
 		if(i != 0){
-			usleep(100000); //100ms wait
+			usleep(10000); //10ms wait
 		}
 		putchar_btport(string[i]);
 	}

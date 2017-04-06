@@ -91,7 +91,7 @@ void ProgramPalette(int PaletteNumber, int RGB);
 int GetClosetColour(int r, int g, int b);
 void DrawMap(char *fileName, int x, int y, int length, int width, int scale);
 void DrawMap2(char *fileName, int x, int y, int length, int width, int scale);
-void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale);
+void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale, int close);
 void DrawButtons();
 void TestShapes();
 int CheckButtonPress(int x, int y);

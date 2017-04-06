@@ -15,6 +15,7 @@
 #define BT_MAP_INIT 'X'
 #define BT_MAP_DELIMITER 'Q'
 #define BT_MAP_FIELD_DELIMITER 'U'
+#define BT_MAP_ID 'K'
 
 #define MAX_MAPS 20
 #define MAX_DATA_SIZE 50

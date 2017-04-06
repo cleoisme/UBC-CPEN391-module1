@@ -272,11 +272,11 @@ void DrawMap2(char *fileName, int x, int y, int length, int width, int scale){
 	 fclose(streamIn);
 }
 
-void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale){
+void DrawMapSDCard(char *fileName, int x, int y, int length, int width, int scale, int close){
 	printf("DRAWING NOW");
 	printf(fileName);
 	short int bitmap[length*width * 3 + 54];
-	ReadFromFile(fileName, bitmap);
+	ReadFromFile(fileName, bitmap, close);
 
 	int currX = x;
 	int currY = y;
