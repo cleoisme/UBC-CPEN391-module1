@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include "bluetooth2.h"
+#include "bluetooth.h"
 
 #define DONGLENAME "TEAM9BLUETOOTH"
 #define NAMELEN 15

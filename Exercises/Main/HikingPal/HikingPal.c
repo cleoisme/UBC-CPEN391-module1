@@ -152,37 +152,50 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 }
 
 // Reset the entire screen and re-draw weather data
-void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
+void ResetScreenWithWeatherMessage(int hasWeather, char weatherData[], char weatherIcon[], int hasMessage, char message[]){
 	ResetScreen();
-	char weatherBuffer[8];
-	sprintf(weatherBuffer, "%s.BMP", weatherIcon);
 
-	char weatherData1[100];
-	char weatherData2[100];
-	int i;
-	for(i = 0; weatherData[i] != '\n' && weatherData[i] != '\0' && i < 100; ++i){
-		weatherData1[i] = weatherData[i];
+	if(hasWeather){
+		char weatherBuffer[8];
+		sprintf(weatherBuffer, "%s.BMP", weatherIcon);
+
+		char weatherData1[100];
+		char weatherData2[100];
+		int i;
+		for(i = 0; weatherData[i] != '\n' && weatherData[i] != '\0' && i < 100; ++i){
+			weatherData1[i] = weatherData[i];
+		}
+		weatherData1[i] = '\0';
+		int j;
+		for(j = 0; weatherData[i] != '\0' && j < 100; ++j){
+			weatherData2[j] = weatherData[i++];
+		}
+		weatherData2[j] = '\0';
+
+		DrawString2Center(400, BLACK, WHITE, weatherData1, 0);
+		DrawString2Center(430, BLACK, WHITE, weatherData2, 0);
+
+		DrawRectangle(18, 22 + 72, 438 -  72, 442, BLACK);
+		DrawRectangle(XRES - 22 - 72, XRES - 18, 438 - 72, 442, BLACK);
+		DrawHorizontalLine(0, XRES, 430 - 72, BLACK);
+		DrawMapSDCard(weatherBuffer, 20, 440, 72, 72, 1, false);
+		DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1, true);
 	}
-	weatherData1[i] = '\0';
-	int j;
-	for(j = 0; weatherData[i] != '\0' && j < 100; ++j){
-		weatherData2[j] = weatherData[i++];
+
+	DrawMessage(hasMessage, message);
+}
+
+void DrawMessage(hasMessage, message){
+	if(hasMessage){
+		DrawFilledRectangle(0, XRES, 0, 30, WHITE);
+		DrawString2Center(10, BLACK, WHITE, message, 0);
 	}
-	weatherData2[j] = '\0';
-
-	DrawString2Center(400, BLACK, WHITE, weatherData1, 0);
-	DrawString2Center(430, BLACK, WHITE, weatherData2, 0);
-
-	DrawRectangle(18, 22 + 72, 438 -  72, 442, BLACK);
-	DrawRectangle(XRES - 22 - 72, XRES - 18, 438 - 72, 442, BLACK);
-	DrawHorizontalLine(0, XRES, 430 - 72, BLACK);
-	DrawMapSDCard(weatherBuffer, 20, 440, 72, 72, 1, false);
-	DrawMapSDCard(weatherBuffer, XRES - 20 - 72, 440, 72, 72, 1, true);
 }
 
 // Reset just the upper screen (ignore weather portion)
-void ResetUpperScreen(){
+void ResetUpperScreen(hasMessage, message){
 	DrawFilledRectangle(0, XRES, 0, 350, WHITE);
+	DrawMessage(hasMessage, message);
 }
 
 void ResetScreenWithMessage(){
@@ -209,14 +222,17 @@ int main(){
 	char gpsData[20];
 	char mapData[500];
 	char keyInput[100];
+	char message[100];
 	int keyIndex = 0;
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
 	size_t num_maps = 0;
 	int selectedMap = -1;
 	int hasWeather = 0;
+	int hasMessage = 0;
 	volatile int switches = IORD_16DIRECT(SWITCHES, 0);
 	int i = 0;
 	State state = None;
+	State prevState = None;
 
 	ResetScreenWithMessage();
 
@@ -230,6 +246,7 @@ int main(){
 //				memset(&keyInput, 0, sizeof(keyInput));
 //				keyIndex = 0;
 				DrawKeyboard();
+				DrawMessage(hasMessage, message);
 				if(keyIndex > 0){
 					DrawString2Center(250, BLACK, WHITE, keyInput, 0);
 				}
@@ -248,7 +265,7 @@ int main(){
 					ResetScreen();
 				}
 				else{
-					ResetUpperScreen();
+					ResetUpperScreen(hasMessage, message);
 				}
 
 				DrawString2Center(100, BLACK, WHITE, "Rate the trail!", 0);
@@ -273,7 +290,7 @@ int main(){
 					printf(weatherData);
 					printf(weatherIcon);
 
-					ResetScreenWithWeather(weatherData, weatherIcon);
+					ResetScreenWithWeatherMessage(hasWeather, weatherData, weatherIcon, hasMessage, message);
 				}
 			}
 
@@ -302,9 +319,27 @@ int main(){
 				}
 				else{
 					num_maps = ParseMapData(mapData, maps, num_maps);
-					ResetUpperScreen();
+					ResetUpperScreen(hasMessage, message);
 					DrawAllSavedMapButtons(maps, num_maps);
 					//printf(mapData);
+					break;
+				}
+			}
+
+			// Message sent
+			else if((state == None || state == Message) && c == BT_MESSAGE){
+				if(state != Message){
+					state = Message;
+					i = 0;
+					printf("Message being sent\n");
+				}
+				else{
+					hasMessage = true;
+					if(prevState == Keyboard){
+						DrawKeyboard();
+					}
+					DrawMessage(hasMessage, message);
+					state = prevState;
 					break;
 				}
 			}
@@ -320,7 +355,7 @@ int main(){
 			}
 
 			// Start parsing gps data
-			else if (state == Gps){
+			else if(state == Gps){
 				gpsData[i++] = c;
 			}
 
@@ -328,6 +363,10 @@ int main(){
 			else if(state == Map){
 				mapData[i++] = c;
 				printf("%c", mapData[i]);
+			}
+			else if(state == Message){
+				message[i++] = c;
+				printf("%c", message[i]);
 			}
 		}
 
@@ -371,7 +410,7 @@ int main(){
 						printf(send);
 						send_string(send, 3);
 
-						ResetUpperScreen();
+						ResetUpperScreen(hasMessage, message);
 
 						DrawRatings(star + 1, YELLOW);
 						char msg[50];
@@ -450,8 +489,10 @@ int main(){
 					printf("Bluetooth inc\n");
 					if(state == Keyboard){
 						ResetScreen();
+						DrawMessage(hasMessage, message);
 					}
 
+					prevState = state;
 					state = None;
 					selectedMap = -1;
 					break;
@@ -462,8 +503,9 @@ int main(){
 					if(state == Keyboard){
 						state = None;
 						if(hasWeather){
-							ResetScreenWithWeather(weatherData, weatherIcon);
+							ResetScreenWithWeatherMessage(hasWeather, weatherData, weatherIcon, hasMessage, message);
 						}
+						// Otherwise, no bluetooth
 						else{
 							ResetScreenWithMessage();
 						}
@@ -471,9 +513,10 @@ int main(){
 						while(IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON);
 						break;
 					}
-					// Turn keyboard if its off
+					// Turn keyboard on if its off
 					else{
 						DrawKeyboard();
+						DrawMessage(hasMessage, message);
 						state = Keyboard;
 					}
 				}

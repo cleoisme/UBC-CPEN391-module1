@@ -11,11 +11,11 @@
 int setup_all_bluetooth2();
 void send_string(char string[], int length);
 char getchar_poll(void);
-void set_user_pass();
+void set_user_pass(void);
 void init_btport();
 void receive_string(char buffer[], int maxlen);
 int test_getchar(void);
 void removeBtBuffer(void);
-void getchar_btport();
+char getchar_btport(void);
 
 #endif /* BLUETOOTH2_H_ */

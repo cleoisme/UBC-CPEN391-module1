@@ -27,6 +27,7 @@ typedef enum{
 	Rating,
 	Map,
 	Keyboard,
+	Message,
 } State;
 
 
