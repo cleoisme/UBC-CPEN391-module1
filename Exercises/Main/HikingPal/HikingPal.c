@@ -459,7 +459,7 @@ int main(){
 						// Handle regular character
 						if(c != 'B' && c != 'E'){
 							keyInput[keyIndex++] = c;
-							keyInput[keyIndex + 1] = '\0';
+							keyInput[keyIndex] = '\0';
 						}
 						// Handle backspace
 						if(c == 'B' && keyIndex > 0){
