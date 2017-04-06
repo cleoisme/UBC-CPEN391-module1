@@ -26,7 +26,6 @@
 #include "SDCard_Test_Program.h"
 #include "lcd.h"
 #include "bluetooth.h"
-#include "bluetooth2.h"
 #include "switches.h"
 #include "io.h"
 #include "keyboard.h"

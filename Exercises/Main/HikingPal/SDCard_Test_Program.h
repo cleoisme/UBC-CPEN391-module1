@@ -14,5 +14,6 @@
 void TestSDCard();
 void WriteToFile();
 void GetBitmap(char* fileName, int bitmap[]);
+void ReadFromFile(char* fileName, short int bitmap[], int close);
 
 #endif /* SDCARD_TEST_PROGRAM_H_ */

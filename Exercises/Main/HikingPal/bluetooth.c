@@ -1,145 +1,202 @@
 /*
- * "Hello World" example.
- *
- * This example prints 'Hello from Nios II' to the STDOUT stream. It runs on
- * the Nios II 'standard', 'full_featured', 'fast', and 'low_cost' example
- * designs. It runs with or without the MicroC/OS-II RTOS and requires a STDOUT
- * device in your system's hardware.
- * The memory footprint of this hosted application is ~69 kbytes by default
- * using the standard reference design.
- *
- * For a reduced footprint version of this template, and an explanation of how
- * to reduce the memory footprint for a given application, see the
- * "small_hello_world" template.
+ * Exercise 1.6 for CPEN 391.
+ * Connects to the bluetooth dongle and sets its name and password.
  *
  */
 
 #include <stdio.h>
 #include <unistd.h>
-#include "bluetooth.h"
+#include "bluetooth2.h"
 
-/*
- * Set up 6850 Control register to utilise a divided by 16 clock
- * Slave mode
- * Serial port: Baud = 115 kbps use 8 bits of data, no parity, one stop bit
- * Serial port flow control disabled
- */
-void init_Bluetooth(void){
-	printf("Start initialising the bluetooth...");
-	BLUETOOTH_Control = 0x15;
-	BLUETOOTH_Baud = 0x01;
-	usleep(100000); //wait for 100ms
-	printf("Done initialisation");
-	printf("\n");
+#define DONGLENAME "TEAM9BLUETOOTH"
+#define NAMELEN 15
+#define DONGLEPASS "9999"
+#define PASSLEN 4
+
+#define BT_CONTROL (*(volatile unsigned char *)(0x84000220))
+#define BT_STATUS (*(volatile unsigned char *)(0x84000220))
+#define BT_TXDATA (*(volatile unsigned char *)(0x84000222))
+#define BT_RXDATA (*(volatile unsigned char *)(0x84000222))
+#define BT_BAUD (*(volatile unsigned char *)(0x84000224))
+
+#define BT_STATUS_TX_MASK 0x02
+#define BT_STATUS_RX_MASK 0x01
+
+//call this function at the start of the program before
+//attempting to read or write via BT port
+void init_btport(void)
+{
+	//set up 6850 control register to utilize a divide by 16 clock,
+	//set RTS low, use 8 bits of data, no parity, 1 stop bit
+	//transmitter interrupt disabled
+	//program baud rate generator to use 115k baud
+	BT_CONTROL = 0x15;
+	BT_BAUD = 0x01;
 }
 
-/*
- * Poll Tx bit in 6850 status register. Wait for it to become "1", and then
- * write c to the 6850 TxData register to output the character
- */
-//char putChar_Bluetooth(char c){
-//	while(1){
-//		if(BLUETOOTH_Status & 0x2){
-//			BLUETOOTH_TxData = c;
-//			break;
-//		}
-//	}
-//	return c;
-//}
-char putChar_Bluetooth(char c){
-	while(!(BLUETOOTH_Status & 0x2))
-		BLUETOOTH_TxData = c;
-
-	return c;
-}
-
-/*
- * Poll Rx bit in 6850 status register. Wait for it to become "1", and then
- * read received character from 6850 RxData register
- */
-char getChar_Bluetooth(void){
-	while(1){
-		if(BLUETOOTH_Status & 0x1){
+char putchar_btport(char c)
+{
+	//poll Tx bit in 6850 status register. Wait for it to become '1'
+	//write 'c' to the 6850 TxData register to output the character
+	while(1)
+	{
+		if (BT_STATUS & BT_STATUS_TX_MASK)
+		{
+			BT_TXDATA = c;
 			break;
 		}
 	}
-	return BLUETOOTH_RxData;
+	return c;
 }
 
-
-/*
- * Send the command to the bluetooth dongle through the serial port.
- */
-void send_command(char string[], int length){
-	printf("Start sending the commands...");
-	int i = 0;
-	for(; i < length; i++){
-		usleep(100000); //wait for 100ms
-		putChar_Bluetooth(string[i]);
-	}
-	printf("Commands sent");
-	printf("\n");
-}
-
-/*
- * Enter the command mode
- */
-void start_command(){
-	usleep(100000); //wait for 100ms
-	send_command("$$$", 3); //Enter the command mode
-	usleep(100000); //wait for 100ms
-	printf("Start the command mode here");
-	printf("\n");
-}
-
-/*
- * Quit the command mode
- */
-void end_command(){
-	usleep(100000); //wait for 100ms
-	send_command("---\r\n", 5); //Exit the command mode
-	usleep(100000); //wait for 100ms
-	printf("Exit the command mode here");
-	printf("\n");
-}
-
-/*
- * Reset the bluetooth dongle
- */
-void dongle_reset(){
-	printf("Start reseting the dongle...");
-	start_command();
-	send_command("SF,", 3);
-	send_command("1\r\n", 3);
-	end_command();
-	printf("Done reset");
-	printf("\n");
-}
-
-int setup_all_bluetooth()
+int test_getchar(void)
 {
-	dongle_reset();
-  printf("Hello from Nios II!\n");
+	return BT_STATUS & BT_STATUS_RX_MASK;
+}
 
-  const char name[] = "2016W-CPEN391-G9";
-  const char password[] = "1234";
+char getchar_btport(void)
+{
+	//poll Rx bit in 6850 status register
+	if (BT_STATUS & BT_STATUS_RX_MASK) {
+		return BT_RXDATA;
+	} else {
+		return '\0';
+	}
+}
 
-  init_Bluetooth();
+char getchar_poll(void){
+	while(!(BT_STATUS & BT_STATUS_RX_MASK)){
 
-  printf("Start setting up the Bluetooth name: '%s'", name);
-  start_command();
-  send_command("SN,", 3);
-  send_command(name, 16);
-  send_command("\r\n", 2);
-  printf("Done with the name setup...");
+	}
 
-  printf("Start setting up the Bluetooth password: '%s'", password);
-  send_command("SP,", 3);
-  send_command(password, 10);
-  send_command("\r\n", 2);
-  end_command();
-  printf("Done with the password setup");
+	return BT_RXDATA;
+}
+
+void receive_string(char buffer[], int maxlen)
+{
+	int i = 0;
+	while ( i < maxlen)
+	{
+		if ((buffer[i] = getchar_btport()) != '\0')
+		{
+			printf("%c", buffer[i]);
+			if (buffer[i] == '\0' || buffer[i] == '?')
+			{
+				printf("boom");
+				break;
+			}
+			usleep(100000);
+			i++;
+		}
+	}
+	//DEBUG PRINT
+	buffer[i] = '\0';
+}
+
+void send_string(char string[], int length)
+{
+	int i;
+	for (i = 0; i < length && string[i] != '\0'; i++)
+	{
+		if(i != 0){
+			usleep(10000); //10ms wait
+		}
+		putchar_btport(string[i]);
+	}
+}
+
+// Enters command mode, with proper delays
+void command_start()
+{
+	usleep(1000000); // 1s wait
+	send_string("$$$", 3);
+	usleep(1000000);
+}
+
+// Exits command mode, with proper delays
+void command_end()
+{
+	usleep(1000000); // 1s wait
+	send_string("---\r\n", 5);
+	usleep(1000000);
+}
+
+// Resets the bluetooth dongle to default settings.
+void reset_dongle()
+{
+	command_start();
+	send_string("SF,", 3);
+	send_string("1\r\n", 3);
+	command_end();
+}
+
+// Sets the bluetooth dongle's name to the given string.
+void set_dongle_name(char name[], int length)
+{
+	command_start();
+	send_string("SN,", 3);
+	send_string(name, length);
+	send_string("\r\n", 2);
+	command_end();
+}
+
+// Sets the bluetooth dongle's password to the given string.
+void set_dongle_pass(char pass[], int length)
+{
+	command_start();
+	send_string("SP,", 3);
+	send_string(pass, length);
+	send_string("\r\n", 2);
+	command_end();
+}
+
+void set_user_pass(){
+	const char dongleName[] = DONGLENAME;
+	const int nameLen = NAMELEN;
+	const char donglePass[] = DONGLEPASS;
+	const int passLen = PASSLEN;
+
+	printf("Begin programming Bluetooth dongle...\n");
+	init_btport();
+
+	printf("Setting name to '%s'.\n", dongleName);
+	set_dongle_name(dongleName, nameLen);
+
+	printf("Setting password to '%s'.\n", donglePass);
+	set_dongle_pass(donglePass, passLen);
 
 
-  return 0;
+	printf("Programming finished.\n");
+
+}
+
+int setup_all_bluetooth2()
+{
+	set_user_pass();
+
+	char str[] = "A";
+	char str2[] = "I love you";
+	char buf[1024];
+
+	while(1){
+		usleep(1000000);
+//		send_string(str, 1);
+//		usleep(1000000);
+//		send_string(str2, 1);
+		send_string(str2, sizeof(str2) / sizeof(str[0]));
+		//printf("hihi\n");
+		//receive_string(buf, 1024);
+		//printf(buf);
+		//char c = getchar_poll();
+		//printf("%c\n", c);
+	}
+
+
+	return 0;
+}
+
+void removeBtBuffer(){
+	while(getchar_btport() != '\0'){
+
+	}
 }
