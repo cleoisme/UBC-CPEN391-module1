@@ -81,7 +81,7 @@ int ParseMapData(char mapData[], SavedMapButton** maps, size_t num_maps){
 			maps[currMap - 1]->name = NULL;
 			maps[currMap - 1]->rating = NULL;
 			maps[currMap - 1]->x = 50;
-			maps[currMap - 1]->y = 20 + (currMap - 1) * (BUTTON_HEIGHT * 1.2);
+			maps[currMap - 1]->y = 35 + (currMap - 1) * (BUTTON_HEIGHT * 1.2);
 			continue;
 		}
 		// Parse each data of the map until we hit the delimiter again
@@ -187,8 +187,10 @@ void ResetScreenWithWeatherMessage(int hasWeather, char weatherData[], char weat
 
 void DrawMessage(hasMessage, message){
 	if(hasMessage){
+		char mes[100];
+		sprintf(mes, "Announcement: %s", message);
 		DrawFilledRectangle(0, XRES, 0, 30, WHITE);
-		DrawString2Center(10, BLACK, WHITE, message, 0);
+		DrawString2Center(10, BLACK, WHITE, mes, 0);
 	}
 }
 
@@ -201,6 +203,10 @@ void ResetUpperScreen(hasMessage, message){
 void ResetScreenWithMessage(){
 	ResetScreen();
 	DrawString2Center(100, BLACK, WHITE, "Connect a bluetooth device!", 0);
+}
+
+void DrawKeyInput(char keyInput[]){
+	DrawString2Center(250, BLACK, WHITE, keyInput, 0);
 }
 
 int main(){
@@ -247,9 +253,7 @@ int main(){
 //				keyIndex = 0;
 				DrawKeyboard();
 				DrawMessage(hasMessage, message);
-				if(keyIndex > 0){
-					DrawString2Center(250, BLACK, WHITE, keyInput, 0);
-				}
+				DrawKeyInput(keyInput);
 				break;
 			}
 
@@ -337,6 +341,7 @@ int main(){
 					hasMessage = true;
 					if(prevState == Keyboard){
 						DrawKeyboard();
+						DrawKeyInput(keyInput);
 					}
 					DrawMessage(hasMessage, message);
 					state = prevState;
@@ -435,12 +440,12 @@ int main(){
 						selectedMap = button;
 						DrawSavedMapData(maps[button]);
 						HighlightSavedMapButton(maps, maps[button], num_maps);
-					}
 
-					char mapName[100];
-					sprintf(mapName, "%c%s%c", BT_MAP_ID, maps[button]->name, BT_MAP_ID);
-					send_string(mapName, 100);
-					printf("ID Sent: %s", mapName);
+						char mapName[100];
+						sprintf(mapName, "%c%s%c", BT_MAP_ID, maps[button]->name, BT_MAP_ID);
+						send_string(mapName, 100);
+						printf("ID Sent: %s", mapName);
+					}
 				}
 
 				else if(state == Keyboard && p.x != -1){

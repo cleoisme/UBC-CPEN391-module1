@@ -99,7 +99,7 @@ void send_string(char string[], int length)
 	for (i = 0; i < length && string[i] != '\0'; i++)
 	{
 		if(i != 0){
-			usleep(10000); //10ms wait
+			usleep(25000); //25ms wait
 		}
 		putchar_btport(string[i]);
 	}
