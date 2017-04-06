@@ -60,7 +60,7 @@ char getchar_btport(void)
 	if (BT_STATUS & BT_STATUS_RX_MASK) {
 		return BT_RXDATA;
 	} else {
-		return '-';
+		return '\0';
 	}
 }
 
@@ -77,7 +77,7 @@ void receive_string(char buffer[], int maxlen)
 	int i = 0;
 	while ( i < maxlen)
 	{
-		if ((buffer[i] = getchar_btport()) != '-')
+		if ((buffer[i] = getchar_btport()) != '\0')
 		{
 			//printf("FDFD\n");
 			printf("%c", buffer[i]);
@@ -197,7 +197,7 @@ int setup_all_bluetooth2()
 }
 
 void removeBtBuffer(){
-	while(getchar_btport() != '-'){
+	while(getchar_btport() != '\0'){
 
 	}
 }

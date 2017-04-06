@@ -53,7 +53,7 @@ void DrawKeyboard(){
 
 char GetCharPress(int x, int y){
 	if(y < INIT_Y){
-		return "\0";
+		return '\0';
 	}
 
 	int row = (y - INIT_Y) / KEY_BUTTON_HEIGHT;

@@ -23,6 +23,7 @@ typedef enum{
 	Gps,
 	Rating,
 	Map,
+	Keyboard,
 } State;
 
 

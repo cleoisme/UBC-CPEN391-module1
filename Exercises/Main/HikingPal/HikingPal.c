@@ -184,6 +184,11 @@ void ResetUpperScreen(){
 	DrawFilledRectangle(0, XRES, 0, 350, WHITE);
 }
 
+void ResetScreenWithMessage(){
+	ResetScreen();
+	DrawString2Center(100, BLACK, WHITE, "Connect a bluetooth device!", 0);
+}
+
 int main(){
 
 	printf("Hello from Nios II!\n");
@@ -197,56 +202,79 @@ int main(){
 	ProgramAllPalette();
 	TestSDCard();
 
-	ResetScreen();
-	DrawString2Center(100, BLACK, WHITE, "Connect a bluetooth device!", 0);
-
 	// Initialize helper variables
 	char weatherData[150];
 	char weatherIcon[4];
 	char gpsData[20];
 	char mapData[500];
+	char keyInput[100];
+	int keyIndex = 0;
 	SavedMapButton** maps = malloc(sizeof(SavedMapButton*) * MAX_MAPS);
 	size_t num_maps = 0;
 	int selectedMap = -1;
+	int hasWeather = 0;
 	volatile int switches = IORD_16DIRECT(SWITCHES, 0);
 	int i = 0;
 	State state = None;
 
-	DrawKeyboard();
+	ResetScreenWithMessage();
 
-	char keyInput[100];
-	int keyIndex = 0;
-	while(1){
-		Point p = {.x = -1, .y = -1};
-		if (CheckForTouch()){
-			p = GetPen();
-			char c = GetCharPress(p.x, p.y);
-			if(c != '\0'){
-				printf("%c\n", c);
-				DrawFilledRectangle(0, XRES, 250, 275, WHITE);
-				if(c == 'B' && keyIndex > 0){
-					keyInput[keyIndex - 1] = '\0';
-					keyIndex--;
-				}
-				else if (c == 'E'){
-					// Send String
-				}
-				else{
-					keyInput[keyIndex++] = c;
-					keyInput[keyIndex + 1] = '\0';
-				}
-				DrawString2Center(250, BLACK, WHITE, keyInput, 0);
-			}
-
-			// Skip check for release (otherwise double input
-			while(!CheckForTouch());
-			GetPen();
-		}
-	}
+//	while(1){
+//		int buttons = IORD_8DIRECT(BUTTONS, 0);
+//		if(buttons == BUTTON1_ON){
+//			break;
+//		}
+//	}
+//
+//	DrawKeyboard();
+//	while(1){
+//		Point p = {.x = -1, .y = -1};
+//		if (CheckForTouch()){
+//			p = GetPen();
+//			char c = GetCharPress(p.x, p.y);
+//			if(c != '\0'){
+//				printf("%c\n", c);
+//				DrawFilledRectangle(0, XRES, 250, 275, WHITE);
+//				if(c == 'B' && keyIndex > 0){
+//					keyInput[keyIndex - 1] = '\0';
+//					keyIndex--;
+//				}
+//				else if (c == 'E'){
+//					// Send String
+//				}
+//				else{
+//					keyInput[keyIndex++] = c;
+//					keyInput[keyIndex + 1] = '\0';
+//				}
+//				DrawString2Center(250, BLACK, WHITE, keyInput, 0);
+//			}
+//
+//			// Skip check for release (otherwise double input
+//			while(!CheckForTouch());
+//			GetPen();
+//		}
+//	}
 
 	while(1){
 		while(1){
-			char c = getchar_poll();
+			char c = getchar_btport();
+
+			// Check for keyboard button press
+			if(state == None && IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON){
+				state = Keyboard;
+//				memset(&keyInput, 0, sizeof(keyInput));
+//				keyIndex = 0;
+				DrawKeyboard();
+				if(keyIndex > 0){
+					DrawString2Center(250, BLACK, WHITE, keyInput, 0);
+				}
+				break;
+			}
+
+			if(c == '\0'){
+				continue;
+			}
+
 			printf("%c\n", c);
 
 			// Rate trail init
@@ -271,6 +299,7 @@ int main(){
 				// Done parsing weather data if we see BT_WEATHER again
 				else{
 					state = None;
+					hasWeather = true;
 					printf(weatherData);
 					printf(weatherIcon);
 
@@ -368,7 +397,7 @@ int main(){
 					printf("%d\n", star);
 					if(star != -1){
 						char send[4];
-						sprintf(send, "%c%d%c", BT_RATE_TRAIL, star + 123456789, BT_RATE_TRAIL);
+						sprintf(send, "%c%d%c", BT_RATE_TRAIL, star + 1, BT_RATE_TRAIL);
 						printf(send);
 						send_string(send, 3);
 
@@ -399,6 +428,41 @@ int main(){
 						HighlightSavedMapButton(maps, maps[button], num_maps);
 					}
 				}
+
+				else if(state == Keyboard && p.x != -1){
+					char c = GetCharPress(p.x, p.y);
+					if(c != '\0'){
+						printf("%c\n", c);
+						DrawFilledRectangle(0, XRES, 250, 275, WHITE);
+						if(c == 'B' && keyIndex > 0){
+							keyInput[keyIndex - 1] = '\0';
+							keyIndex--;
+						}
+						else if (c == 'E'){
+							// Send String
+						}
+						else{
+							keyInput[keyIndex++] = c;
+							keyInput[keyIndex + 1] = '\0';
+						}
+							DrawString2Center(250, BLACK, WHITE, keyInput, 0);
+					}
+
+					int lastTime = time(NULL);
+					// Skip check for release (otherwise double input
+					while(!CheckForTouch()){
+						if(time(NULL) - lastTime >= 1){
+							break;
+						}
+						if(IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON){
+							break;
+						}
+					}
+
+					if(CheckForTouch()){
+						GetPen();
+					}
+				}
 			}
 			else{
 				// No input, check for incoming bluetooth data
@@ -406,6 +470,19 @@ int main(){
 					printf("Bluetooth inc\n");
 					state = None;
 					selectedMap = -1;
+					break;
+				}
+				// Check for close keyboard button
+				if(IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON){
+					state = None;
+					if(hasWeather){
+						ResetScreenWithWeather(weatherData, weatherIcon);
+					}
+					else{
+						ResetScreenWithMessage();
+					}
+					// Wait until button is released
+					while(IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON);
 					break;
 				}
 			}
