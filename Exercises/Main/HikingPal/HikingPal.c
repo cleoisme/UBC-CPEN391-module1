@@ -164,10 +164,12 @@ void ResetScreenWithWeather(char weatherData[], char weatherIcon[]){
 	for(i = 0; weatherData[i] != '\n' && weatherData[i] != '\0' && i < 100; ++i){
 		weatherData1[i] = weatherData[i];
 	}
+	weatherData1[i] = '\0';
 	int j;
 	for(j = 0; weatherData[i] != '\0' && j < 100; ++j){
 		weatherData2[j] = weatherData[i++];
 	}
+	weatherData2[j] = '\0';
 
 	DrawString2Center(400, BLACK, WHITE, weatherData1, 0);
 	DrawString2Center(430, BLACK, WHITE, weatherData2, 0);
@@ -279,7 +281,12 @@ int main(){
 
 			// Rate trail init
 			if((state == None || state == Rating) && c == BT_RATE_TRAIL){
-				ResetUpperScreen();
+				if (state == Keyboard){
+					ResetScreen();
+				}
+				else{
+					ResetUpperScreen();
+				}
 
 				DrawString2Center(100, BLACK, WHITE, "Rate the trail!", 0);
 				DrawRatings(5, BLACK);
@@ -434,6 +441,10 @@ int main(){
 					if(c != '\0'){
 						printf("%c\n", c);
 						DrawFilledRectangle(0, XRES, 250, 275, WHITE);
+						if(c != 'B' && c != 'E'){
+							keyInput[keyIndex++] = c;
+							keyInput[keyIndex + 1] = '\0';
+						}
 						if(c == 'B' && keyIndex > 0){
 							keyInput[keyIndex - 1] = '\0';
 							keyIndex--;
@@ -441,20 +452,13 @@ int main(){
 						else if (c == 'E'){
 							// Send String
 						}
-						else{
-							keyInput[keyIndex++] = c;
-							keyInput[keyIndex + 1] = '\0';
-						}
-							DrawString2Center(250, BLACK, WHITE, keyInput, 0);
+						DrawString2Center(250, BLACK, WHITE, keyInput, 0);
 					}
 
 					int lastTime = time(NULL);
 					// Skip check for release (otherwise double input
 					while(!CheckForTouch()){
 						if(time(NULL) - lastTime >= 1){
-							break;
-						}
-						if(IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON){
 							break;
 						}
 					}
@@ -468,22 +472,34 @@ int main(){
 				// No input, check for incoming bluetooth data
 				if(test_getchar()){
 					printf("Bluetooth inc\n");
+					if(state == Keyboard){
+						ResetScreen();
+					}
+
 					state = None;
 					selectedMap = -1;
 					break;
 				}
 				// Check for close keyboard button
 				if(IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON){
-					state = None;
-					if(hasWeather){
-						ResetScreenWithWeather(weatherData, weatherIcon);
+					// Close keyboard if its on
+					if(state == Keyboard){
+						state = None;
+						if(hasWeather){
+							ResetScreenWithWeather(weatherData, weatherIcon);
+						}
+						else{
+							ResetScreenWithMessage();
+						}
+						// Wait until button is released
+						while(IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON);
+						break;
 					}
+					// Turn keyboard if its off
 					else{
-						ResetScreenWithMessage();
+						DrawKeyboard();
+						state = Keyboard;
 					}
-					// Wait until button is released
-					while(IORD_8DIRECT(BUTTONS, 0) == BUTTON1_ON);
-					break;
 				}
 			}
 		}

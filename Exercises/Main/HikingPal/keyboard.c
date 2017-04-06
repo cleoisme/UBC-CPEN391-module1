@@ -16,6 +16,8 @@ const char Row3[] = {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'B'};
 const char Row4[] = {'z', 'x', 'c', 'v', 'b', 'n', 'm', ' ', '.', 'E'};
 
 void DrawKeyboard(){
+	ResetScreen();
+
 	char str[3];
 	str[1] = '\0';
 	int i;
